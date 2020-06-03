@@ -4,7 +4,7 @@ import "time"
 
 //Interface defines model structs
 type Interface interface {
-	GetNameSpace() string
+	TableName() string
 	GetID() string
 	SetID(string)
 	SetCreatedAt(t time.Time)
@@ -14,7 +14,7 @@ type Interface interface {
 
 //Interfaces
 type Interfaces interface {
-	GetNameSpace() string
+	TableName() string
 }
 
 //Pagination defines list page pagination and sorting query
