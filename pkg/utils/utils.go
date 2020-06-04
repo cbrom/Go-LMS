@@ -39,7 +39,7 @@ func GenerateError(errors map[string][]string, code int, message string) *Error 
 	}
 }
 
-func (e *Error) ErrorMessage() string {
+func (e *Error) Error() string {
 	return e.Message
 }
 
