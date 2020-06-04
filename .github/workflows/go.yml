@@ -34,7 +34,7 @@ jobs:
       run: go build -v cmd/api/
 
     - name: Test
-      run: go test -v .
+      run: go test -v cmd/api
     - name: Setup Go environment
       uses: actions/setup-go@v2.0.3
       with:
