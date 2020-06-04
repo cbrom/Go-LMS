@@ -3,6 +3,11 @@ package user
 import (
 	"go-lms-of-pupilfirst/pkg/utils"
 	"time"
+
+	"github.com/pborman/uuid"
+	"golang.org/x/crypto/bcrypt"
+
+	"github.com/pkg/errors"
 )
 
 const (
@@ -38,11 +43,35 @@ type UserLoginRequest struct {
 }
 
 type UserCreateRequest struct {
-	Name            string  `json:"name" validate:"required" example:"Groot"`
-	Email           string  `json:"email" validate:"required,email,unique" example:"groot@golms.com"`
-	Password        string  `json:"password" validate:"required" example:"GrootSecret"`
-	PasswordConfirm string  `json:"password_confirm" validate:"required,eqfield=password" example:"GrootSecret"`
-	Timezone        *string `json:"timezone" validate:"required" example:"America/Anchorage"`
+	Name            string     `json:"name" validate:"required" example:"Groot"`
+	Email           string     `json:"email" validate:"required,email,unique" example:"groot@golms.com"`
+	Password        string     `json:"password" validate:"required" example:"GrootSecret"`
+	PasswordConfirm string     `json:"password_confirm" validate:"required,eqfield=password" example:"GrootSecret"`
+	Timezone        *time.Time `json:"timezone" validate:"required" example:"America/Anchorage"`
+}
+
+// GetUser creates a user from a user create request
+func (usrCreateRequest *UserCreateRequest) GetUser() (*User, error) {
+	if usrCreateRequest == nil {
+		return nil, errors.New("Null User Create Request")
+	}
+
+	passwordSalt := uuid.NewRandom().String()
+	saltedPassword := usrCreateRequest.Password + passwordSalt
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(saltedPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, errors.Wrap(err, "Error generating password hash")
+	}
+
+	usr := &User{
+		Name:         usrCreateRequest.Name,
+		Email:        usrCreateRequest.Email,
+		PasswordSalt: passwordSalt,
+		PasswordHash: passwordHash,
+		TimeZone:     usrCreateRequest.Timezone,
+	}
+
+	return usr, nil
 }
 
 type UserInfoUpdateRequest struct {
