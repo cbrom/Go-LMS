@@ -99,7 +99,7 @@ func (h *handler) ListPagination(doc object.Interfaces, query interface{}, pagin
 	}
 	//fetch count
 	var totalRecord uint32
-	if err := h.RecordCount(doc.GetNameSpace(), query, advancedSearch, &totalRecord); err != nil {
+	if err := h.RecordCount(doc.TableName(), query, advancedSearch, &totalRecord); err != nil {
 		return err
 	}
 	//calculate total number of pages
@@ -163,7 +163,7 @@ func (h *handler) Update(doc object.Interface, query interface{}) error {
 
 	doc.SetUpdatedAt(time.Now())
 	client := h.currentDb()
-	err := client.Table(doc.GetNameSpace()).Where(query).Where("archived_at IS NULL").Updates(doc)
+	err := client.Table(doc.TableName()).Where(query).Where("archived_at IS NULL").Updates(doc)
 	if err != nil {
 		return err.Error
 	}
@@ -183,7 +183,7 @@ func (h *handler) Drop(doc object.Interface) error {
 
 func (h *handler) Remove(doc object.Interface) error {
 	client := h.currentDb()
-	result := client.Table(doc.GetNameSpace()).Where("id = ?", doc.GetID()).Where("archived_at IS NULL").Update("archived_at", time.Now())
+	result := client.Table(doc.TableName()).Where("id = ?", doc.GetID()).Where("archived_at IS NULL").Update("archived_at", time.Now())
 	if result.Error != nil {
 		return result.Error
 	}
@@ -192,7 +192,7 @@ func (h *handler) Remove(doc object.Interface) error {
 
 func (h *handler) RemoveMany(doc object.Interface, query interface{}) error {
 	client := h.currentDb()
-	result := client.Table(doc.GetNameSpace()).Where(query).Where("archived_at IS NULL").Updates(map[string]interface{}{"archived_at": time.Now()})
+	result := client.Table(doc.TableName()).Where(query).Where("archived_at IS NULL").Updates(map[string]interface{}{"archived_at": time.Now()})
 	if result.Error != nil {
 		return result.Error
 	}
