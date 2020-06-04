@@ -2,7 +2,7 @@
 A rewrite of pupilfirst (Learning management system) in golang for the purpose of learning a software development process.
 
 
-## ![Go-LMS Logo](https://github.com/cbrom/Go-LMS/docs/assets/log.png)
+## ![Go-LMS Logo](https://github.com/cbrom/Go-LMS/blob/cbrom/docs/assets/log.png)
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-informational)](https://github.com/cbrom/Go-LMS/blob/master/LICENSE)
 [![Continuous Integration](https://github.com/cbrom/Go-LMS/workflows/Continuous%20Integration/badge.svg?branch=master)](https://github.com/cbrom/Go-LMS/actions?query=workflow%3A%22Continuous+Integration%22)
@@ -12,7 +12,7 @@ A rewrite of pupilfirst (Learning management system) in golang for the purpose o
 ## Features
 
 * Coaches
-* sStudents
+* Students
 * Live learning
 * Course curriculum 
 
@@ -24,9 +24,9 @@ Have doubts? Talk to our development team on [our Discord server](https://discor
 
 1. Install postgresql
 2. Install redis (optional)
-3. clone the repo
-4. cd Go-LMS
-5. go run cmd/api/main.go
+3. ```clone the repo```
+4. ```cd Go-LMS```
+5. ```go run cmd/api/main.go```
 
 ### Note
 Any configuration goes to .env file.
