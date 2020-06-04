@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"go-lms-of-pupilfirst/configs"
+	"go-lms-of-pupilfirst/pkg/database"
 	"go-lms-of-pupilfirst/pkg/flag"
 	"log"
 	"os"
@@ -54,6 +55,7 @@ func main() {
 		log.Printf("main : Error loading database %+v", err)
 	}
 	log.Printf("%+v", dbConfig)
+	database.New(dbConfig.Storage)
 	app := gin.Default()
 	app.Run()
 }
