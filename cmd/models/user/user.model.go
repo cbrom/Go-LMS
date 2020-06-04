@@ -56,10 +56,6 @@ type UserInfoUpdateRequest struct {
 	TimeZone *time.Time `json:"timezone" validation:"omitempty"`
 }
 
-type GetUser struct {
-	ID string `json:"id" validate:"required,uuid"`
-}
-
 // TableName gorm standard table name
 func (u *User) TableName() string {
 	return userTableName
@@ -88,4 +84,12 @@ func (u *User) SetUpdatedAt(t time.Time) {
 // SetArchivedAt sets field DeletedAt
 func (u *User) SetArchivedAt(t *time.Time) {
 	u.ArchivedAt = t
+}
+
+// List defines array of user objects
+type List []*User
+
+// TableName gorm standard table name
+func (u *List) TableName() string {
+	return userTableName
 }
