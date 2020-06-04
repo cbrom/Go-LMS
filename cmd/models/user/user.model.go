@@ -74,3 +74,18 @@ func (u *User) GetID() string {
 func (u *User) SetID(id string) {
 	u.ID = id
 }
+
+// SetCreatedAt sets field createdAt, should only be used in mongodb
+func (u *User) SetCreatedAt(t time.Time) {
+	u.CreatedAt = t
+}
+
+// SetUpdatedAt sets field UpdatedAt
+func (u *User) SetUpdatedAt(t time.Time) {
+	u.UpdatedAt = t
+}
+
+// SetArchivedAt sets field DeletedAt
+func (u *User) SetArchivedAt(t *time.Time) {
+	u.ArchivedAt = t
+}
