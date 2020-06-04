@@ -15,6 +15,9 @@ var (
 	ErrForbidden             = errors.New("Attempted action is not allowed")
 	ErrUnableToCreateUser    = errors.New("Unable to create User")
 	ErrUnableToFetchUser     = errors.New("Unable to fetch user")
+	ErrUnableToFetchUserList = errors.New("Unable to fetch user list")
+	ErrUnableToUpdateUser    = errors.New("Unable to update user")
+	ErrUnableToDeleteUser    = errors.New("Unable to delete user")
 
 	// ErrResetExpired occurs when the reset hash exceeds the expiration
 	ErrResetExpired = errors.New("Reset expired")
@@ -52,5 +55,58 @@ func FetchByID(u *User) error {
 			"user_id": []string{err.Error()}}, http.StatusNotFound, ErrUnableToFetchUser.Error())
 		return errs
 	}
+	return nil
+}
+
+// FetchAll fetchs all Users
+func FetchAll(l *List, query *User) error {
+	err := database.Handler().List(l, query)
+	if err != nil {
+		errs := utils.GenerateError(map[string][]string{"Unknown": []string{err.Error()}}, http.StatusNotFound, ErrUnableToFetchUserList.Error())
+		return errs
+	}
+	return nil
+}
+
+// UpdateInfo updates User by given id
+func UpdateInfo(u *User, query *UserInfoUpdateRequest) error {
+
+	// check if user exists
+	user := &User{
+		Name:      query.Name,
+		Phone:     query.Phone,
+		Title:     query.Title,
+		KeySkills: query.KeySkills,
+		About:     query.About,
+		TimeZone:  query.TimeZone,
+	}
+	user.SetID(query.ID)
+	if err := FetchByID(user); err != nil {
+		(err.(*utils.Error)).Message = ErrUnableToFetchUser.Error()
+		return err
+	}
+	err := database.Handler().Update(u, user)
+	if err != nil {
+		errs := utils.GenerateError(map[string][]string{
+			"unknown": []string{err.Error()}}, http.StatusBadRequest, ErrUnableToUpdateUser.Error())
+		return errs
+	}
+	return nil
+}
+
+// Delete deletes user by id
+func Delete(query *User) error {
+	// check if user exists
+	if err := FetchByID(query); err != nil {
+		(err.(*utils.Error)).Message = ErrUnableToFetchUser.Error()
+		return err
+	}
+	err := database.Handler().Remove(query)
+	if err != nil {
+		errs := utils.GenerateError(map[string][]string{
+			"unknown": []string{err.Error()}}, http.StatusBadRequest, ErrUnableToDeleteUser.Error())
+		return errs
+	}
+
 	return nil
 }
