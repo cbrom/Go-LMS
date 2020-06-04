@@ -2,11 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"go-lms-of-pupilfirst/cmd/api/handlers"
 	"go-lms-of-pupilfirst/configs"
+	"go-lms-of-pupilfirst/pkg/auth"
 	"go-lms-of-pupilfirst/pkg/database"
 	"go-lms-of-pupilfirst/pkg/flag"
 	"log"
 	"os"
+	"time"
 
 	redistrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/go-redis/redis"
 
@@ -56,6 +59,9 @@ func main() {
 	}
 	log.Printf("%+v", dbConfig)
 	database.New(dbConfig.Storage)
+	authenticator, _ := auth.NewAuthenticatorFile("", time.Now().UTC(), configs.CFG.Auth.KeyExpiration)
+
 	app := gin.Default()
-	app.Run()
+	handlers.ApplyRoutes(app, authenticator)
+	app.Run(configs.CFG.Server.Host)
 }
