@@ -5,7 +5,7 @@ A rewrite of pupilfirst (Learning management system) in golang for the purpose o
 ## ![Go-LMS Logo](https://github.com/cbrom/Go-LMS/blob/cbrom/docs/assets/log.png)
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-informational)](https://github.com/cbrom/Go-LMS/blob/master/LICENSE)
-[![Continuous Integration](https://github.com/cbrom/Go-LMS/workflows/Go/badge.svg)](https://github.com/cbrom/Go-LMS/actions?query=workflow%3A%22Go%22)
+[![Go](https://github.com/cbrom/Go-LMS/workflows/Go/badge.svg?branch=cbrom)](https://github.com/cbrom/Go-LMS/actions?query=workflow%3A%22Go%22)
 
 ---
 
