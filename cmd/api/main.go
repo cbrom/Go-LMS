@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"go-lms-of-pupilfirst/cmd/api/handlers"
 	"go-lms-of-pupilfirst/configs"
+	"go-lms-of-pupilfirst/migrations"
 	"go-lms-of-pupilfirst/pkg/auth"
 	"go-lms-of-pupilfirst/pkg/database"
 	"go-lms-of-pupilfirst/pkg/flag"
@@ -60,6 +61,8 @@ func main() {
 	log.Printf("%+v", dbConfig)
 	database.New(dbConfig.Storage)
 	authenticator, _ := auth.NewAuthenticatorFile("", time.Now().UTC(), configs.CFG.Auth.KeyExpiration)
+
+	migrations.Migrate()
 
 	app := gin.Default()
 	handlers.ApplyRoutes(app, authenticator)
