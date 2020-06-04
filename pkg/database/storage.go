@@ -7,13 +7,15 @@ import (
 	config "go-lms-of-pupilfirst/configs"
 	"go-lms-of-pupilfirst/pkg/database/object"
 	"go-lms-of-pupilfirst/pkg/database/postgresql"
+
+	"github.com/jinzhu/gorm"
 )
 
 type (
 	handlerName string
 
 	Interface interface {
-		Prepare() error
+		Prepare() (*gorm.DB, error)
 		Close() error
 		//DropCollection(doc interface{}) error
 		//DropDatabase(doc interface{}) error
@@ -44,8 +46,8 @@ func New(storageConfig config.Storage) error {
 	default:
 		return errors.New("Invalid storage handler `" + storageConfig.HandlerName + "`")
 	}
-
-	return handler.Prepare()
+	_, err := handler.Prepare()
+	return err
 }
 
 //Handler returns storage handler
