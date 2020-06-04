@@ -45,17 +45,17 @@ func NewHandler(conf config.Storage) *handler {
 }
 
 // Prepare prepares database for the system (migrate and other setup)
-func (h *handler) Prepare() error {
-	url := fmt.Sprintf("host=%s port%s user=%s password%s dbname%s sslmode=disabled", h.dialInfo.host, h.dialInfo.port, h.dialInfo.user, h.dialInfo.password, h.dialInfo.database)
+func (h *handler) Prepare() (*gorm.DB, error) {
+	url := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", h.dialInfo.host, h.dialInfo.port, h.dialInfo.user, h.dialInfo.password, h.dialInfo.database)
 	db, err := gorm.Open("postgres", url)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	h.client = db
 	h.transactionDb = nil
 	h.transaction = false
-	return nil
+	return db, nil
 }
 
 func (h *handler) Close() (err error) {
