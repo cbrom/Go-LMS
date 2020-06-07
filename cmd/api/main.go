@@ -59,12 +59,18 @@ func main() {
 		log.Printf("main : Error loading database %+v", err)
 	}
 	log.Printf("%+v", dbConfig)
-	database.New(dbConfig.Storage)
+	db, err := database.Initialize(dbConfig.Storage)
+	defer db.Close()
+
+	if err != nil {
+		log.Fatalf("main: Error initializing database %+v", err)
+	}
 	authenticator, _ := auth.NewAuthenticatorFile("", time.Now().UTC(), configs.CFG.Auth.KeyExpiration)
 
-	migrations.Migrate()
+	migrations.Migrate(db)
 
 	app := gin.Default()
 	handlers.ApplyRoutes(app, authenticator)
+	app.Use(database.InjectDB(db))
 	app.Run(configs.CFG.Server.Host)
 }
