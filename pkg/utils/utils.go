@@ -9,6 +9,7 @@ import (
 
 // Base serves as a base model for other models
 type Base struct {
+	gorm.Model
 	ID         string     `json:"id" sql:"type:uuid;primary_key;default:uuid_generate_v4()" validate:"omitempty,uuid,required"`
 	CreatedAt  time.Time  `json:"created_at"`
 	UpdatedAt  time.Time  `json:"updated_at"`
