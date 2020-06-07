@@ -1,16 +1,12 @@
 package migrations
 
 import (
-	"go-lms-of-pupilfirst/cmd/models/user"
-	"go-lms-of-pupilfirst/pkg/database"
-	"log"
+	"go-lms-of-pupilfirst/cmd/models"
+
+	"github.com/jinzhu/gorm"
 )
 
 // Migrate migrates gorm models
-func Migrate() {
-	db, err := database.Handler().Prepare()
-	if err != nil {
-		log.Fatalf("Unable to migrate, %+v", err)
-	}
-	db.AutoMigrate(&user.User{})
+func Migrate(db *gorm.DB) {
+	db.AutoMigrate(&models.User{})
 }
