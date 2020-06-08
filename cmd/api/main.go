@@ -70,7 +70,7 @@ func main() {
 	migrations.Migrate(db)
 
 	app := gin.Default()
-	handlers.ApplyRoutes(app, authenticator)
+	handlers.ApplyRoutes(app, authenticator, db)
 	app.Use(database.InjectDB(db))
 	app.Run(configs.CFG.Server.Host)
 }
