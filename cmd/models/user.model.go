@@ -1,9 +1,7 @@
 package models
 
 import (
-	"go-lms-of-pupilfirst/pkg/database"
 	"go-lms-of-pupilfirst/pkg/utils"
-	"net/http"
 	"time"
 
 	"github.com/pkg/errors"
@@ -82,11 +80,11 @@ func (u *User) SetArchivedAt(t *time.Time) {
 	u.ArchivedAt = t
 }
 
-// List defines array of user objects
-type List []*User
+// UserList defines array of user objects
+type UserList []*User
 
 // TableName gorm standard table name
-func (u *List) TableName() string {
+func (u *UserList) TableName() string {
 	return userTableName
 }
 
@@ -94,50 +92,42 @@ func (u *List) TableName() string {
 CRUD functions
 */
 
+// Create creates a new user record
 func (u *User) Create() error {
-	err := database.Handler().Insert(u)
-	if err != nil {
-		errs := utils.GenerateError(map[string][]string{
-			"unknown": []string{err.Error()}}, http.StatusBadRequest, ErrUnableToCreateUser.Error())
-		return errs
+	possible := handler.NewRecord(u)
+	if possible {
+		if err := handler.Create(u).Error; err != nil {
+			return err
+		}
 	}
+
 	return nil
 }
 
 // FetchByID fetches User by id
 func (u *User) FetchByID() error {
-	err := database.Handler().One(u)
+	err := handler.First(u).Error
 	if err != nil {
-		errs := utils.GenerateError(map[string][]string{
-			"user_id": []string{err.Error()}}, http.StatusNotFound, ErrUnableToFetchUser.Error())
-		return errs
+		return err
 	}
+
 	return nil
 }
 
 // FetchAll fetchs all Users
-func (query *User) FetchAll(l *List) error {
-	err := database.Handler().List(l, query)
-	if err != nil {
-		errs := utils.GenerateError(map[string][]string{"Unknown": []string{err.Error()}}, http.StatusNotFound, ErrUnableToFetchUserList.Error())
-		return errs
-	}
-	return nil
+func (u *User) FetchAll(ul *UserList) error {
+	err := handler.Find(ul).Error
+	return err
+}
+
+// UpdateOne updates a given user
+func (u *User) UpdateOne() error {
+	err := handler.Save(u).Error
+	return err
 }
 
 // Delete deletes user by id
-func (query *User) Delete() error {
-	// check if user exists
-	if err := query.FetchByID(); err != nil {
-		(err.(*utils.Error)).Message = ErrUnableToFetchUser.Error()
-		return err
-	}
-	err := database.Handler().Remove(query)
-	if err != nil {
-		errs := utils.GenerateError(map[string][]string{
-			"unknown": []string{err.Error()}}, http.StatusBadRequest, ErrUnableToDeleteUser.Error())
-		return errs
-	}
-
-	return nil
+func (u *User) Delete() error {
+	err := handler.Delete(u).Error
+	return err
 }
