@@ -35,7 +35,7 @@ func (ctrl *UserController) SignUp(ctx *gin.Context) {
 	// get values
 	// build into struct
 
-	var signupBody reqres.UserCreateRequest
+	var signupBody UserCreateRequest
 	ctx.BindJSON(&signupBody)
 	usr, err := signupBody.ToUser()
 	if err != nil {
