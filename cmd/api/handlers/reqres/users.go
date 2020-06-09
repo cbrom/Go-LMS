@@ -1,12 +1,9 @@
 package reqres
 
 import (
-	"net/http"
 	"time"
 
 	"go-lms-of-pupilfirst/cmd/models"
-	"go-lms-of-pupilfirst/pkg/database"
-	"go-lms-of-pupilfirst/pkg/utils"
 
 	"github.com/pborman/uuid"
 	"github.com/pkg/errors"
@@ -61,30 +58,4 @@ type UserInfoUpdateRequest struct {
 	About     string `gorm:"type:text" json:"about" validate:"omitempty"`
 
 	TimeZone *time.Time `json:"timezone" validation:"omitempty"`
-}
-
-// UpdateInfo updates User by given id
-func UpdateInfo(u *models.User, query *UserInfoUpdateRequest) error {
-
-	// check if user exists
-	user := &models.User{
-		Name:      query.Name,
-		Phone:     query.Phone,
-		Title:     query.Title,
-		KeySkills: query.KeySkills,
-		About:     query.About,
-		TimeZone:  query.TimeZone,
-	}
-	user.SetID(query.ID)
-	if err := user.FetchByID(); err != nil {
-		(err.(*utils.Error)).Message = models.ErrUnableToFetchUser.Error()
-		return err
-	}
-	err := database.Handler().Update(u, user)
-	if err != nil {
-		errs := utils.GenerateError(map[string][]string{
-			"unknown": []string{err.Error()}}, http.StatusBadRequest, models.ErrUnableToUpdateUser.Error())
-		return errs
-	}
-	return nil
 }
