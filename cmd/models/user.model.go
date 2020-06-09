@@ -59,9 +59,9 @@ func (u *User) SetUpdatedAt(t time.Time) {
 	u.UpdatedAt = t
 }
 
-// SetArchivedAt sets field DeletedAt
-func (u *User) SetArchivedAt(t *time.Time) {
-	u.ArchivedAt = t
+// SetDeletedAt sets field DeletedAt
+func (u *User) SetDeletedAt(t *time.Time) {
+	u.DeletedAt = t
 }
 
 // UserList defines array of user objects
