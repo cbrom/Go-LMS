@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"go-lms-of-pupilfirst/cmd/api/handlers/reqres"
 	"go-lms-of-pupilfirst/cmd/models"
 	"go-lms-of-pupilfirst/pkg/auth"
 	"log"
