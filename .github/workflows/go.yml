@@ -2,9 +2,9 @@ name: Go
 
 on:
   push:
-    branches: [ cbrom ]
+    branches: [ dev ]
   pull_request:
-    branches: [ cbrom ]
+    branches: [ dev ]
 
 jobs:
 
