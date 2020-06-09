@@ -3,8 +3,6 @@ package models
 import (
 	"go-lms-of-pupilfirst/pkg/utils"
 	"time"
-
-	"github.com/pkg/errors"
 )
 
 const (
@@ -12,40 +10,26 @@ const (
 	userTableName = "users"
 )
 
-var (
-	// ErrAuthenticationFailure auth failure
-	ErrAuthenticationFailure = errors.New("Authentication failed")
-	ErrorNotFound            = errors.New("Entity not found")
-	ErrForbidden             = errors.New("Attempted action is not allowed")
-	ErrUnableToCreateUser    = errors.New("Unable to create User")
-	ErrUnableToFetchUser     = errors.New("Unable to fetch user")
-	ErrUnableToFetchUserList = errors.New("Unable to fetch user list")
-	ErrUnableToUpdateUser    = errors.New("Unable to update user")
-	ErrUnableToDeleteUser    = errors.New("Unable to delete user")
-
-	// ErrResetExpired occurs when the reset hash exceeds the expiration
-	ErrResetExpired = errors.New("Reset expired")
-)
-
+// User struct for users table
 type User struct {
 	utils.Base
-	Email                  string     `gorm:"type:varchar(100);unique_index" json:"email" validate:"required,unique,email"`
-	PasswordSalt           string     `json:"-"`
-	PasswordHash           []byte     `json:"-"`
-	Role                   int        `json:"role"`
-	SiginInCount           int        `json:"sign_in_count" validate:"omitempty"`
-	CurrentSignInAt        *time.Time `json:"current_sign_in_at" validate:"omitempty"`
-	LastSignInAt           *time.Time `json:"last_sign_in_at" validate:"omitempty"`
-	CurrentSignInIP        string     `json:"-" validate:"omitempty,ip"`
-	LastSignInIP           string     `json:"-" validate:"omitempty,ip"`
-	RememberToken          string     `json:"remember_token" validate:"omitempty"`
-	ConfirmedAt            *time.Time `json:"confirmed_at" validate:"omitempty"`
-	ConfirmationMailSentAt *time.Time `json:"confirmation_mail_sent_at" validate:"omitempty"`
-	Name                   string     `json:"name" validate:"min=3,max=10,omitempty"`
-	Phone                  string     `json:"phone" validate:"omitempty"`
-	Title                  string     `json:"title" validate:"omitempty"`
-	KeySkills              string     `json:"key_skills" validate:"omitempty"`
-	About                  string     `gorm:"type:text" json:"about" validate:"omitempty"`
+	Email                  string `gorm:"type:varchar(100);unique_index" `
+	PasswordSalt           string
+	PasswordHash           []byte
+	Role                   int
+	SiginInCount           int
+	CurrentSignInAt        *time.Time
+	LastSignInAt           *time.Time
+	CurrentSignInIP        string
+	LastSignInIP           string
+	RememberToken          string
+	ConfirmedAt            *time.Time
+	ConfirmationMailSentAt *time.Time
+	Name                   string
+	Phone                  string
+	Title                  string
+	KeySkills              string
+	About                  string `gorm:"type:text" json:"about" validate:"omitempty"`
 
 	TimeZone *time.Time `json:"timezone" validation:"omitempty"`
 }
