@@ -72,20 +72,21 @@ func ApplyResolvers(r *gin.Engine, db *gorm.DB, auth *auth.Authenticator) {
 		},
 	)
 
-	r.POST("/graphql", func(c *gin.Context) {
+	r.POST("/graphql", middlewares.JWTAuthMiddleware(authenticator), func(ctx *gin.Context) {
 		var query struct {
 			Query string
 		}
-		c.BindJSON(&query)
-		result := executeQuery(query.Query, schema)
-		c.JSON(200, result)
-	}, middlewares.JWTAuthMiddleware(authenticator))
+		ctx.BindJSON(&query)
+		result := executeQuery(query.Query, schema, ctx)
+		ctx.JSON(200, result)
+	})
 }
 
-func executeQuery(query string, schema graphql.Schema) *graphql.Result {
+func executeQuery(query string, schema graphql.Schema, ctx *gin.Context) *graphql.Result {
 	result := graphql.Do(graphql.Params{
 		Schema:        schema,
 		RequestString: query,
+		Context:       ctx,
 	})
 	if len(result.Errors) > 0 {
 		fmt.Printf("wrong result, unexpected errors: %+v", result.Errors)
