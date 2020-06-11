@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"context"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -29,10 +28,9 @@ func JWTAuthMiddleware(authenticator *auth.Authenticator) gin.HandlerFunc {
 		}
 
 		claims, _ := authenticator.ParseClaims(tokenString)
-		ctx.Request = ctx.Request.WithContext(context.WithValue(ctx.Request.Context(), tokenString, claims))
 
-		// ctx.Set("claims", claims)
-		// ctx.Set("auth_key", auth.Key)
+		ctx.Set("claims", claims)
+		ctx.Set("auth_key", auth.Key)
 		ctx.Next()
 	}
 }
