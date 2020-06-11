@@ -6,6 +6,7 @@ import (
 	"go-lms-of-pupilfirst/cmd/models"
 
 	"go-lms-of-pupilfirst/pkg/auth"
+	"go-lms-of-pupilfirst/pkg/middlewares"
 
 	"github.com/gin-gonic/gin"
 	"github.com/graphql-go/graphql"
@@ -71,11 +72,14 @@ func ApplyResolvers(r *gin.Engine, db *gorm.DB, auth *auth.Authenticator) {
 		},
 	)
 
-	r.GET("/graphql", func(c *gin.Context) {
-		query, _ := c.GetQuery("query")
-		result := executeQuery(query, schema)
+	r.POST("/graphql", func(c *gin.Context) {
+		var query struct {
+			Query string
+		}
+		c.BindJSON(&query)
+		result := executeQuery(query.Query, schema)
 		c.JSON(200, result)
-	})
+	}, middlewares.JWTAuthMiddleware(authenticator))
 }
 
 func executeQuery(query string, schema graphql.Schema) *graphql.Result {
