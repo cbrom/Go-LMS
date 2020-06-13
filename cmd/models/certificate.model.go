@@ -9,6 +9,7 @@ type Certificate struct {
 	utils.Base
 	CourseID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
 	IssuerID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	UserID   string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
 	Message  string
 	Active   bool
 }
