@@ -9,8 +9,10 @@ import (
 
 // Base serves as a base model for other models
 type Base struct {
-	gorm.Model
-	ID string `sql:"type:uuid;primary_key;default:uuid_generate_v4()" validate:"omitempty,uuid,required"`
+	ID        string     `sql:"type:uuid;primary_key;default:uuid_generate_v4()" validate:"omitempty,uuid,required"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"update_at"`
+	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
 }
 
 // BeforeCreate generates a uuid into the id before saving the model

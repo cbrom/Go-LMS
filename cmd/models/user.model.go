@@ -98,6 +98,16 @@ func (u *User) FetchByID() error {
 	return nil
 }
 
+// FetchByEmail fetches User by email
+func (u *User) FetchByEmail() error {
+	err := handler.Where("email = ?", u.Email).First(&u).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // FetchAll fetchs all Users
 func (u *User) FetchAll(ul *UserList) error {
 	err := handler.Find(ul).Error
