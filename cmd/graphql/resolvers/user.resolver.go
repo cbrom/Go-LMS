@@ -17,16 +17,14 @@ import (
 
 // GetUser returns user object for a graphql
 func GetUser(p graphql.ResolveParams) (interface{}, error) {
-	idQuery, isOK := p.Args["id"].(string)
-	if isOK {
+	idQuery, ok := p.Args["id"].(string)
+	if ok {
 		usr := &models.User{}
 		usr.SetID(idQuery)
 		usr.FetchByID()
-		usr.Name = "Hello"
-		fmt.Printf("%+v", usr.ID)
 		return usr, nil
 	}
-	return nil, errors.New("User Not Found")
+	return nil, errors.New("User ID not Provided")
 }
 
 // GetTimeFromStamp changes timestamp string to  *time.Time
