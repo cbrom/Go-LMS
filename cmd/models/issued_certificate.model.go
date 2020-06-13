@@ -9,5 +9,5 @@ type IssuedCertificate struct {
 	utils.Base
 	CertificateID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
 	UserID        string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	SerialNumber  string `sql:"type:citext;"`
+	SerialNumber  string
 }
