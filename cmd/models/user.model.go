@@ -39,31 +39,6 @@ func (u *User) TableName() string {
 	return userTableName
 }
 
-// GetID returns Id of the user
-func (u *User) GetID() string {
-	return u.ID
-}
-
-// SetID sets Id of the user
-func (u *User) SetID(id string) {
-	u.ID = id
-}
-
-// SetCreatedAt sets field createdAt, should only be used in mongodb
-func (u *User) SetCreatedAt(t time.Time) {
-	u.CreatedAt = t
-}
-
-// SetUpdatedAt sets field UpdatedAt
-func (u *User) SetUpdatedAt(t time.Time) {
-	u.UpdatedAt = t
-}
-
-// SetDeletedAt sets field DeletedAt
-func (u *User) SetDeletedAt(t *time.Time) {
-	u.DeletedAt = t
-}
-
 // UserList defines array of user objects
 type UserList []*User
 

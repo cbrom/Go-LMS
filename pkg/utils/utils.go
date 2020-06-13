@@ -21,6 +21,31 @@ func (base *Base) BeforeCreate(scope *gorm.Scope) error {
 	return scope.SetColumn("ID", uuid)
 }
 
+// GetID returns Id of the model
+func (base *Base) GetID() string {
+	return base.ID
+}
+
+// SetID sets Id of the model
+func (base *Base) SetID(id string) {
+	base.ID = id
+}
+
+// SetCreatedAt sets field createdAt, should only be used in mongodb
+func (base *Base) SetCreatedAt(t time.Time) {
+	base.CreatedAt = t
+}
+
+// SetUpdatedAt sets field UpdatedAt
+func (base *Base) SetUpdatedAt(t time.Time) {
+	base.UpdatedAt = t
+}
+
+// SetDeletedAt sets field DeletedAt
+func (base *Base) SetDeletedAt(t *time.Time) {
+	base.DeletedAt = t
+}
+
 // Error defines error type to be returned by handlers
 type Error struct {
 	Errors    map[string][]string
