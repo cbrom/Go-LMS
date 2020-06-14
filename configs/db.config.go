@@ -39,11 +39,12 @@ func LoadConfig() (*AppConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	if conf.Storage == (Storage{}) {
+	if conf.Storage.Host == "db" || conf.Storage == (Storage{}) {
 		err = godotenv.Load()
 		if err != nil {
 			return nil, err
 		}
+		
 		storage := Storage{
 			HandlerName: os.Getenv("STORAGE_HANDLERNAME"),
 			Host:        os.Getenv("STORAGE_HOST"),
@@ -53,6 +54,11 @@ func LoadConfig() (*AppConfig, error) {
 			Dbuser:      os.Getenv("STORAGE_DBUSER"),
 			Dbpassword:  os.Getenv("STORAGE_DBPASSWORD"),
 		}
+		// If running in docker-compose, we should check if STORAGE_HOST was set.
+		if conf.Storage.Host == "db" {
+			storage.Host = conf.Storage.Host
+		}
+
 		tls := TLS{
 			Key:   os.Getenv("TLS_KEY"),
 			Crt:   os.Getenv("TLS_CRT"),

@@ -10,4 +10,4 @@ RUN go mod download
 
 RUN go get github.com/githubnemo/CompileDaemon
 
-ENTRYPOINT CompileDaemon --build="go build cmd/api/main.go" --command=./main
+ENTRYPOINT export STORAGE_HOST=db && CompileDaemon --build="go build cmd/api/main.go" --command="./main"
