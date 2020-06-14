@@ -19,7 +19,6 @@ services:
             - pupilgo
     backend:
         build: .
-        command: go run cmd/api/main.go
         ports:
             - "8000:3000" 
         restart: unless-stopped
