@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+    db: 
+        build:
+            context: ./postgres
+        ports:
+            - "5432"
+        environment:
+            - POSTGRES_DB=go_lms
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=1772
+        networks:
+            - pupilgo
+    redis:
+        image: "redis:alpine"
+        restart: unless-stopped
+        networks:
+            - pupilgo
+    backend:
+        build: .
+        command: go run cmd/api/main.go
+        ports:
+            - "8000:3000" 
+        restart: unless-stopped
+        depends_on: 
+            - db
+            - redis
+        volumes:
+            - ./:/Go-LMS
+        environment:
+            REDIS_URL: redis:6379     
+        networks:
+            - pupilgo
+    frontend:
+        build: ./user-interface
+        command: npm run start
+        ports: 
+            - "3000:3000"
+        depends_on:
+            - backend
+        volumes:
+            - /user-interface/node_modules
+            - ./user-interface:/user-interface
+        networks:
+            - pupilgo
+        stdin_open: true
+
+networks:
+    pupilgo:
