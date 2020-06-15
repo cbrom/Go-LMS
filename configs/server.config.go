@@ -25,7 +25,7 @@ var CFG struct {
 		MaxmemoryPolicy string        `envconfig:"MAXMEMORY_POLICY"`
 	}
 	DB struct {
-		Host       string `default:"127.0.0.1:5433" envconfig:"DB_HOST"`
+		Host       string `default:"127.0.0.1:5433" envconfig:"STORAGE_HOST"`
 		User       string `default:"postgres" envconfig:"DB_HOST"`
 		Pass       string `default:"postgres" envconfig:"DB_PASS" json:"-"`
 		Database   string `default:"shared" envconfig:"DATABASE"`

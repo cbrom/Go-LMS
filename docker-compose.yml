@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+    db: 
+        build:
+            context: ./postgres
+            args:
+                - POSTGRES_DB=${STORAGE_DATABASE}
+                - POSTGRES_USER=${STORAGE_DBUSER}
+                - POSTGRES_PASSWORD=${STORAGE_DBPASSWORD}
+        ports:
+            - "127.0.0.1:5432:5432"
+        environment:
+            - POSTGRES_DB=${STORAGE_DATABASE}
+            - POSTGRES_USER=${STORAGE_DBUSER}
+            - POSTGRES_PASSWORD=${STORAGE_DBPASSWORD}
+        networks:
+            - pupilgo
+    redis:
+        image: "redis:alpine"
+        restart: unless-stopped
+        networks:
+            - pupilgo
+    backend:
+        build: .
+        ports:
+            - "8000:3000" 
+        restart: unless-stopped
+        depends_on: 
+            - db
+            - redis
+        volumes:
+            - ./:/Go-LMS
+        environment:
+            REDIS_URL: redis:6379   
+        networks:
+            - pupilgo
+    frontend:
+        build: ./user-interface
+        command: npm run start
+        ports: 
+            - "3000:3000"
+        depends_on:
+            - backend
+        volumes:
+            - /user-interface/node_modules
+            - ./user-interface:/user-interface
+        networks:
+            - pupilgo
+        stdin_open: true
+
+networks:
+    pupilgo:
