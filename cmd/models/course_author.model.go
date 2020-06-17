@@ -11,12 +11,15 @@ var (
 // CourseAuthor defines a model for course authors
 type CourseAuthor struct {
 	utils.Base
-	UserID   string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	CourseID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	UserID       string          `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	CourseID     string          `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	Course       *Course         `gorm:"foreignkey:CourseID"`
+	User         *User           `gorm:"foreignkey:UserID"`
+	Certificates CertificateList `gorm:"foreignkey:Issuer"`
 }
 
 // TableName gorm standard table name
-func (u *CourseAuthor) TableName() string {
+func (c *CourseAuthor) TableName() string {
 	return courseAuthorTableName
 }
 
@@ -24,7 +27,7 @@ func (u *CourseAuthor) TableName() string {
 type CourseAuthorList []*CourseAuthor
 
 // TableName gorm standard table name
-func (u *CourseAuthorList) TableName() string {
+func (c *CourseAuthorList) TableName() string {
 	return courseAuthorTableName
 }
 
@@ -33,10 +36,10 @@ CRUD functions
 */
 
 // Create creates a new course author record
-func (u *CourseAuthor) Create() error {
-	possible := handler.NewRecord(u)
+func (c *CourseAuthor) Create() error {
+	possible := handler.NewRecord(c)
 	if possible {
-		if err := handler.Create(u).Error; err != nil {
+		if err := handler.Create(c).Error; err != nil {
 			return err
 		}
 	}
@@ -45,8 +48,8 @@ func (u *CourseAuthor) Create() error {
 }
 
 // FetchByID fetches CourseAuthor by id
-func (u *CourseAuthor) FetchByID() error {
-	err := handler.First(u).Error
+func (c *CourseAuthor) FetchByID() error {
+	err := handler.First(c).Error
 	if err != nil {
 		return err
 	}
@@ -55,19 +58,19 @@ func (u *CourseAuthor) FetchByID() error {
 }
 
 // FetchAll fetchs all CourseAuthors
-func (u *CourseAuthor) FetchAll(ul *CourseAuthorList) error {
-	err := handler.Find(ul).Error
+func (c *CourseAuthor) FetchAll(cl *CourseAuthorList) error {
+	err := handler.Find(cl).Error
 	return err
 }
 
 // UpdateOne updates a given course author
-func (u *CourseAuthor) UpdateOne() error {
-	err := handler.Save(u).Error
+func (c *CourseAuthor) UpdateOne() error {
+	err := handler.Save(c).Error
 	return err
 }
 
 // Delete deletes course author by id
-func (u *CourseAuthor) Delete() error {
-	err := handler.Delete(u).Error
+func (c *CourseAuthor) Delete() error {
+	err := handler.Delete(c).Error
 	return err
 }

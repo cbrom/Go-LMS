@@ -16,11 +16,12 @@ type ContentBlock struct {
 	BlockType       string `gorm:"type:varchar(100)"`
 	Content         postgres.Jsonb
 	SortIndex       int
-	TargetVersionID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	TargetVersionID string         `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	TargetVersion   *TargetVersion `gorm:"foreignkey:TargetVersionID"`
 }
 
 // TableName gorm standard table name
-func (u *ContentBlock) TableName() string {
+func (c *ContentBlock) TableName() string {
 	return contentBlockTableName
 }
 
@@ -28,7 +29,7 @@ func (u *ContentBlock) TableName() string {
 type ContentBlockList []*ContentBlock
 
 // TableName gorm standard table name
-func (u *ContentBlockList) TableName() string {
+func (c *ContentBlockList) TableName() string {
 	return contentBlockTableName
 }
 
@@ -37,10 +38,10 @@ CRUD functions
 */
 
 // Create creates a new content block record
-func (u *ContentBlock) Create() error {
-	possible := handler.NewRecord(u)
+func (c *ContentBlock) Create() error {
+	possible := handler.NewRecord(c)
 	if possible {
-		if err := handler.Create(u).Error; err != nil {
+		if err := handler.Create(c).Error; err != nil {
 			return err
 		}
 	}
@@ -49,8 +50,8 @@ func (u *ContentBlock) Create() error {
 }
 
 // FetchByID fetches ContentBlock by id
-func (u *ContentBlock) FetchByID() error {
-	err := handler.First(u).Error
+func (c *ContentBlock) FetchByID() error {
+	err := handler.First(c).Error
 	if err != nil {
 		return err
 	}
@@ -59,19 +60,19 @@ func (u *ContentBlock) FetchByID() error {
 }
 
 // FetchAll fetchs all ContentBlocks
-func (u *ContentBlock) FetchAll(ul *ContentBlockList) error {
-	err := handler.Find(ul).Error
+func (c *ContentBlock) FetchAll(cl *ContentBlockList) error {
+	err := handler.Find(cl).Error
 	return err
 }
 
 // UpdateOne updates a given content block
-func (u *ContentBlock) UpdateOne() error {
-	err := handler.Save(u).Error
+func (c *ContentBlock) UpdateOne() error {
+	err := handler.Save(c).Error
 	return err
 }
 
 // Delete deletes content block by id
-func (u *ContentBlock) Delete() error {
-	err := handler.Delete(u).Error
+func (c *ContentBlock) Delete() error {
+	err := handler.Delete(c).Error
 	return err
 }

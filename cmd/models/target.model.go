@@ -26,10 +26,13 @@ type Target struct {
 	Resubmittable          bool
 	CheckList              postgres.Jsonb
 	ReviewChecklist        postgres.Jsonb
+	TargetGroup            *TargetGroup      `gorm:"foreignkey:TargetGroupID"`
+	TargetVersions         TargetVersionList `gorm:"foreignkey:TargetID"`
+	Quizzes                QuizList          `gorm:"foreignkey:TargetID"`
 }
 
 // TableName gorm standard table name
-func (u *Target) TableName() string {
+func (t *Target) TableName() string {
 	return targetTableName
 }
 
@@ -37,7 +40,7 @@ func (u *Target) TableName() string {
 type TargetList []*Target
 
 // TableName gorm standard table name
-func (u *TargetList) TableName() string {
+func (t *TargetList) TableName() string {
 	return targetTableName
 }
 
@@ -46,10 +49,10 @@ CRUD functions
 */
 
 // Create creates a new target record
-func (u *Target) Create() error {
-	possible := handler.NewRecord(u)
+func (t *Target) Create() error {
+	possible := handler.NewRecord(t)
 	if possible {
-		if err := handler.Create(u).Error; err != nil {
+		if err := handler.Create(t).Error; err != nil {
 			return err
 		}
 	}
@@ -58,8 +61,8 @@ func (u *Target) Create() error {
 }
 
 // FetchByID fetches Target by id
-func (u *Target) FetchByID() error {
-	err := handler.First(u).Error
+func (t *Target) FetchByID() error {
+	err := handler.First(t).Error
 	if err != nil {
 		return err
 	}
@@ -68,19 +71,19 @@ func (u *Target) FetchByID() error {
 }
 
 // FetchAll fetchs all Targets
-func (u *Target) FetchAll(ul *TargetList) error {
-	err := handler.Find(ul).Error
+func (t *Target) FetchAll(tl *TargetList) error {
+	err := handler.Find(tl).Error
 	return err
 }
 
 // UpdateOne updates a given target
-func (u *Target) UpdateOne() error {
-	err := handler.Save(u).Error
+func (t *Target) UpdateOne() error {
+	err := handler.Save(t).Error
 	return err
 }
 
 // Delete deletes target by id
-func (u *Target) Delete() error {
-	err := handler.Delete(u).Error
+func (t *Target) Delete() error {
+	err := handler.Delete(t).Error
 	return err
 }

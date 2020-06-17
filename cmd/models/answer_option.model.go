@@ -11,21 +11,23 @@ var (
 // AnswerOption is a model for options of Answers for a target
 type AnswerOption struct {
 	utils.Base
-	QuizID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	Value  string
-	Hint   string `gorm:"type:varchar(255)"`
+	QuizQuestionID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	Value          string
+	Hint           string `gorm:"type:varchar(255)"`
+
+	QuizQuestion *QuizQuestion `gorm:"foreignkey:QuizQuestionID"`
 }
 
 // TableName gorm standard table name
-func (u *AnswerOption) TableName() string {
+func (a *AnswerOption) TableName() string {
 	return answerOptionTableName
 }
 
-// AnswerOptionList defines array of user objects
+// AnswerOptionList defines array of answer options objects
 type AnswerOptionList []*AnswerOption
 
 // TableName gorm standard table name
-func (u *AnswerOptionList) TableName() string {
+func (a *AnswerOptionList) TableName() string {
 	return answerOptionTableName
 }
 
@@ -33,11 +35,11 @@ func (u *AnswerOptionList) TableName() string {
 CRUD functions
 */
 
-// Create creates a new user record
-func (u *AnswerOption) Create() error {
-	possible := handler.NewRecord(u)
+// Create creates a new answer options record
+func (a *AnswerOption) Create() error {
+	possible := handler.NewRecord(a)
 	if possible {
-		if err := handler.Create(u).Error; err != nil {
+		if err := handler.Create(a).Error; err != nil {
 			return err
 		}
 	}
@@ -46,8 +48,8 @@ func (u *AnswerOption) Create() error {
 }
 
 // FetchByID fetches AnswerOption by id
-func (u *AnswerOption) FetchByID() error {
-	err := handler.First(u).Error
+func (a *AnswerOption) FetchByID() error {
+	err := handler.First(a).Error
 	if err != nil {
 		return err
 	}
@@ -56,19 +58,19 @@ func (u *AnswerOption) FetchByID() error {
 }
 
 // FetchAll fetchs all AnswerOptions
-func (u *AnswerOption) FetchAll(ul *AnswerOptionList) error {
-	err := handler.Find(ul).Error
+func (a *AnswerOption) FetchAll(al *AnswerOptionList) error {
+	err := handler.Find(al).Error
 	return err
 }
 
-// UpdateOne updates a given user
-func (u *AnswerOption) UpdateOne() error {
-	err := handler.Save(u).Error
+// UpdateOne updates a given answer options
+func (a *AnswerOption) UpdateOne() error {
+	err := handler.Save(a).Error
 	return err
 }
 
-// Delete deletes user by id
-func (u *AnswerOption) Delete() error {
-	err := handler.Delete(u).Error
+// Delete deletes answer options by id
+func (a *AnswerOption) Delete() error {
+	err := handler.Delete(a).Error
 	return err
 }

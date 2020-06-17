@@ -20,10 +20,14 @@ type Certificate struct {
 	FontSize      int
 	Message       string
 	Active        bool
+
+	Course             *Course               `gorm:"foreignkey:CourseID"`
+	Issuer             *CourseAuthor         `gorm:"foreignkey:IssuerID"`
+	IssuedCertificates IssuedCertificateList `gorm:"foreignkey:CertificateID"`
 }
 
 // TableName gorm standard table name
-func (u *Certificate) TableName() string {
+func (c *Certificate) TableName() string {
 	return certificateTableName
 }
 
@@ -31,7 +35,7 @@ func (u *Certificate) TableName() string {
 type CertificateList []*Certificate
 
 // TableName gorm standard table name
-func (u *CertificateList) TableName() string {
+func (c *CertificateList) TableName() string {
 	return certificateTableName
 }
 
@@ -40,10 +44,10 @@ CRUD functions
 */
 
 // Create creates a new certificate record
-func (u *Certificate) Create() error {
-	possible := handler.NewRecord(u)
+func (c *Certificate) Create() error {
+	possible := handler.NewRecord(c)
 	if possible {
-		if err := handler.Create(u).Error; err != nil {
+		if err := handler.Create(c).Error; err != nil {
 			return err
 		}
 	}
@@ -52,8 +56,8 @@ func (u *Certificate) Create() error {
 }
 
 // FetchByID fetches Certificate by id
-func (u *Certificate) FetchByID() error {
-	err := handler.First(u).Error
+func (c *Certificate) FetchByID() error {
+	err := handler.First(c).Error
 	if err != nil {
 		return err
 	}
@@ -62,19 +66,19 @@ func (u *Certificate) FetchByID() error {
 }
 
 // FetchAll fetchs all Certificates
-func (u *Certificate) FetchAll(ul *CertificateList) error {
-	err := handler.Find(ul).Error
+func (c *Certificate) FetchAll(cl *CertificateList) error {
+	err := handler.Find(cl).Error
 	return err
 }
 
 // UpdateOne updates a given certificate
-func (u *Certificate) UpdateOne() error {
-	err := handler.Save(u).Error
+func (c *Certificate) UpdateOne() error {
+	err := handler.Save(c).Error
 	return err
 }
 
 // Delete deletes certificate by id
-func (u *Certificate) Delete() error {
-	err := handler.Delete(u).Error
+func (c *Certificate) Delete() error {
+	err := handler.Delete(c).Error
 	return err
 }

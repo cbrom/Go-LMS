@@ -21,10 +21,15 @@ type Course struct {
 	About               string `gorm:"type:varchar(100)"`
 	ProgressionBehavior string `gorm:"type:varchar(100)"`
 	ProgressionLimit    int
+	Certificates        CertificateList        `gorm:"foreignkey:CourceID"`
+	Authors             CourseAuthorList       `gorm:"foreignkey:CourseID"`
+	EvaluationCriterias EvaluationCriteriaList `gorm:"foreignkey:CourseID"`
+	Levels              LevelList              `gorm:"foreignkey:CourseID"`
+	Students            StudentCourseList      `gorm:"foreignkey:CourseID"`
 }
 
 // TableName gorm standard table name
-func (u *Course) TableName() string {
+func (c *Course) TableName() string {
 	return courseTableName
 }
 
@@ -32,7 +37,7 @@ func (u *Course) TableName() string {
 type CourseList []*Course
 
 // TableName gorm standard table name
-func (u *CourseList) TableName() string {
+func (c *CourseList) TableName() string {
 	return courseTableName
 }
 
@@ -41,10 +46,10 @@ CRUD functions
 */
 
 // Create creates a new course record
-func (u *Course) Create() error {
-	possible := handler.NewRecord(u)
+func (c *Course) Create() error {
+	possible := handler.NewRecord(c)
 	if possible {
-		if err := handler.Create(u).Error; err != nil {
+		if err := handler.Create(c).Error; err != nil {
 			return err
 		}
 	}
@@ -53,8 +58,8 @@ func (u *Course) Create() error {
 }
 
 // FetchByID fetches Course by id
-func (u *Course) FetchByID() error {
-	err := handler.First(u).Error
+func (c *Course) FetchByID() error {
+	err := handler.First(c).Error
 	if err != nil {
 		return err
 	}
@@ -63,19 +68,19 @@ func (u *Course) FetchByID() error {
 }
 
 // FetchAll fetchs all Courses
-func (u *Course) FetchAll(ul *CourseList) error {
-	err := handler.Find(ul).Error
+func (c *Course) FetchAll(cl *CourseList) error {
+	err := handler.Find(cl).Error
 	return err
 }
 
 // UpdateOne updates a given course
-func (u *Course) UpdateOne() error {
-	err := handler.Save(u).Error
+func (c *Course) UpdateOne() error {
+	err := handler.Save(c).Error
 	return err
 }
 
 // Delete deletes course by id
-func (u *Course) Delete() error {
-	err := handler.Delete(u).Error
+func (c *Course) Delete() error {
+	err := handler.Delete(c).Error
 	return err
 }

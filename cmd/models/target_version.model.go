@@ -11,12 +11,14 @@ var (
 // TargetVersion defines a model for a specific version of a target
 type TargetVersion struct {
 	utils.Base
-	TargetID    string `sql:"type:uuid" validate:"omitempty,required,uuid"`
-	VersionName string `gorm:"type:varchar(100)"`
+	TargetID      string           `sql:"type:uuid" validate:"omitempty,required,uuid"`
+	VersionName   string           `gorm:"type:varchar(100)"`
+	Target        *Target          `gorm:"foreignkey:TargetID"`
+	ContentBlocks ContentBlockList `gorm:"foreignkey:TargetVersion"`
 }
 
 // TableName gorm standard table name
-func (u *TargetVersion) TableName() string {
+func (t *TargetVersion) TableName() string {
 	return targetVersionTableName
 }
 
@@ -24,7 +26,7 @@ func (u *TargetVersion) TableName() string {
 type TargetVersionList []*TargetVersion
 
 // TableName gorm standard table name
-func (u *TargetVersionList) TableName() string {
+func (t *TargetVersionList) TableName() string {
 	return targetVersionTableName
 }
 
@@ -33,10 +35,10 @@ CRUD functions
 */
 
 // Create creates a new target version record
-func (u *TargetVersion) Create() error {
-	possible := handler.NewRecord(u)
+func (t *TargetVersion) Create() error {
+	possible := handler.NewRecord(t)
 	if possible {
-		if err := handler.Create(u).Error; err != nil {
+		if err := handler.Create(t).Error; err != nil {
 			return err
 		}
 	}
@@ -45,8 +47,8 @@ func (u *TargetVersion) Create() error {
 }
 
 // FetchByID fetches TargetVersion by id
-func (u *TargetVersion) FetchByID() error {
-	err := handler.First(u).Error
+func (t *TargetVersion) FetchByID() error {
+	err := handler.First(t).Error
 	if err != nil {
 		return err
 	}
@@ -55,19 +57,19 @@ func (u *TargetVersion) FetchByID() error {
 }
 
 // FetchAll fetchs all TargetVersions
-func (u *TargetVersion) FetchAll(ul *TargetVersionList) error {
-	err := handler.Find(ul).Error
+func (t *TargetVersion) FetchAll(tl *TargetVersionList) error {
+	err := handler.Find(tl).Error
 	return err
 }
 
 // UpdateOne updates a given target version
-func (u *TargetVersion) UpdateOne() error {
-	err := handler.Save(u).Error
+func (t *TargetVersion) UpdateOne() error {
+	err := handler.Save(t).Error
 	return err
 }
 
 // Delete deletes target version by id
-func (u *TargetVersion) Delete() error {
-	err := handler.Delete(u).Error
+func (t *TargetVersion) Delete() error {
+	err := handler.Delete(t).Error
 	return err
 }

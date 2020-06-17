@@ -11,12 +11,14 @@ var (
 // Quiz defines a model for target quizes
 type Quiz struct {
 	utils.Base
-	Title    string
-	TargetID string `sql:"type:uuid" validate:"required,omitempty,uuid"`
+	Title         string
+	TargetID      string           `sql:"type:uuid" validate:"required,omitempty,uuid"`
+	Target        *Target          `gorm:"foreignkey:TargetID"`
+	QuizQuestions QuizQuestionList `gorm:"foreignkey:QuizID"`
 }
 
 // TableName gorm standard table name
-func (u *Quiz) TableName() string {
+func (q *Quiz) TableName() string {
 	return quizTableName
 }
 
@@ -24,7 +26,7 @@ func (u *Quiz) TableName() string {
 type QuizList []*Quiz
 
 // TableName gorm standard table name
-func (u *QuizList) TableName() string {
+func (q *QuizList) TableName() string {
 	return quizTableName
 }
 
@@ -33,10 +35,10 @@ CRUD functions
 */
 
 // Create creates a new quiz record
-func (u *Quiz) Create() error {
-	possible := handler.NewRecord(u)
+func (q *Quiz) Create() error {
+	possible := handler.NewRecord(q)
 	if possible {
-		if err := handler.Create(u).Error; err != nil {
+		if err := handler.Create(q).Error; err != nil {
 			return err
 		}
 	}
@@ -45,8 +47,8 @@ func (u *Quiz) Create() error {
 }
 
 // FetchByID fetches Quiz by id
-func (u *Quiz) FetchByID() error {
-	err := handler.First(u).Error
+func (q *Quiz) FetchByID() error {
+	err := handler.First(q).Error
 	if err != nil {
 		return err
 	}
@@ -55,19 +57,19 @@ func (u *Quiz) FetchByID() error {
 }
 
 // FetchAll fetchs all Quizs
-func (u *Quiz) FetchAll(ul *QuizList) error {
-	err := handler.Find(ul).Error
+func (q *Quiz) FetchAll(ql *QuizList) error {
+	err := handler.Find(ql).Error
 	return err
 }
 
 // UpdateOne updates a given quiz
-func (u *Quiz) UpdateOne() error {
-	err := handler.Save(u).Error
+func (q *Quiz) UpdateOne() error {
+	err := handler.Save(q).Error
 	return err
 }
 
 // Delete deletes quiz by id
-func (u *Quiz) Delete() error {
-	err := handler.Delete(u).Error
+func (q *Quiz) Delete() error {
+	err := handler.Delete(q).Error
 	return err
 }

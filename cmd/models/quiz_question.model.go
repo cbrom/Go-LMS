@@ -13,12 +13,15 @@ type QuizQuestion struct {
 	utils.Base
 	QuizID          string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
 	Question        string
-	Description     string `gorm:"type:varchar(100)"`
-	CorrectAnswerID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	Description     string           `gorm:"type:varchar(100)"`
+	CorrectAnswerID string           `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	Quiz            *Quiz            `gorm:"foreignkey:QuizID"`
+	Answer          *AnswerOption    `gorm:"foreignkey:CorrectAnswerID"`
+	Answers         AnswerOptionList `gorm:"foreign:QuizQuestionID"`
 }
 
 // TableName gorm standard table name
-func (u *QuizQuestion) TableName() string {
+func (i *QuizQuestion) TableName() string {
 	return quizQuestionTableName
 }
 
@@ -26,7 +29,7 @@ func (u *QuizQuestion) TableName() string {
 type QuizQuestionList []*QuizQuestion
 
 // TableName gorm standard table name
-func (u *QuizQuestionList) TableName() string {
+func (i *QuizQuestionList) TableName() string {
 	return quizQuestionTableName
 }
 
@@ -35,10 +38,10 @@ CRUD functions
 */
 
 // Create creates a new quiz question record
-func (u *QuizQuestion) Create() error {
-	possible := handler.NewRecord(u)
+func (i *QuizQuestion) Create() error {
+	possible := handler.NewRecord(i)
 	if possible {
-		if err := handler.Create(u).Error; err != nil {
+		if err := handler.Create(i).Error; err != nil {
 			return err
 		}
 	}
@@ -47,8 +50,8 @@ func (u *QuizQuestion) Create() error {
 }
 
 // FetchByID fetches QuizQuestion by id
-func (u *QuizQuestion) FetchByID() error {
-	err := handler.First(u).Error
+func (i *QuizQuestion) FetchByID() error {
+	err := handler.First(i).Error
 	if err != nil {
 		return err
 	}
@@ -57,19 +60,19 @@ func (u *QuizQuestion) FetchByID() error {
 }
 
 // FetchAll fetchs all QuizQuestions
-func (u *QuizQuestion) FetchAll(ul *QuizQuestionList) error {
-	err := handler.Find(ul).Error
+func (i *QuizQuestion) FetchAll(il *QuizQuestionList) error {
+	err := handler.Find(il).Error
 	return err
 }
 
 // UpdateOne updates a given quiz question
-func (u *QuizQuestion) UpdateOne() error {
-	err := handler.Save(u).Error
+func (i *QuizQuestion) UpdateOne() error {
+	err := handler.Save(i).Error
 	return err
 }
 
 // Delete deletes quiz question by id
-func (u *QuizQuestion) Delete() error {
-	err := handler.Delete(u).Error
+func (i *QuizQuestion) Delete() error {
+	err := handler.Delete(i).Error
 	return err
 }

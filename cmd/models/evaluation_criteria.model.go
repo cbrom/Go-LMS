@@ -18,10 +18,11 @@ type EvaluationCriteria struct {
 	MaxGrade    uint
 	PassGrade   uint
 	GradeLabels postgres.Jsonb
+	Course      *Course `gorm:"foreignkey:CourseID"`
 }
 
 // TableName gorm standard table name
-func (u *EvaluationCriteria) TableName() string {
+func (e *EvaluationCriteria) TableName() string {
 	return evaluationCriteriaTableName
 }
 
@@ -29,7 +30,7 @@ func (u *EvaluationCriteria) TableName() string {
 type EvaluationCriteriaList []*EvaluationCriteria
 
 // TableName gorm standard table name
-func (u *EvaluationCriteriaList) TableName() string {
+func (e *EvaluationCriteriaList) TableName() string {
 	return evaluationCriteriaTableName
 }
 
@@ -38,10 +39,10 @@ CRUD functions
 */
 
 // Create creates a new evaluation criteria record
-func (u *EvaluationCriteria) Create() error {
-	possible := handler.NewRecord(u)
+func (e *EvaluationCriteria) Create() error {
+	possible := handler.NewRecord(e)
 	if possible {
-		if err := handler.Create(u).Error; err != nil {
+		if err := handler.Create(e).Error; err != nil {
 			return err
 		}
 	}
@@ -50,8 +51,8 @@ func (u *EvaluationCriteria) Create() error {
 }
 
 // FetchByID fetches EvaluationCriteria by id
-func (u *EvaluationCriteria) FetchByID() error {
-	err := handler.First(u).Error
+func (e *EvaluationCriteria) FetchByID() error {
+	err := handler.First(e).Error
 	if err != nil {
 		return err
 	}
@@ -60,19 +61,19 @@ func (u *EvaluationCriteria) FetchByID() error {
 }
 
 // FetchAll fetchs all EvaluationCriterias
-func (u *EvaluationCriteria) FetchAll(ul *EvaluationCriteriaList) error {
-	err := handler.Find(ul).Error
+func (e *EvaluationCriteria) FetchAll(el *EvaluationCriteriaList) error {
+	err := handler.Find(el).Error
 	return err
 }
 
 // UpdateOne updates a given evaluation criteria
-func (u *EvaluationCriteria) UpdateOne() error {
-	err := handler.Save(u).Error
+func (e *EvaluationCriteria) UpdateOne() error {
+	err := handler.Save(e).Error
 	return err
 }
 
 // Delete deletes evaluation criteria by id
-func (u *EvaluationCriteria) Delete() error {
-	err := handler.Delete(u).Error
+func (e *EvaluationCriteria) Delete() error {
+	err := handler.Delete(e).Error
 	return err
 }

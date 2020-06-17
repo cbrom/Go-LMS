@@ -9,13 +9,16 @@ var (
 // QuizUserAnswer defines a model for questions in a quiz
 type QuizUserAnswer struct {
 	utils.Base
-	QuestionID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	AnswerID   string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	UserID     string `sql:"type:uuid" validate:"omitempty,uuid,required"`
+	QuestionID string        `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	AnswerID   string        `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	UserID     string        `sql:"type:uuid" validate:"omitempty,uuid,required"`
+	Question   *QuizQuestion `gorm:"foreignkey:QuestionID"`
+	Answer     *AnswerOption `gorm:"foreignkey:AnswerID"`
+	User       *User         `gorm:"foreignkey:UserID"`
 }
 
 // TableName gorm standard table name
-func (u *QuizUserAnswer) TableName() string {
+func (q *QuizUserAnswer) TableName() string {
 	return quizQuestionUserAnswerTableName
 }
 
@@ -23,7 +26,7 @@ func (u *QuizUserAnswer) TableName() string {
 type QuizUserAnswerList []*QuizUserAnswer
 
 // TableName gorm standard table name
-func (u *QuizUserAnswerList) TableName() string {
+func (q *QuizUserAnswerList) TableName() string {
 	return quizQuestionUserAnswerTableName
 }
 
@@ -32,10 +35,10 @@ CRUD functions
 */
 
 // Create creates a new quiz user answer record
-func (u *QuizUserAnswer) Create() error {
-	possible := handler.NewRecord(u)
+func (q *QuizUserAnswer) Create() error {
+	possible := handler.NewRecord(q)
 	if possible {
-		if err := handler.Create(u).Error; err != nil {
+		if err := handler.Create(q).Error; err != nil {
 			return err
 		}
 	}
@@ -44,8 +47,8 @@ func (u *QuizUserAnswer) Create() error {
 }
 
 // FetchByID fetches QuizUserAnswer by id
-func (u *QuizUserAnswer) FetchByID() error {
-	err := handler.First(u).Error
+func (q *QuizUserAnswer) FetchByID() error {
+	err := handler.First(q).Error
 	if err != nil {
 		return err
 	}
@@ -54,19 +57,19 @@ func (u *QuizUserAnswer) FetchByID() error {
 }
 
 // FetchAll fetchs all QuizUserAnswers
-func (u *QuizUserAnswer) FetchAll(ul *QuizUserAnswerList) error {
-	err := handler.Find(ul).Error
+func (q *QuizUserAnswer) FetchAll(ql *QuizUserAnswerList) error {
+	err := handler.Find(ql).Error
 	return err
 }
 
 // UpdateOne updates a given quiz user answer
-func (u *QuizUserAnswer) UpdateOne() error {
-	err := handler.Save(u).Error
+func (q *QuizUserAnswer) UpdateOne() error {
+	err := handler.Save(q).Error
 	return err
 }
 
 // Delete deletes quiz user answer by id
-func (u *QuizUserAnswer) Delete() error {
-	err := handler.Delete(u).Error
+func (q *QuizUserAnswer) Delete() error {
+	err := handler.Delete(q).Error
 	return err
 }

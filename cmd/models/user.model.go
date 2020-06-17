@@ -32,6 +32,9 @@ type User struct {
 	About                  string `gorm:"type:text" json:"about" validate:"omitempty"`
 
 	TimeZone *time.Time `json:"timezone" validation:"omitempty"`
+
+	AuthoredCourses CourseAuthorList  `gorm:"foreignkey:UserID"`
+	Courses         StudentCourseList `gorm:"foreignkey:UserID"`
 }
 
 // TableName gorm standard table name
