@@ -25,4 +25,5 @@ func Migrate(db *gorm.DB) {
 	db.AutoMigrate(&models.TargetVersion{})
 	db.AutoMigrate(&models.TargetVersion{})
 	db.AutoMigrate(&models.TargetGroup{})
+	db.AutoMigrate(&models.StudentCourse{})
 }
