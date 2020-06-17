@@ -32,6 +32,15 @@ func (a *AnswerOptionList) TableName() string {
 }
 
 /**
+Relationship functions
+*/
+
+// GetQuestion returns the QuizQuestion of this answer
+func (a *AnswerOption) GetQuestion() error {
+	return handler.Model(a.QuizQuestion).Related(a).Error
+}
+
+/**
 CRUD functions
 */
 
