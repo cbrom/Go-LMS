@@ -21,7 +21,7 @@ type QuizQuestion struct {
 }
 
 // TableName gorm standard table name
-func (i *QuizQuestion) TableName() string {
+func (q *QuizQuestion) TableName() string {
 	return quizQuestionTableName
 }
 
@@ -29,8 +29,22 @@ func (i *QuizQuestion) TableName() string {
 type QuizQuestionList []*QuizQuestion
 
 // TableName gorm standard table name
-func (i *QuizQuestionList) TableName() string {
+func (q *QuizQuestionList) TableName() string {
 	return quizQuestionTableName
+}
+
+/**
+Relationship functions
+*/
+
+// GetAnswerOptions returns answer options of a question
+func (q *QuizQuestion) GetAnswerOptions() error {
+	return handler.Model(q.Answers).Related(q).Error
+}
+
+// GetAnswer returns the answer of a question
+func (q *QuizQuestion) GetAnswer() error {
+	return handler.Model(q.Answer).Related(q).Error
 }
 
 /**
@@ -38,10 +52,10 @@ CRUD functions
 */
 
 // Create creates a new quiz question record
-func (i *QuizQuestion) Create() error {
-	possible := handler.NewRecord(i)
+func (q *QuizQuestion) Create() error {
+	possible := handler.NewRecord(q)
 	if possible {
-		if err := handler.Create(i).Error; err != nil {
+		if err := handler.Create(q).Error; err != nil {
 			return err
 		}
 	}
@@ -50,8 +64,8 @@ func (i *QuizQuestion) Create() error {
 }
 
 // FetchByID fetches QuizQuestion by id
-func (i *QuizQuestion) FetchByID() error {
-	err := handler.First(i).Error
+func (q *QuizQuestion) FetchByID() error {
+	err := handler.First(q).Error
 	if err != nil {
 		return err
 	}
@@ -60,19 +74,19 @@ func (i *QuizQuestion) FetchByID() error {
 }
 
 // FetchAll fetchs all QuizQuestions
-func (i *QuizQuestion) FetchAll(il *QuizQuestionList) error {
-	err := handler.Find(il).Error
+func (q *QuizQuestion) FetchAll(ql *QuizQuestionList) error {
+	err := handler.Find(ql).Error
 	return err
 }
 
 // UpdateOne updates a given quiz question
-func (i *QuizQuestion) UpdateOne() error {
-	err := handler.Save(i).Error
+func (q *QuizQuestion) UpdateOne() error {
+	err := handler.Save(q).Error
 	return err
 }
 
 // Delete deletes quiz question by id
-func (i *QuizQuestion) Delete() error {
-	err := handler.Delete(i).Error
+func (q *QuizQuestion) Delete() error {
+	err := handler.Delete(q).Error
 	return err
 }
