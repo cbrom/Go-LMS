@@ -45,6 +45,12 @@ var CourseSchema = graphql.NewObject(
 			"progression_limit": &graphql.Field{
 				Type: graphql.Int,
 			},
+			"levels": &graphql.Field{
+				Type: graphql.NewList(LevelSchema),
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					return nil, nil
+				},
+			},
 		},
 	})
 

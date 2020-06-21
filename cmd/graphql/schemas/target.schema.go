@@ -6,16 +6,16 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
-// LevelSchema graphql schema of Level model
-var LevelSchema = graphql.NewObject(
+// TargetGroupSchema graphql schema of TargetGroup model
+var TargetGroupSchema = graphql.NewObject(
 	graphql.ObjectConfig{
-		Name: "Level",
+		Name: "TargetGroup",
 		Fields: graphql.Fields{
 			"id": &graphql.Field{
 				Type: graphql.String,
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					l := p.Source.(*models.Level)
-					return l.GetID(), nil
+					tg := p.Source.(*models.TargetGroup)
+					return tg.GetID(), nil
 				},
 			},
 			"name": &graphql.Field{
@@ -24,33 +24,30 @@ var LevelSchema = graphql.NewObject(
 			"description": &graphql.Field{
 				Type: graphql.String,
 			},
-			"number": &graphql.Field{
+			"sort_index": &graphql.Field{
 				Type: graphql.Int,
 			},
-			"unlock_on": &graphql.Field{
-				Type: graphql.String,
-			},
-			"target_groups": &graphql.Field{
-				Type: graphql.NewList(TargetGroupSchema),
+			"milestone": &graphql.Field{
+				Type: graphql.Boolean,
 			},
 		},
 	})
 
-// CreateLevelSchema contains fields to create a new level
-var CreateLevelSchema = graphql.FieldConfigArgument{
+// CreateTargetGroupSchema contains fields used to create a new target group
+var CreateTargetGroupSchema = graphql.FieldConfigArgument{
 	"name": &graphql.ArgumentConfig{
 		Type: graphql.String,
 	},
 	"description": &graphql.ArgumentConfig{
 		Type: graphql.String,
 	},
-	"number": &graphql.ArgumentConfig{
+	"sort_index": &graphql.ArgumentConfig{
 		Type: graphql.Int,
 	},
-	"unlock_on": &graphql.ArgumentConfig{
-		Type: graphql.String,
+	"milestone": &graphql.ArgumentConfig{
+		Type: graphql.Boolean,
 	},
-	"course_id": &graphql.ArgumentConfig{
+	"level_id": &graphql.ArgumentConfig{
 		Type: graphql.String,
 	},
 }
