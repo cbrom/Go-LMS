@@ -21,8 +21,6 @@ type Certificate struct {
 	Message       string
 	Active        bool
 
-	Course             *Course               `gorm:"foreignkey:CourseID"`
-	Issuer             *CourseAuthor         `gorm:"foreignkey:IssuerID"`
 	IssuedCertificates IssuedCertificateList `gorm:"foreignkey:CertificateID"`
 }
 

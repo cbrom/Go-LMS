@@ -16,39 +16,42 @@ services:
             - POSTGRES_PASSWORD=${STORAGE_DBPASSWORD}
         networks:
             - pupilgo
-    redis:
-        image: "redis:alpine"
-        restart: unless-stopped
-        networks:
-            - pupilgo
+    # redis:
+    #     image: "redis:alpine"
+    #     restart: unless-stopped
+    #     networks:
+    #         - pupilgo
     backend:
+        # stdin_open: true
+        # command: bash
+        command: godotenv -f .env go test -v ./...
         build: .
         ports:
             - "8000:3000" 
-        restart: unless-stopped
+            - "8001:4000" 
         depends_on: 
             - db
-            - redis
+            # - redis
         volumes:
             - ./:/Go-LMS
         environment:
-            REDIS_URL: redis:6379   
+            REDIS_URL: redis:6379 
             STORAGE_HOST: db
         networks:
             - pupilgo
-    frontend:
-        build: ./user-interface
-        command: npm run start
-        ports: 
-            - "3000:3000"
-        depends_on:
-            - backend
-        volumes:
-            - /user-interface/node_modules
-            - ./user-interface:/user-interface
-        networks:
-            - pupilgo
-        stdin_open: true
+    # frontend:
+    #     build: ./user-interface
+    #     command: npm run start
+    #     ports: 
+    #         - "3000:3000"
+    #     depends_on:
+    #         - backend
+    #     volumes:
+    #         - /user-interface/node_modules
+    #         - ./user-interface:/user-interface
+    #     networks:
+    #         - pupilgo
+    #     stdin_open: true
 
 networks:
     pupilgo:

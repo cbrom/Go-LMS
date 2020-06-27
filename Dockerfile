@@ -10,4 +10,6 @@ RUN go mod download
 
 RUN go get github.com/githubnemo/CompileDaemon
 
-ENTRYPOINT export STORAGE_HOST=db && CompileDaemon --build="go build cmd/graphql/main.go" --command="./main"
+RUN go get github.com/joho/godotenv/cmd/godotenv
+
+CMD CompileDaemon --build="go build cmd/graphql/main.go" --command="godotenv -f .env ./main"
