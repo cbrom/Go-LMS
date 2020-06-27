@@ -2,7 +2,6 @@ package configs
 
 import (
 	"os"
-
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 )
@@ -39,7 +38,7 @@ func LoadConfig() (*AppConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	if conf.Storage.Host == "db" || conf.Storage == (Storage{}) {
+	if conf.Storage == (Storage{}) {
 		err = godotenv.Load()
 		if err != nil {
 			return nil, err

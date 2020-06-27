@@ -21,7 +21,7 @@ type Course struct {
 	About               string `gorm:"type:varchar(100)"`
 	ProgressionBehavior string `gorm:"type:varchar(100)"`
 	ProgressionLimit    int
-	Certificates        CertificateList        `gorm:"foreignkey:CourceID"`
+	Certificates        CertificateList        `gorm:"foreignkey:CourseID"`
 	Authors             CourseAuthorList       `gorm:"foreignkey:CourseID"`
 	EvaluationCriterias EvaluationCriteriaList `gorm:"foreignkey:CourseID"`
 	Levels              LevelList              `gorm:"foreignkey:CourseID"`
@@ -39,6 +39,25 @@ type CourseList []*Course
 // TableName gorm standard table name
 func (c *CourseList) TableName() string {
 	return courseTableName
+}
+
+/**
+Relationship functions
+*/
+func (c *Course) GetCertificates() error {
+	return handler.Model(&c).Related(&c.Certificates, "Certificates").Error
+} 
+func (c *Course) GetAuthors() error {
+	return handler.Model(&c).Related(&c.Authors, "Authors").Error
+} 
+func (c *Course) GetStudents() error {
+	return handler.Model(&c).Related(&c.Students, "Students").Error
+}
+func (c *Course) GetEvaluationCriterias() error {
+	return handler.Model(&c).Related(&c.Students, "EvaluationCriterias").Error
+}
+func (c *Course) GetLevels() error {
+	return handler.Model(&c).Related(&c.Levels, "Levels").Error
 }
 
 /**
