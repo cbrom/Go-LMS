@@ -63,14 +63,21 @@ var _ = Describe("User.Model", func() {
 	Describe("Registering a new User", func() {
 		Context("Create a new User", func() {
 			It("should contain the newly created user", func() {
-				if err := user.Create(); err != nil {
-					fmt.Printf("Error %+v", err.Error())
+				if err := user.Create(); err == nil {
+					createdUser := &models.User{}
+					createdUser.SetID(user.GetID())
+					createdUser.FetchByID()
+					userName = createdUser.Name
+					Expect(userName).To(Equal(user.Name))
+				} else {
+					if err.Error() == "pq: duplicate key value violates unique constraint \"uix_users_email\"" {
+						fmt.Printf("Error %+v", err.Error())
+					} else {
+						Fail("Couldn't create user")
+					}
+
 				}
-				createdUser := &models.User{}
-				createdUser.SetID(user.GetID())
-				createdUser.FetchByID()
-				userName = createdUser.Name
-				Expect(userName).To(Equal(user.Name))
+
 			})
 		})
 	})
