@@ -1,0 +1,89 @@
+package models_test
+
+import (
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	"github.com/pborman/uuid"
+
+	"go-lms-of-pupilfirst/cmd/models"
+)
+
+var _ = Describe("CourseAuthor.Model", func() {
+	var (
+		user         models.User
+		course       models.Course
+		courseAuthor models.CourseAuthor
+	)
+
+	BeforeEach(func() {
+		// create user
+		user = models.CreateUser()
+		// create course
+		course = models.CreateCourse()
+
+		if err := user.Create(); err != nil {
+			Fail("Couldn't create user")
+		}
+
+		if err := course.Create(); err != nil {
+			Fail("Couldn't create course")
+		}
+
+		// assign author
+		courseAuthor = models.AssignAuthor(user, course)
+
+		if err := courseAuthor.Create(); err != nil {
+			Fail("Couldn't create course author")
+		}
+	})
+
+	AfterEach(func() {
+		// drop data
+		u := models.User{}
+		u.Delete()
+
+		c := models.Course{}
+		c.Delete()
+
+		ca := models.CourseAuthor{}
+		ca.Delete()
+	})
+
+	Describe("Basic Crud Tests", func() {
+		Context("CRUD basics", func() {
+			It("should create a new course author", func() {
+				createdCA := models.CourseAuthor{}
+				createdCA.SetID(courseAuthor.GetID())
+				createdCA.FetchByID()
+				Expect(createdCA.CourseID).To(Equal(courseAuthor.CourseID))
+			})
+
+			It("should fetcha course author by ID", func() {
+				ca := models.CourseAuthor{}
+				ca.SetID(courseAuthor.GetID())
+				ca.FetchByID()
+				Expect(courseAuthor.CourseID).To(Equal(ca.CourseID))
+				Expect(courseAuthor.UserID).To(Equal(ca.UserID))
+			})
+
+			It("should update an existing course author", func() {
+				newID := uuid.NewRandom().String()
+				courseAuthor.UserID = newID
+				courseAuthor.UpdateOne()
+				ca := models.CourseAuthor{}
+				ca.SetID(courseAuthor.GetID())
+				ca.FetchByID()
+				Expect(ca.UserID).To(Equal(newID))
+			})
+
+			It("should soft delete a record", func() {
+				courseAuthor.SoftDelete()
+				ca := models.CourseAuthor{}
+				ca.SetID(courseAuthor.GetID())
+				ca.FetchByID()
+				Expect(ca.CourseID).To(Equal(""))
+				Expect(ca.UserID).To(Equal(""))
+			})
+		})
+	})
+})
