@@ -118,6 +118,16 @@ func (u *User) Delete() error {
 	if handler == nil {
 		return handlerNotSet
 	}
+	err := handler.Unscoped().Delete(u).Error
+	return err
+}
+
+// SoftDelete set's deleted at date
+func (u *User) SoftDelete() error {
+	if handler == nil {
+		return handlerNotSet
+	}
+
 	err := handler.Delete(u).Error
 	return err
 }
