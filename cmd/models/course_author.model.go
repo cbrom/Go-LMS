@@ -13,8 +13,8 @@ type CourseAuthor struct {
 	utils.Base
 	UserID       string          `sql:"type:uuid;" validate:"omitempty,uuid,required"`
 	CourseID     string          `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	Course       *Course         `gorm:"foreignkey:CourseID"`
-	User         *User           `gorm:"foreignkey:UserID"`
+	Course       Course          `gorm:"foreignkey:CourseID"`
+	User         User            `gorm:"foreignkey:UserID"`
 	Certificates CertificateList `gorm:"foreignkey:Issuer"`
 }
 
@@ -29,6 +29,20 @@ type CourseAuthorList []*CourseAuthor
 // TableName gorm standard table name
 func (c *CourseAuthorList) TableName() string {
 	return courseAuthorTableName
+}
+
+/**
+Relationship functions
+*/
+
+// GetCourse returns the Course of this relationship
+func (c *CourseAuthor) GetCourse() error {
+	return handler.Model(c).Related(&c.Course).Error
+}
+
+// GetUser returns the Course Author of this relationship
+func (c *CourseAuthor) GetUser() error {
+	return handler.Model(c).Related(&c.User).Error
 }
 
 /**
