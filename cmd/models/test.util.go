@@ -54,3 +54,12 @@ func CreateCourse() Course {
 
 	return course
 }
+
+// AssignAuthor assignes a user to a course
+func AssignAuthor(user User, course Course) CourseAuthor {
+	courseAuthor := CourseAuthor{
+		UserID:   user.GetID(),
+		CourseID: course.GetID(),
+	}
+	return courseAuthor
+}
