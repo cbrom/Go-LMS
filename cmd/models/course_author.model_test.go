@@ -86,4 +86,20 @@ var _ = Describe("CourseAuthor.Model", func() {
 			})
 		})
 	})
+
+	Describe("Basic Relationship Tests", func() {
+		Context("Course Based", func() {
+			It("should get the course", func() {
+				courseAuthor.GetCourse()
+				Expect(courseAuthor.Course.Name).To(Equal(course.Name))
+			})
+		})
+
+		Context("Author based", func() {
+			It("should get the author", func() {
+				courseAuthor.GetUser()
+				Expect(courseAuthor.User.Name).To(Equal(user.Name))
+			})
+		})
+	})
 })
