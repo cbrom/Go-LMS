@@ -15,3 +15,9 @@ var (
 func SetRepoDB(db *gorm.DB) {
 	handler = db
 }
+
+func CloseDB() {
+	if handler != nil {
+		handler.Close()
+	}
+}
