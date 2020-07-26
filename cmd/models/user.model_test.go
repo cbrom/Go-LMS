@@ -6,7 +6,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"go-lms-of-pupilfirst/cmd/models"
-	"go-lms-of-pupilfirst/migrations"
 
 	"github.com/pborman/uuid"
 
@@ -17,9 +16,6 @@ var _ = Describe("User.Model", func() {
 	var (
 		user models.User
 	)
-
-	db := models.ConnectToTestDatabase()
-	migrations.Migrate(db)
 
 	BeforeEach(func() {
 
@@ -47,10 +43,6 @@ var _ = Describe("User.Model", func() {
 		// drop all users
 		u := models.User{}
 		u.Delete()
-	})
-
-	AfterSuite(func() {
-		models.CloseDB()
 	})
 
 	Describe("Basic Crud Tests", func() {

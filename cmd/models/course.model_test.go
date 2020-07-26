@@ -2,7 +2,6 @@ package models_test
 
 import (
 	"go-lms-of-pupilfirst/cmd/models"
-	"go-lms-of-pupilfirst/migrations"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -13,9 +12,6 @@ var _ = Describe("Course", func() {
 		user   models.User
 		course models.Course
 	)
-
-	db := models.ConnectToTestDatabase()
-	migrations.Migrate(db)
 
 	BeforeEach(func() {
 		// create user
