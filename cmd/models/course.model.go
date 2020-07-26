@@ -81,6 +81,12 @@ func (c *Course) UpdateOne() error {
 
 // Delete deletes course by id
 func (c *Course) Delete() error {
+	err := handler.Unscoped().Delete(c).Error
+	return err
+}
+
+// SoftDelete set's deleted at date
+func (c *Course) SoftDelete() error {
 	err := handler.Delete(c).Error
 	return err
 }
