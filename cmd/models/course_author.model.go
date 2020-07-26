@@ -71,6 +71,12 @@ func (c *CourseAuthor) UpdateOne() error {
 
 // Delete deletes course author by id
 func (c *CourseAuthor) Delete() error {
+	err := handler.Unscoped().Delete(c).Error
+	return err
+}
+
+// SoftDelete set's record deleted at field
+func (c *CourseAuthor) SoftDelete() error {
 	err := handler.Delete(c).Error
 	return err
 }
