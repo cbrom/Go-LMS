@@ -71,7 +71,7 @@ CRUD functions
 // Create creates a new user record
 func (u *User) Create() error {
 	if handler == nil {
-		return handlerNotSet
+		return errHandlerNotSet
 	}
 	possible := handler.NewRecord(u)
 	if possible {
@@ -86,7 +86,7 @@ func (u *User) Create() error {
 // FetchByID fetches User by id
 func (u *User) FetchByID() error {
 	if handler == nil {
-		return handlerNotSet
+		return errHandlerNotSet
 	}
 	err := handler.First(u).Error
 	if err != nil {
@@ -99,7 +99,7 @@ func (u *User) FetchByID() error {
 // FetchByEmail fetches User by email
 func (u *User) FetchByEmail() error {
 	if handler == nil {
-		return handlerNotSet
+		return errHandlerNotSet
 	}
 	err := handler.Where("email = ?", u.Email).First(&u).Error
 	if err != nil {
@@ -112,7 +112,7 @@ func (u *User) FetchByEmail() error {
 // FetchAll fetchs all Users
 func (u *User) FetchAll(ul *UserList) error {
 	if handler == nil {
-		return handlerNotSet
+		return errHandlerNotSet
 	}
 	err := handler.Find(ul).Error
 	return err
@@ -121,7 +121,7 @@ func (u *User) FetchAll(ul *UserList) error {
 // UpdateOne updates a given user
 func (u *User) UpdateOne() error {
 	if handler == nil {
-		return handlerNotSet
+		return errHandlerNotSet
 	}
 	err := handler.Save(u).Error
 	return err
@@ -130,7 +130,7 @@ func (u *User) UpdateOne() error {
 // Delete deletes user by id
 func (u *User) Delete() error {
 	if handler == nil {
-		return handlerNotSet
+		return errHandlerNotSet
 	}
 	err := handler.Unscoped().Delete(u).Error
 	return err
@@ -139,7 +139,7 @@ func (u *User) Delete() error {
 // SoftDelete set's deleted at date
 func (u *User) SoftDelete() error {
 	if handler == nil {
-		return handlerNotSet
+		return errHandlerNotSet
 	}
 
 	err := handler.Delete(u).Error
