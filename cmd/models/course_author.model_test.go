@@ -17,9 +17,9 @@ var _ = Describe("CourseAuthor.Model", func() {
 
 	BeforeEach(func() {
 		// create user
-		user = models.CreateUser()
+		user = CreateUser()
 		// create course
-		course = models.CreateCourse()
+		course = CreateCourse()
 
 		if err := user.Create(); err != nil {
 			Fail("Couldn't create user")
@@ -30,7 +30,7 @@ var _ = Describe("CourseAuthor.Model", func() {
 		}
 
 		// assign author
-		courseAuthor = models.AssignAuthor(user, course)
+		courseAuthor = AssignAuthor(user, course)
 
 		if err := courseAuthor.Create(); err != nil {
 			Fail("Couldn't create course author")
@@ -99,6 +99,10 @@ var _ = Describe("CourseAuthor.Model", func() {
 			It("should get the author", func() {
 				courseAuthor.GetUser()
 				Expect(courseAuthor.User.Name).To(Equal(user.Name))
+			})
+
+			It("should get all courses from a", func() {
+
 			})
 		})
 	})

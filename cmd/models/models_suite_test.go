@@ -20,7 +20,7 @@ var _ = Describe("Configuration", func() {
 	})
 
 	BeforeSuite(func() {
-		db := models.ConnectToTestDatabase()
+		db := ConnectToTestDatabase()
 		migrations.Migrate(db)
 	})
 })

@@ -93,7 +93,7 @@ var _ = Describe("User.Model", func() {
 		)
 
 		BeforeEach(func() {
-			course = models.CreateCourse()
+			course = CreateCourse()
 			if err := course.Create(); err != nil {
 				Fail("Couldn't create course")
 			}
@@ -107,7 +107,7 @@ var _ = Describe("User.Model", func() {
 		Context("Course relationships", func() {
 			BeforeEach(func() {
 				// assign author
-				courseAuthor = models.AssignAuthor(user, course)
+				courseAuthor = AssignAuthor(user, course)
 
 				if err := courseAuthor.Create(); err != nil {
 					Fail("Couldn't create course author")
@@ -127,7 +127,7 @@ var _ = Describe("User.Model", func() {
 		Context("Student relationships", func() {
 			BeforeEach(func() {
 				// create a student
-				studentCourse = models.CreateStudentCourse(user, course)
+				studentCourse = CreateStudentCourse(user, course)
 
 				if err := studentCourse.Create(); err != nil {
 					Fail("Couldn't create student course")

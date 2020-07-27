@@ -15,9 +15,9 @@ var _ = Describe("Course", func() {
 
 	BeforeEach(func() {
 		// create user
-		user = models.CreateUser()
+		user = CreateUser()
 		// create course
-		course = models.CreateCourse()
+		course = CreateCourse()
 
 		if err := user.Create(); err != nil {
 			Fail("Couldn't create user")
