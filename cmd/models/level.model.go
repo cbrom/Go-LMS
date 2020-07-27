@@ -17,7 +17,7 @@ type Level struct {
 	Description  string
 	Number       int
 	UnlockOn     *time.Time
-	Course       *Course         `gorm:"foreignkey:CourseID"`
+	Course       Course          `gorm:"foreignkey:CourseID"`
 	TargetGroups TargetGroupList `gorm:"foreignkey:TargetGroupID"`
 }
 
@@ -32,6 +32,15 @@ type LevelList []*Level
 // TableName gorm standard table name
 func (l *LevelList) TableName() string {
 	return levelTableName
+}
+
+/**
+Relationship functions
+*/
+
+// GetCourse returns the associated course of the level
+func (l *Level) GetCourse() error {
+	return handler.Model(l).Related(&l.Course).Error
 }
 
 /**
@@ -74,6 +83,11 @@ func (l *Level) UpdateOne() error {
 
 // Delete deletes level by id
 func (l *Level) Delete() error {
-	err := handler.Delete(l).Error
+	err := handler.Unscoped().Delete(l).Error
 	return err
+}
+
+// SoftDelete sets deleted at of level
+func (l *Level) SoftDelete() error {
+	return handler.Delete(l).Error
 }
