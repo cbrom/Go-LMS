@@ -55,6 +55,18 @@ func CreateCourse() Course {
 	return course
 }
 
+// CreateLevel creates a level mock for testing
+func CreateLevel(course Course) Level {
+	level := Level{
+		Name:        "Test Level",
+		CourseID:    course.GetID(),
+		Description: "Level description",
+		Number:      1,
+	}
+
+	return level
+}
+
 // AssignAuthor assignes a user to a course
 func AssignAuthor(user User, course Course) CourseAuthor {
 	courseAuthor := CourseAuthor{
