@@ -18,7 +18,7 @@ type Level struct {
 	Number       int
 	UnlockOn     *time.Time
 	Course       Course          `gorm:"foreignkey:CourseID"`
-	TargetGroups TargetGroupList `gorm:"foreignkey:TargetGroupID"`
+	TargetGroups TargetGroupList `gorm:"foreignkey:LevelID"`
 }
 
 // TableName gorm standard table name
