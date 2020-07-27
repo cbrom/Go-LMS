@@ -14,7 +14,8 @@ import (
 
 var _ = Describe("User.Model", func() {
 	var (
-		user models.User
+		user   models.User
+		course models.Course
 	)
 
 	BeforeEach(func() {
@@ -80,6 +81,66 @@ var _ = Describe("User.Model", func() {
 				u.FetchByID()
 				Expect(u.Name).To(Equal(""))
 				Expect(u.Email).To(Equal(""))
+			})
+		})
+	})
+
+	Describe("Basic Relationship tests", func() {
+
+		var (
+			courseAuthor  models.CourseAuthor
+			studentCourse models.StudentCourse
+		)
+
+		BeforeEach(func() {
+			course = models.CreateCourse()
+			if err := course.Create(); err != nil {
+				Fail("Couldn't create course")
+			}
+		})
+
+		AfterEach(func() {
+			c := models.Course{}
+			c.Delete()
+		})
+
+		Context("Course relationships", func() {
+			BeforeEach(func() {
+				// assign author
+				courseAuthor = models.AssignAuthor(user, course)
+
+				if err := courseAuthor.Create(); err != nil {
+					Fail("Couldn't create course author")
+				}
+			})
+
+			AfterEach(func() {
+				ca := models.CourseAuthor{}
+				ca.Delete()
+			})
+			It("should get courses authored", func() {
+				user.GetAuthoredCourses()
+				Expect(len(user.AuthoredCourses)).To(Equal(1))
+			})
+		})
+
+		Context("Student relationships", func() {
+			BeforeEach(func() {
+				// create a student
+				studentCourse = models.CreateStudentCourse(user, course)
+
+				if err := studentCourse.Create(); err != nil {
+					Fail("Couldn't create student course")
+				}
+			})
+
+			AfterEach(func() {
+				sc := models.StudentCourse{}
+				sc.Delete()
+			})
+			It("should get student's course list", func() {
+				user.GetCourses()
+				Expect(len(user.Courses)).To(Equal(1))
 			})
 		})
 	})
