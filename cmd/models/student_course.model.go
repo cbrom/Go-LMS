@@ -11,10 +11,10 @@ var (
 // StudentCourse defines a model for course students
 type StudentCourse struct {
 	utils.Base
-	UserID   string  `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	CourseID string  `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	Course   *Course `gorm:"foreignkey:CourseID"`
-	User     *User   `gorm:"foreignkey:UserID"`
+	UserID   string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	CourseID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	Course   Course `gorm:"foreignkey:CourseID"`
+	User     User   `gorm:"foreignkey:UserID"`
 }
 
 // TableName gorm standard table name
@@ -28,6 +28,20 @@ type StudentCourseList []*StudentCourse
 // TableName gorm standard table name
 func (s *StudentCourseList) TableName() string {
 	return studentCourseTableName
+}
+
+/**
+Relationship functions
+*/
+
+// GetCourse returns student course
+func (s *StudentCourse) GetCourse() error {
+	return handler.Model(s).Related(&s.Course).Error
+}
+
+// GetUser returns student course
+func (s *StudentCourse) GetUser() error {
+	return handler.Model(s).Related(&s.User).Error
 }
 
 /**
@@ -70,6 +84,11 @@ func (s *StudentCourse) UpdateOne() error {
 
 // Delete deletes course student by id
 func (s *StudentCourse) Delete() error {
-	err := handler.Delete(s).Error
+	err := handler.Unscoped().Delete(s).Error
 	return err
+}
+
+// SoftDelete sets deleted at field
+func (s *StudentCourse) SoftDelete() error {
+	return handler.Delete(s).Error
 }
