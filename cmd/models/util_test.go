@@ -110,3 +110,20 @@ func CreateStudentCourse(user models.User, course models.Course) models.StudentC
 
 	return studentCourse
 }
+
+// CreateTargetGroup creates a level target group mock for testing
+func CreateTargetGroup(level models.Level) models.TargetGroup {
+	targetGroup := models.TargetGroup{
+		Name:        "Test target group",
+		Description: "Test target description",
+		SortIndex:   1,
+		Milestone:   true,
+		LevelID:     level.GetID(),
+	}
+
+	if err := targetGroup.Create(); err != nil {
+		Fail("Couldn't create target group")
+	}
+
+	return targetGroup
+}
