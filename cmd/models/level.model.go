@@ -43,6 +43,11 @@ func (l *Level) GetCourse() error {
 	return handler.Model(l).Related(&l.Course).Error
 }
 
+// GetTargetGroups returns the target groups of a level
+func (l *Level) GetTargetGroups() error {
+	return handler.Model(l).Related(&l.TargetGroups).Error
+}
+
 /**
 CRUD functions
 */
