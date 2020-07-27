@@ -71,6 +71,12 @@ var _ = Describe("Level.Model", func() {
 				level.GetCourse()
 				Expect(level.Course.Name).To(Equal(course.Name))
 			})
+
+			It("should get target groups of the level", func() {
+				CreateTargetGroup(level)
+				level.GetTargetGroups()
+				Expect(len(level.TargetGroups)).To(Equal(1))
+			})
 		})
 	})
 })
