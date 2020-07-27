@@ -11,18 +11,18 @@ var (
 // Certificate defines a model for student certificates in a model
 type Certificate struct {
 	utils.Base
-	CourseID      string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	IssuerID      string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	QRCorner      string
-	QRScale       int
-	Margin        int
-	NameOffsetTop int
-	FontSize      int
-	Message       string
-	Active        bool
+	CourseID       string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	CourseAuthorID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	QRCorner       string
+	QRScale        int
+	Margin         int
+	NameOffsetTop  int
+	FontSize       int
+	Message        string
+	Active         bool
 
-	Course             *Course               `gorm:"foreignkey:CourseID"`
-	Issuer             *CourseAuthor         `gorm:"foreignkey:IssuerID"`
+	Course             Course                `gorm:"foreignkey:CourseID"`
+	Issuer             CourseAuthor          `gorm:"foreignkey:CourseAuthorID"`
 	IssuedCertificates IssuedCertificateList `gorm:"foreignkey:CertificateID"`
 }
 
@@ -37,6 +37,20 @@ type CertificateList []*Certificate
 // TableName gorm standard table name
 func (c *CertificateList) TableName() string {
 	return certificateTableName
+}
+
+/**
+Relationship functions
+*/
+
+// GetCourse returns certificate course
+func (c *Certificate) GetCourse() error {
+	return handler.Model(c).Related(&c.Course).Error
+}
+
+// GetIssuer returns course author from certificate
+func (c *Certificate) GetIssuer() error {
+	return handler.Model(c).Related(&c.Issuer).Error
 }
 
 /**
@@ -79,6 +93,11 @@ func (c *Certificate) UpdateOne() error {
 
 // Delete deletes certificate by id
 func (c *Certificate) Delete() error {
-	err := handler.Delete(c).Error
+	err := handler.Unscoped().Delete(c).Error
 	return err
+}
+
+// SoftDelete sets deleted at
+func (c *Certificate) SoftDelete() error {
+	return handler.Delete(c).Error
 }
