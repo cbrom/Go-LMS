@@ -91,7 +91,7 @@ func AssignAuthor(user models.User, course models.Course) models.CourseAuthor {
 		CourseID: course.GetID(),
 	}
 
-	if err := user.Create(); err != nil {
+	if err := courseAuthor.Create(); err != nil {
 		Fail("Couldn't create course author")
 	}
 	return courseAuthor

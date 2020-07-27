@@ -3,11 +3,8 @@ package models_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"golang.org/x/crypto/bcrypt"
 
 	"go-lms-of-pupilfirst/cmd/models"
-
-	"github.com/pborman/uuid"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -20,23 +17,7 @@ var _ = Describe("User.Model", func() {
 
 	BeforeEach(func() {
 
-		password := "password"
-		passwordSalt := uuid.NewRandom().String()
-		saltedPassword := password + passwordSalt
-		passwordHash, _ := bcrypt.GenerateFromPassword([]byte(saltedPassword), bcrypt.DefaultCost)
-
-		user = models.User{
-			Email:        "test1@gmail.com",
-			Role:         2,
-			PasswordSalt: passwordSalt,
-			PasswordHash: passwordHash,
-			Name:         "Test Name",
-			About:        "About user",
-		}
-
-		if err := user.Create(); err != nil {
-			Fail("Couldn't create user")
-		}
+		user = CreateUser()
 
 	})
 

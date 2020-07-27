@@ -21,20 +21,8 @@ var _ = Describe("CourseAuthor.Model", func() {
 		// create course
 		course = CreateCourse()
 
-		if err := user.Create(); err != nil {
-			Fail("Couldn't create user")
-		}
-
-		if err := course.Create(); err != nil {
-			Fail("Couldn't create course")
-		}
-
 		// assign author
 		courseAuthor = AssignAuthor(user, course)
-
-		if err := courseAuthor.Create(); err != nil {
-			Fail("Couldn't create course author")
-		}
 	})
 
 	AfterEach(func() {
