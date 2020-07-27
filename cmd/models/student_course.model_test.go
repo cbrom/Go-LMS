@@ -21,7 +21,7 @@ var _ = Describe("StudentCourse.Model", func() {
 		// create course
 		course = CreateCourse()
 
-		// assign author
+		// create student course
 		studentCourse = CreateStudentCourse(user, course)
 	})
 
