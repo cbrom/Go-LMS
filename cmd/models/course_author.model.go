@@ -45,6 +45,11 @@ func (c *CourseAuthor) GetUser() error {
 	return handler.Model(c).Related(&c.User).Error
 }
 
+// GetCertificates returns course sertificates issued by the author for the course
+func (c *CourseAuthor) GetCertificates() error {
+	return handler.Model(c).Related(&c.Certificates).Error
+}
+
 /**
 CRUD functions
 */
