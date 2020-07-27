@@ -125,7 +125,7 @@ func CreateStudentCourse(user models.User, course models.Course) models.StudentC
 		CourseID: course.GetID(),
 	}
 
-	if err := user.Create(); err != nil {
+	if err := studentCourse.Create(); err != nil {
 		Fail("Couldn't create student course")
 	}
 
