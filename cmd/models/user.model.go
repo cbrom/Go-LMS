@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"go-lms-of-pupilfirst/pkg/utils"
 	"time"
 )
@@ -57,10 +56,12 @@ Relationship functions
 
 // GetAuthoredCourses returns a list of authored courses
 func (u *User) GetAuthoredCourses() error {
-	c := CourseAuthor{}
-	cl := CourseAuthorList{}
-	fmt.Printf("retrieved %+v\n\n", c.FetchAll(&cl))
 	return handler.Model(u).Related(&u.AuthoredCourses).Error
+}
+
+// GetCourses returns a list of courses from a list of authored courses
+func (u *User) GetCourses() error {
+	return handler.Model(u).Related(&u.Courses).Error
 }
 
 /**
