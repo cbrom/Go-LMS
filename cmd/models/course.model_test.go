@@ -18,14 +18,6 @@ var _ = Describe("Course", func() {
 		user = CreateUser()
 		// create course
 		course = CreateCourse()
-
-		if err := user.Create(); err != nil {
-			Fail("Couldn't create user")
-		}
-
-		if err := course.Create(); err != nil {
-			Fail("Couldn't create course")
-		}
 	})
 
 	AfterEach(func() {
@@ -70,6 +62,65 @@ var _ = Describe("Course", func() {
 				c.FetchByID()
 				Expect(c.Name).To(Equal(""))
 				Expect(c.Description).To(Equal(""))
+			})
+		})
+	})
+
+	Describe("Basic Relationship Tests", func() {
+		var (
+			level         models.Level
+			studentCourse models.StudentCourse
+			courseAuthor  models.CourseAuthor
+			certificate   models.Certificate
+		)
+
+		BeforeEach(func() {
+			level = CreateLevel(course)
+			studentCourse = CreateStudentCourse(user, course)
+			courseAuthor = AssignAuthor(user, course)
+			certificate = CreateCertificate(courseAuthor)
+		})
+
+		AfterEach(func() {
+			l := models.Level{}
+			l.Delete()
+
+			s := models.StudentCourse{}
+			s.Delete()
+
+			ca := models.CourseAuthor{}
+			ca.Delete()
+		})
+
+		Context("Level Based", func() {
+			It("should get course levels", func() {
+				course.GetLevels()
+				Expect(len(course.Levels)).To(Equal(1))
+				Expect(course.Levels[0].GetID()).To(Equal(level.GetID()))
+			})
+		})
+
+		Context("Author based", func() {
+			It("should get course authors", func() {
+				course.GetAuthors()
+				Expect(len(course.Authors)).To(Equal(1))
+				Expect(course.Authors[0].GetID()).To(Equal(courseAuthor.GetID()))
+			})
+		})
+
+		Context("Student based", func() {
+			It("should course students", func() {
+				course.GetStudents()
+				Expect(len(course.Students)).To(Equal(1))
+				Expect(course.Students[0].GetID()).To(Equal(studentCourse.GetID()))
+			})
+		})
+
+		Context("Certificate based", func() {
+			It("should get course certificates", func() {
+				course.GetCertificates()
+				Expect(len(course.Certificates)).To(Equal(1))
+				Expect(course.Certificates[0].GetID()).To(Equal(certificate.GetID()))
 			})
 		})
 	})
