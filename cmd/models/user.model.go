@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"go-lms-of-pupilfirst/pkg/utils"
 	"time"
 )
@@ -48,6 +49,18 @@ type UserList []*User
 // TableName gorm standard table name
 func (u *UserList) TableName() string {
 	return userTableName
+}
+
+/**
+Relationship functions
+*/
+
+// GetAuthoredCourses returns a list of authored courses
+func (u *User) GetAuthoredCourses() error {
+	c := CourseAuthor{}
+	cl := CourseAuthorList{}
+	fmt.Printf("retrieved %+v\n\n", c.FetchAll(&cl))
+	return handler.Model(u).Related(&u.AuthoredCourses).Error
 }
 
 /**
