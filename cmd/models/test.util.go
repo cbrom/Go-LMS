@@ -63,3 +63,12 @@ func AssignAuthor(user User, course Course) CourseAuthor {
 	}
 	return courseAuthor
 }
+
+// CreateStudentCourse creates a student and assigns it a course for testing
+func CreateStudentCourse(user User, course Course) StudentCourse {
+	studentCourse := StudentCourse{
+		UserID:   user.GetID(),
+		CourseID: course.GetID(),
+	}
+	return studentCourse
+}
