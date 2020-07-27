@@ -100,17 +100,16 @@ func AssignAuthor(user models.User, course models.Course) models.CourseAuthor {
 // CreateCertificate creates a certificate mock for testing
 func CreateCertificate(courseAuthor models.CourseAuthor) models.Certificate {
 	courseAuthor.GetCourse()
-	courseAuthor.GetUser()
 	certificate := models.Certificate{
-		CourseID:      courseAuthor.Course.GetID(),
-		IssuerID:      courseAuthor.User.GetID(),
-		QRCorner:      "QR Corner",
-		QRScale:       2,
-		Margin:        2,
-		NameOffsetTop: 2,
-		FontSize:      2,
-		Message:       "Certificate message",
-		Active:        true,
+		CourseID:       courseAuthor.Course.GetID(),
+		CourseAuthorID: courseAuthor.GetID(),
+		QRCorner:       "QR Corner",
+		QRScale:        2,
+		Margin:         2,
+		NameOffsetTop:  2,
+		FontSize:       2,
+		Message:        "Certificate message",
+		Active:         true,
 	}
 
 	if err := certificate.Create(); err != nil {
