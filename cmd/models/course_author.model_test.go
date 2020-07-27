@@ -88,9 +88,19 @@ var _ = Describe("CourseAuthor.Model", func() {
 				courseAuthor.GetUser()
 				Expect(courseAuthor.User.Name).To(Equal(user.Name))
 			})
+		})
 
-			It("should get all courses from a", func() {
-
+		Context("Certificate based", func() {
+			BeforeEach(func() {
+				CreateCertificate(courseAuthor)
+			})
+			AfterEach(func() {
+				cer := models.Certificate{}
+				cer.Delete()
+			})
+			It("should get certificates of the level", func() {
+				courseAuthor.GetCertificates()
+				Expect(len(courseAuthor.Certificates)).To(Equal(1))
 			})
 		})
 	})
