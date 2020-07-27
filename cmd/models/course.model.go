@@ -42,6 +42,35 @@ func (c *CourseList) TableName() string {
 }
 
 /**
+* Relationship functions
+ */
+
+// GetCertificates returns course certificates
+func (c *Course) GetCertificates() error {
+	return handler.Model(c).Related(&c.Certificates).Error
+}
+
+// GetAuthors returns course authors
+func (c *Course) GetAuthors() error {
+	return handler.Model(c).Related(&c.Authors).Error
+}
+
+// GetEvaluationCriterias returns course evaluation criterias
+func (c *Course) GetEvaluationCriterias() error {
+	return handler.Model(c).Related(&c.EvaluationCriterias).Error
+}
+
+// GetLevels returns course levels
+func (c *Course) GetLevels() error {
+	return handler.Model(c).Related(&c.Levels).Error
+}
+
+// GetStudents returns course students
+func (c *Course) GetStudents() error {
+	return handler.Model(c).Related(&c.Students).Error
+}
+
+/**
 CRUD functions
 */
 
