@@ -15,7 +15,7 @@ type CourseAuthor struct {
 	CourseID     string          `sql:"type:uuid;" validate:"omitempty,uuid,required"`
 	Course       Course          `gorm:"foreignkey:CourseID"`
 	User         User            `gorm:"foreignkey:UserID"`
-	Certificates CertificateList `gorm:"foreignkey:Issuer"`
+	Certificates CertificateList `gorm:"foreignkey:CourseAuthorID"`
 }
 
 // TableName gorm standard table name
