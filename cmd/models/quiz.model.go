@@ -13,7 +13,7 @@ type Quiz struct {
 	utils.Base
 	Title         string
 	TargetID      string           `sql:"type:uuid" validate:"required,omitempty,uuid"`
-	Target        *Target          `gorm:"foreignkey:TargetID"`
+	Target        Target           `gorm:"foreignkey:TargetID"`
 	QuizQuestions QuizQuestionList `gorm:"foreignkey:QuizID"`
 }
 
@@ -28,6 +28,20 @@ type QuizList []*Quiz
 // TableName gorm standard table name
 func (q *QuizList) TableName() string {
 	return quizTableName
+}
+
+/**
+* Relationship functions
+ */
+
+// GetTarget returns the quiz target
+func (q *Quiz) GetTarget() error {
+	return handler.Model(q).Related(&q.Target).Error
+}
+
+// GetQuizQuestions returns a list of quiz questions of this quiz
+func (q *Quiz) GetQuizQuestions() error {
+	return handler.Model(q).Related(&q.QuizQuestions).Error
 }
 
 /**
@@ -70,6 +84,11 @@ func (q *Quiz) UpdateOne() error {
 
 // Delete deletes quiz by id
 func (q *Quiz) Delete() error {
-	err := handler.Delete(q).Error
+	err := handler.Unscoped().Delete(q).Error
 	return err
+}
+
+// SoftDelete sets the deleted at field
+func (q *Quiz) SoftDelete() error {
+	return handler.Delete(q).Error
 }
