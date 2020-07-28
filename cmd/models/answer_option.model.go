@@ -80,6 +80,11 @@ func (a *AnswerOption) UpdateOne() error {
 
 // Delete deletes answer options by id
 func (a *AnswerOption) Delete() error {
-	err := handler.Delete(a).Error
+	err := handler.Unscoped().Delete(a).Error
 	return err
+}
+
+// SoftDelete sets deleted at field
+func (a *AnswerOption) SoftDelete() error {
+	return handler.Delete(a).Error
 }
