@@ -16,7 +16,7 @@ type TargetGroup struct {
 	SortIndex   int
 	Milestone   bool
 	LevelID     string     `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	Level       *Level     `gorm:"foreignkey:LevelID"`
+	Level       Level      `gorm:"foreignkey:LevelID"`
 	Targets     TargetList `gorm:"foreignkey:TargetGroupID"`
 }
 
@@ -31,6 +31,20 @@ type TargetGroupList []*TargetGroup
 // TableName gorm standard table name
 func (t *TargetGroupList) TableName() string {
 	return targetGroupTableName
+}
+
+/**
+* Relationship functions
+ */
+
+// GetLevel returns the level of the target group
+func (t *TargetGroup) GetLevel() error {
+	return handler.Model(t).Related(&t.Level).Error
+}
+
+// GetTargets returns the list of targets
+func (t *TargetGroup) GetTargets() error {
+	return handler.Model(t).Related(&t.Targets).Error
 }
 
 /**
@@ -73,6 +87,11 @@ func (t *TargetGroup) UpdateOne() error {
 
 // Delete deletes target group by id
 func (t *TargetGroup) Delete() error {
-	err := handler.Delete(t).Error
+	err := handler.Unscoped().Delete(t).Error
 	return err
+}
+
+// SoftDelete sets deleted at field
+func (t *TargetGroup) SoftDelete() error {
+	return handler.Delete(t).Error
 }
