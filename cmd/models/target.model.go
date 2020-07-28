@@ -19,14 +19,14 @@ type Target struct {
 	Description            string
 	CompletionInstructions string
 	ResourceURL            string `gorm:"type:varchar(255)"`
-	TargetGroupID          string
+	TargetGroupID          string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
 	SortIndex              int
 	SessionAt              *time.Time
 	LinkToComplete         string `gorm:"type:varchar(255)"`
 	Resubmittable          bool
 	CheckList              postgres.Jsonb
 	ReviewChecklist        postgres.Jsonb
-	TargetGroup            *TargetGroup      `gorm:"foreignkey:TargetGroupID"`
+	TargetGroup            TargetGroup       `gorm:"foreignkey:TargetGroupID"`
 	TargetVersions         TargetVersionList `gorm:"foreignkey:TargetID"`
 	Quizzes                QuizList          `gorm:"foreignkey:TargetID"`
 }
@@ -42,6 +42,25 @@ type TargetList []*Target
 // TableName gorm standard table name
 func (t *TargetList) TableName() string {
 	return targetTableName
+}
+
+/**
+* Relationship functions
+ */
+
+// GetTargetGroup returns target group
+func (t *Target) GetTargetGroup() error {
+	return handler.Model(t).Related(&t.TargetGroup).Error
+}
+
+// GetVersions returns a list of target versions
+func (t *Target) GetVersions() error {
+	return handler.Model(t).Related(&t.TargetVersions).Error
+}
+
+// GetQuizzes returns a list of quizzes
+func (t *Target) GetQuizzes() error {
+	return handler.Model(t).Related(&t.Quizzes).Error
 }
 
 /**
@@ -84,6 +103,11 @@ func (t *Target) UpdateOne() error {
 
 // Delete deletes target by id
 func (t *Target) Delete() error {
-	err := handler.Delete(t).Error
+	err := handler.Unscoped().Delete(t).Error
 	return err
+}
+
+// SoftDelete sets deleted at field
+func (t *Target) SoftDelete() error {
+	return handler.Delete(t).Error
 }
