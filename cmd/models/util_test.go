@@ -148,3 +148,23 @@ func CreateTargetGroup(level models.Level) models.TargetGroup {
 
 	return targetGroup
 }
+
+func CreateTarget(targetGroup models.TargetGroup) models.Target {
+	target := models.Target{
+		Role:                   "Target Test role",
+		Title:                  "Target Test Title",
+		Description:            "Target Test Description",
+		CompletionInstructions: "",
+		ResourceURL:            "Target Test resource url",
+		TargetGroupID:          targetGroup.GetID(),
+		SortIndex:              1,
+		LinkToComplete:         "Target Test no link",
+		Resubmittable:          true,
+	}
+
+	if err := target.Create(); err != nil {
+		Fail("Couldn't create target")
+	}
+
+	return target
+}
