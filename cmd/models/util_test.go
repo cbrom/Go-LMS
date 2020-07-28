@@ -180,3 +180,15 @@ func CreateTargetVersion(target models.Target) models.TargetVersion {
 
 	return targetVersion
 }
+
+func CreateQuiz(target models.Target) models.Quiz {
+	quiz := models.Quiz{
+		Title:    "Quiz Test Title",
+		TargetID: target.GetID(),
+	}
+	if err := quiz.Create(); err != nil {
+		Fail("Couldn't create quiz")
+	}
+
+	return quiz
+}
