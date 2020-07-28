@@ -168,3 +168,15 @@ func CreateTarget(targetGroup models.TargetGroup) models.Target {
 
 	return target
 }
+
+func CreateTargetVersion(target models.Target) models.TargetVersion {
+	targetVersion := models.TargetVersion{
+		TargetID:    target.GetID(),
+		VersionName: "Target Version Test Name",
+	}
+	if err := targetVersion.Create(); err != nil {
+		Fail("Couldn't create target")
+	}
+
+	return targetVersion
+}
