@@ -192,3 +192,30 @@ func CreateQuiz(target models.Target) models.Quiz {
 
 	return quiz
 }
+
+func CreateQuizQuestion(quiz models.Quiz) models.QuizQuestion {
+	quizQuestion := models.QuizQuestion{
+		QuizID:      quiz.GetID(),
+		Question:    "This is a Test question",
+		Description: "this is a question to help students get good at math",
+	}
+	if err := quizQuestion.Create(); err != nil {
+		Fail("Couldn't create quizQuestion")
+	}
+
+	return quizQuestion
+}
+
+func CreateAnswerOption(quizQuestion models.QuizQuestion) models.AnswerOption {
+	answerOption := models.AnswerOption{
+		QuizQuestionID: quizQuestion.GetID(),
+		Value:          "This is a Test answer",
+		Hint:           "This is a Test hint",
+	}
+
+	if err := answerOption.Create(); err != nil {
+		Fail("Couldn't create answer option")
+	}
+
+	return answerOption
+}
