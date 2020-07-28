@@ -14,7 +14,7 @@ type QuizQuestion struct {
 	QuizID          string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
 	Question        string
 	Description     string           `gorm:"type:varchar(100)"`
-	CorrectAnswerID string           `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	CorrectAnswerID *string          `sql:"type:uuid;" validate:"omitempty,uuid,required"`
 	Quiz            *Quiz            `gorm:"foreignkey:QuizID"`
 	Answer          *AnswerOption    `gorm:"foreignkey:CorrectAnswerID"`
 	Answers         AnswerOptionList `gorm:"foreign:QuizQuestionID"`
