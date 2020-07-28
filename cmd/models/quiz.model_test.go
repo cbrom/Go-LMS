@@ -85,9 +85,6 @@ var _ = Describe("Quiz.Model", func() {
 		AfterEach(func() {
 			qq := models.QuizQuestion{}
 			qq.Delete()
-
-			ao := models.AnswerOption{}
-			ao.Delete()
 		})
 		Context("Target Based", func() {
 			It("should get the target", func() {
