@@ -45,8 +45,11 @@ func (q *QuizQuestion) GetAnswerOptions() error {
 // GetAnswer returns the answer of a question
 func (q *QuizQuestion) GetAnswer() error {
 	answer := AnswerOption{}
-	err := handler.Model(q).Related(&q.Answer).Error
-	q.Answer = &answer
+	answer.SetID(q.CorrectAnswerID)
+	err := handler.Find(&answer).Error
+	if err == nil {
+		q.Answer = &answer
+	}
 	return err
 }
 
