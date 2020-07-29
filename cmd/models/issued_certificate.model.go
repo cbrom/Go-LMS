@@ -34,7 +34,7 @@ func (i *IssuedCertificateList) TableName() string {
 * Relationship functions
  */
 
-// GetCertificate
+// GetCertificate returns the certificate
 func (i *IssuedCertificate) GetCertificate() error {
 	return handler.Model(i).Related(&i.Certificate).Error
 }
