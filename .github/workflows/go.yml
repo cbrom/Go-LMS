@@ -32,6 +32,7 @@ jobs:
 
     - name: Build
       run: go build -v cmd/api/
+      run: go build -v cmd/models/
 
     - name: Test
       run: go test -v cmd/api
