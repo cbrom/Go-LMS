@@ -24,6 +24,7 @@ func ConnectToTestDatabase() *gorm.DB {
 	if err != nil {
 		log.Printf("main : Error loading database configuration %+v", err)
 	}
+	dbConfig.Storage.Database = "go_lms_test"
 	db, err := database.Initialize(dbConfig.Storage)
 	models.SetRepoDB(db)
 	return db
