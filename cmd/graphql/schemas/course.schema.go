@@ -2,6 +2,8 @@ package schemas
 
 import (
 	"go-lms-of-pupilfirst/cmd/models"
+	"go-lms-of-pupilfirst/pkg/utils"
+	"time"
 
 	"github.com/graphql-go/graphql"
 )
@@ -83,4 +85,29 @@ var CreateCourseSchema = graphql.FieldConfigArgument{
 	"progression_limit": &graphql.ArgumentConfig{
 		Type: graphql.Int,
 	},
+}
+
+// CourseFromSchema course schema adapter returns course from course schema
+func CourseFromSchema(p graphql.ResolveParams) models.Course {
+	endsAtArg := p.Args["ends_at"]
+	var endsAt *time.Time
+	switch endsAtArg.(type) {
+	case string:
+		endsAt = utils.GetTimeFromStamp(endsAtArg.(string))
+	case time.Time:
+		endsAt = endsAtArg.(*time.Time)
+	}
+	course := models.Course{
+		Name:                p.Args["name"].(string),
+		EndsAt:              endsAt,
+		Description:         p.Args["description"].(string),
+		EnableLeadboard:     p.Args["enable_leadboard"].(bool),
+		PublicSignup:        p.Args["public_signup"].(bool),
+		Featured:            p.Args["featured"].(bool),
+		About:               p.Args["about"].(string),
+		ProgressionBehavior: p.Args["progression_behaviour"].(string),
+		ProgressionLimit:    p.Args["progression_limit"].(int),
+	}
+
+	return course
 }
