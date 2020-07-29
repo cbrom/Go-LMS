@@ -14,7 +14,7 @@ type IssuedCertificate struct {
 	CertificateID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
 	UserID        string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
 	SerialNumber  string
-	Certificate   *Certificate `gorm:"foreignkey:CertificateID"`
+	Certificate   Certificate `gorm:"foreignkey:CertificateID"`
 }
 
 // TableName gorm standard table name
@@ -28,6 +28,15 @@ type IssuedCertificateList []*IssuedCertificate
 // TableName gorm standard table name
 func (i *IssuedCertificateList) TableName() string {
 	return issuedCertificateTableName
+}
+
+/**
+* Relationship functions
+ */
+
+// GetCertificate
+func (i *IssuedCertificate) GetCertificate() error {
+	return handler.Model(i).Related(&i.Certificate).Error
 }
 
 /**
@@ -70,6 +79,11 @@ func (i *IssuedCertificate) UpdateOne() error {
 
 // Delete deletes certificate by id
 func (i *IssuedCertificate) Delete() error {
-	err := handler.Delete(i).Error
+	err := handler.Unscoped().Delete(i).Error
 	return err
+}
+
+// SoftDelete sets deleted at field
+func (i *IssuedCertificate) SoftDelete() error {
+	return handler.Delete(i).Error
 }
