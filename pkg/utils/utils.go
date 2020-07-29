@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -44,6 +45,16 @@ func (base *Base) SetUpdatedAt(t time.Time) {
 // SetDeletedAt sets field DeletedAt
 func (base *Base) SetDeletedAt(t *time.Time) {
 	base.DeletedAt = t
+}
+
+// GetTimeFromStamp changes timestamp string to  *time.Time
+func GetTimeFromStamp(ts string) *time.Time {
+	i, err := strconv.ParseInt(ts, 10, 64)
+	if err != nil {
+		return nil
+	}
+	tm := time.Unix(i, 0)
+	return &tm
 }
 
 // Error defines error type to be returned by handlers
