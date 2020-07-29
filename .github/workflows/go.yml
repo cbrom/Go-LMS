@@ -36,7 +36,7 @@ jobs:
     - name: Test api
       run: go test -v cmd/api
     - name: Test models
-      run: go test -v cmd/models/
+      run: go test -v ./cmd/models/
     - name: Setup Go environment
       uses: actions/setup-go@v2.0.3
       with:
