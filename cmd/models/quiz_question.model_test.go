@@ -85,6 +85,8 @@ var _ = Describe("QuizQuestion.Model", func() {
 
 		BeforeEach(func() {
 			answerOption = CreateAnswerOption(quizQuestion)
+			quizQuestion.CorrectAnswerID = answerOption.GetID()
+			quizQuestion.UpdateOne()
 		})
 		AfterEach(func() {
 			ao := models.AnswerOption{}
