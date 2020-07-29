@@ -32,10 +32,10 @@ jobs:
 
     - name: Build
       run: go build -v cmd/api/
-      run: go build -v cmd/models/
 
     - name: Test
       run: go test -v cmd/api
+      run: go test -v cmd/models/
     - name: Setup Go environment
       uses: actions/setup-go@v2.0.3
       with:
