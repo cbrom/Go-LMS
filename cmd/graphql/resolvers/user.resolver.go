@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"go-lms-of-pupilfirst/cmd/models"
 	"go-lms-of-pupilfirst/pkg/auth"
-	"strconv"
+	"go-lms-of-pupilfirst/pkg/utils"
 	"time"
 
 	"github.com/pkg/errors"
@@ -27,16 +27,6 @@ func GetUser(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("User ID not Provided")
 }
 
-// GetTimeFromStamp changes timestamp string to  *time.Time
-func GetTimeFromStamp(ts string) *time.Time {
-	i, err := strconv.ParseInt(ts, 10, 64)
-	if err != nil {
-		return nil
-	}
-	tm := time.Unix(i, 0)
-	return &tm
-}
-
 // SignUp creates a new user
 func SignUp(p graphql.ResolveParams) (interface{}, error) {
 	passwordSalt := uuid.NewRandom().String()
@@ -50,7 +40,7 @@ func SignUp(p graphql.ResolveParams) (interface{}, error) {
 	var timeZone *time.Time
 	switch timezoneArg.(type) {
 	case string:
-		timeZone = GetTimeFromStamp(timezoneArg.(string))
+		timeZone = utils.GetTimeFromStamp(timezoneArg.(string))
 	case time.Time:
 		timeZone = timezoneArg.(*time.Time)
 	}
