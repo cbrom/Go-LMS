@@ -217,6 +217,28 @@ func CreateContentBlock(targetVersion models.TargetVersion) models.ContentBlock 
 	return contentBlock
 }
 
+func CreateEvaluationCriteria(course models.Course) models.EvaluationCriteria {
+	value := struct {
+		Key   string
+		Value string
+	}{Key: "evaluation", Value: "100"}
+
+	returned, _ := json.Marshal(value)
+	evaluationCriteria := models.EvaluationCriteria{
+		Name:        "Evaluation Criteria Test Name",
+		CourseID:    course.GetID(),
+		MaxGrade:    4,
+		PassGrade:   2,
+		GradeLabels: postgres.Jsonb{returned},
+	}
+
+	if err := evaluationCriteria.Create(); err != nil {
+		Fail("Couldn't create evaluation criteria")
+	}
+
+	return evaluationCriteria
+}
+
 func CreateQuiz(target models.Target) models.Quiz {
 	quiz := models.Quiz{
 		Title:    "Quiz Test Title",

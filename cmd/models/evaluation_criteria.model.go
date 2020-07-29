@@ -18,7 +18,7 @@ type EvaluationCriteria struct {
 	MaxGrade    uint
 	PassGrade   uint
 	GradeLabels postgres.Jsonb
-	Course      *Course `gorm:"foreignkey:CourseID"`
+	Course      Course `gorm:"foreignkey:CourseID"`
 }
 
 // TableName gorm standard table name
@@ -32,6 +32,15 @@ type EvaluationCriteriaList []*EvaluationCriteria
 // TableName gorm standard table name
 func (e *EvaluationCriteriaList) TableName() string {
 	return evaluationCriteriaTableName
+}
+
+/**
+* Relationship functions
+ */
+
+// GetCourse returns the course of evaluation criteria
+func (e *EvaluationCriteria) GetCourse() error {
+	return handler.Model(e).Related(&e.Course).Error
 }
 
 /**
@@ -74,6 +83,11 @@ func (e *EvaluationCriteria) UpdateOne() error {
 
 // Delete deletes evaluation criteria by id
 func (e *EvaluationCriteria) Delete() error {
-	err := handler.Delete(e).Error
+	err := handler.Unscoped().Delete(e).Error
 	return err
+}
+
+// SoftDelete sets deleted at field
+func (e *EvaluationCriteria) SoftDelete() error {
+	return handler.Delete(e).Error
 }
