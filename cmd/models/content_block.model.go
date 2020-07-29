@@ -16,8 +16,8 @@ type ContentBlock struct {
 	BlockType       string `gorm:"type:varchar(100)"`
 	Content         postgres.Jsonb
 	SortIndex       int
-	TargetVersionID string         `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	TargetVersion   *TargetVersion `gorm:"foreignkey:TargetVersionID"`
+	TargetVersionID string        `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	TargetVersion   TargetVersion `gorm:"foreignkey:TargetVersionID"`
 }
 
 // TableName gorm standard table name
@@ -31,6 +31,15 @@ type ContentBlockList []*ContentBlock
 // TableName gorm standard table name
 func (c *ContentBlockList) TableName() string {
 	return contentBlockTableName
+}
+
+/**
+* Relationship functions
+ */
+
+// GetTargetVersion returns the target version of a content block
+func (c *ContentBlock) GetTargetVersion() error {
+	return handler.Model(c).Related(&c.TargetVersion).Error
 }
 
 /**
@@ -73,6 +82,11 @@ func (c *ContentBlock) UpdateOne() error {
 
 // Delete deletes content block by id
 func (c *ContentBlock) Delete() error {
-	err := handler.Delete(c).Error
+	err := handler.Unscoped().Delete(c).Error
 	return err
+}
+
+// SoftDelete sets deleted at field
+func (c *ContentBlock) SoftDelete() error {
+	return handler.Delete(c).Error
 }
