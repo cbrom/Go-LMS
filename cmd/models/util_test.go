@@ -1,12 +1,14 @@
 package models_test
 
 import (
+	"encoding/json"
 	"go-lms-of-pupilfirst/cmd/models"
 	"go-lms-of-pupilfirst/configs"
 	"go-lms-of-pupilfirst/pkg/database"
 	"log"
 
 	"github.com/jinzhu/gorm"
+	"github.com/jinzhu/gorm/dialects/postgres"
 	. "github.com/onsi/ginkgo"
 	"github.com/pborman/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -179,6 +181,26 @@ func CreateTargetVersion(target models.Target) models.TargetVersion {
 	}
 
 	return targetVersion
+}
+
+func CreateContentBlock(targetVersion models.TargetVersion) models.ContentBlock {
+	value := struct {
+		Key   string
+		Value string
+	}{Key: "autorefid", Value: "100"}
+
+	returned, _ := json.Marshal(value)
+	contentBlock := models.ContentBlock{
+		BlockType:       "text",
+		Content:         postgres.Jsonb{returned},
+		SortIndex:       1,
+		TargetVersionID: targetVersion.GetID(),
+	}
+	if err := contentBlock.Create(); err != nil {
+		Fail("Couldn't create content block")
+	}
+
+	return contentBlock
 }
 
 func CreateQuiz(target models.Target) models.Quiz {
