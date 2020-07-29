@@ -28,13 +28,16 @@ func ApplyResolvers(r *gin.Engine, db *gorm.DB, auth *auth.Authenticator) {
 			Description: "User type query",
 			Fields: graphql.Fields{
 				"user": &graphql.Field{
-					Type: schemas.UserSchema,
-					Args: graphql.FieldConfigArgument{
-						"id": &graphql.ArgumentConfig{
-							Type: graphql.String,
-						},
-					},
-					Resolve: GetUser,
+					Type:        schemas.UserSchema,
+					Description: "Returns a user by ID",
+					Args:        schemas.FetchByIDArgument,
+					Resolve:     GetUser,
+				},
+				"course": &graphql.Field{
+					Type:        schemas.CourseSchema,
+					Description: "Returns a course by ID",
+					Args:        schemas.FetchByIDArgument,
+					Resolve:     GetCourse,
 				},
 				"signin": &graphql.Field{
 					Type: graphql.String,
@@ -61,6 +64,13 @@ func ApplyResolvers(r *gin.Engine, db *gorm.DB, auth *auth.Authenticator) {
 					Args:        schemas.CreateUserSchema,
 					Description: "Register new user",
 					Resolve:     SignUp,
+				},
+
+				"createCourse": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.CreateCourseSchema,
+					Description: "Create a new course",
+					Resolve:     CreateCourse,
 				},
 			},
 		})
