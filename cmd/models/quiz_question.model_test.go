@@ -1,7 +1,6 @@
 package models_test
 
 import (
-	"fmt"
 	"go-lms-of-pupilfirst/cmd/models"
 
 	. "github.com/onsi/ginkgo"
@@ -108,8 +107,6 @@ var _ = Describe("QuizQuestion.Model", func() {
 
 			It("should get the correct answer", func() {
 				quizQuestion.GetAnswer()
-				fmt.Printf("quiz question %+v\n\n", quizQuestion.Answer.GetID())
-				fmt.Printf("quiz question %+v", answerOption.GetID())
 				Expect(quizQuestion.Answer.GetID()).To(Equal(answerOption.GetID()))
 			})
 		})
