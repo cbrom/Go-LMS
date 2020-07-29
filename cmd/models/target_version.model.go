@@ -13,7 +13,7 @@ type TargetVersion struct {
 	utils.Base
 	TargetID      string           `sql:"type:uuid" validate:"omitempty,required,uuid"`
 	VersionName   string           `gorm:"type:varchar(100)"`
-	Target        *Target          `gorm:"foreignkey:TargetID"`
+	Target        Target           `gorm:"foreignkey:TargetID"`
 	ContentBlocks ContentBlockList `gorm:"foreignkey:TargetVersion"`
 }
 
@@ -28,6 +28,20 @@ type TargetVersionList []*TargetVersion
 // TableName gorm standard table name
 func (t *TargetVersionList) TableName() string {
 	return targetVersionTableName
+}
+
+/**
+* Relationship functions
+ */
+
+// GetTarget returns target of this version
+func (t *TargetVersion) GetTarget() error {
+	return handler.Model(t).Related(&t.Target).Error
+}
+
+// GetContentBlocks returns content blocks of this version
+func (t *TargetVersion) GetContentBlocks() error {
+	return handler.Model(t).Related(&t.ContentBlocks).Error
 }
 
 /**
@@ -70,6 +84,11 @@ func (t *TargetVersion) UpdateOne() error {
 
 // Delete deletes target version by id
 func (t *TargetVersion) Delete() error {
-	err := handler.Delete(t).Error
+	err := handler.Unscoped().Delete(t).Error
 	return err
+}
+
+// SoftDelete sets deleted at field
+func (t *TargetVersion) SoftDelete() error {
+	return handler.Delete(t).Error
 }

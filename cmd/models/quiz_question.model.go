@@ -13,9 +13,9 @@ type QuizQuestion struct {
 	utils.Base
 	QuizID          string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
 	Question        string
-	Description     string           `gorm:"type:varchar(100)"`
-	CorrectAnswerID string           `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	Quiz            *Quiz            `gorm:"foreignkey:QuizID"`
+	Description     string `gorm:"type:varchar(100)"`
+	CorrectAnswerID string
+	Quiz            Quiz             `gorm:"foreignkey:QuizID"`
 	Answer          *AnswerOption    `gorm:"foreignkey:CorrectAnswerID"`
 	Answers         AnswerOptionList `gorm:"foreign:QuizQuestionID"`
 }
@@ -39,12 +39,23 @@ Relationship functions
 
 // GetAnswerOptions returns answer options of a question
 func (q *QuizQuestion) GetAnswerOptions() error {
-	return handler.Model(q.Answers).Related(q).Error
+	return handler.Model(q).Related(&q.Answers).Error
 }
 
 // GetAnswer returns the answer of a question
 func (q *QuizQuestion) GetAnswer() error {
-	return handler.Model(q.Answer).Related(q).Error
+	answer := AnswerOption{}
+	answer.SetID(q.CorrectAnswerID)
+	err := handler.Find(&answer).Error
+	if err == nil {
+		q.Answer = &answer
+	}
+	return err
+}
+
+// GetQuiz returns the quiz of this question
+func (q *QuizQuestion) GetQuiz() error {
+	return handler.Model(q).Related(&q.Quiz).Error
 }
 
 /**
@@ -87,6 +98,11 @@ func (q *QuizQuestion) UpdateOne() error {
 
 // Delete deletes quiz question by id
 func (q *QuizQuestion) Delete() error {
-	err := handler.Delete(q).Error
+	err := handler.Unscoped().Delete(q).Error
 	return err
+}
+
+// SoftDelete sets deleted at field
+func (q *QuizQuestion) SoftDelete() error {
+	return handler.Delete(q).Error
 }

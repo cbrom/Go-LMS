@@ -15,7 +15,7 @@ type AnswerOption struct {
 	Value          string
 	Hint           string `gorm:"type:varchar(255)"`
 
-	QuizQuestion *QuizQuestion `gorm:"foreignkey:QuizQuestionID"`
+	QuizQuestion QuizQuestion `gorm:"foreignkey:QuizQuestionID"`
 }
 
 // TableName gorm standard table name
@@ -37,7 +37,7 @@ Relationship functions
 
 // GetQuestion returns the QuizQuestion of this answer
 func (a *AnswerOption) GetQuestion() error {
-	return handler.Model(a.QuizQuestion).Related(a).Error
+	return handler.Model(a).Related(&a.QuizQuestion).Error
 }
 
 /**
@@ -80,6 +80,11 @@ func (a *AnswerOption) UpdateOne() error {
 
 // Delete deletes answer options by id
 func (a *AnswerOption) Delete() error {
-	err := handler.Delete(a).Error
+	err := handler.Unscoped().Delete(a).Error
 	return err
+}
+
+// SoftDelete sets deleted at field
+func (a *AnswerOption) SoftDelete() error {
+	return handler.Delete(a).Error
 }

@@ -13,9 +13,9 @@ type CourseAuthor struct {
 	utils.Base
 	UserID       string          `sql:"type:uuid;" validate:"omitempty,uuid,required"`
 	CourseID     string          `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	Course       *Course         `gorm:"foreignkey:CourseID"`
-	User         *User           `gorm:"foreignkey:UserID"`
-	Certificates CertificateList `gorm:"foreignkey:Issuer"`
+	Course       Course          `gorm:"foreignkey:CourseID"`
+	User         User            `gorm:"foreignkey:UserID"`
+	Certificates CertificateList `gorm:"foreignkey:CourseAuthorID"`
 }
 
 // TableName gorm standard table name
@@ -29,6 +29,25 @@ type CourseAuthorList []*CourseAuthor
 // TableName gorm standard table name
 func (c *CourseAuthorList) TableName() string {
 	return courseAuthorTableName
+}
+
+/**
+Relationship functions
+*/
+
+// GetCourse returns the Course of this relationship
+func (c *CourseAuthor) GetCourse() error {
+	return handler.Model(c).Related(&c.Course).Error
+}
+
+// GetUser returns the Course Author of this relationship
+func (c *CourseAuthor) GetUser() error {
+	return handler.Model(c).Related(&c.User).Error
+}
+
+// GetCertificates returns course sertificates issued by the author for the course
+func (c *CourseAuthor) GetCertificates() error {
+	return handler.Model(c).Related(&c.Certificates).Error
 }
 
 /**
@@ -71,6 +90,12 @@ func (c *CourseAuthor) UpdateOne() error {
 
 // Delete deletes course author by id
 func (c *CourseAuthor) Delete() error {
+	err := handler.Unscoped().Delete(c).Error
+	return err
+}
+
+// SoftDelete set's record deleted at field
+func (c *CourseAuthor) SoftDelete() error {
 	err := handler.Delete(c).Error
 	return err
 }
