@@ -68,10 +68,11 @@ var _ = Describe("Course", func() {
 
 	Describe("Basic Relationship Tests", func() {
 		var (
-			level         models.Level
-			studentCourse models.StudentCourse
-			courseAuthor  models.CourseAuthor
-			certificate   models.Certificate
+			level              models.Level
+			studentCourse      models.StudentCourse
+			courseAuthor       models.CourseAuthor
+			certificate        models.Certificate
+			evaluationCriteria models.EvaluationCriteria
 		)
 
 		BeforeEach(func() {
@@ -79,6 +80,7 @@ var _ = Describe("Course", func() {
 			studentCourse = CreateStudentCourse(user, course)
 			courseAuthor = AssignAuthor(user, course)
 			certificate = CreateCertificate(courseAuthor)
+			evaluationCriteria = CreateEvaluationCriteria(course)
 		})
 
 		AfterEach(func() {
@@ -90,6 +92,9 @@ var _ = Describe("Course", func() {
 
 			ca := models.CourseAuthor{}
 			ca.Delete()
+
+			ec := models.EvaluationCriteria{}
+			ec.Delete()
 		})
 
 		Context("Level Based", func() {
@@ -121,6 +126,14 @@ var _ = Describe("Course", func() {
 				course.GetCertificates()
 				Expect(len(course.Certificates)).To(Equal(1))
 				Expect(course.Certificates[0].GetID()).To(Equal(certificate.GetID()))
+			})
+		})
+
+		Context("Evaluation criteria based", func() {
+			It("should get evaluation criterias", func() {
+				course.GetEvaluationCriterias()
+				Expect(len(course.EvaluationCriterias)).To(Equal(1))
+				Expect(course.EvaluationCriterias[0].GetID()).To(Equal(evaluationCriteria.GetID()))
 			})
 		})
 	})
