@@ -120,6 +120,19 @@ func CreateCertificate(courseAuthor models.CourseAuthor) models.Certificate {
 	return certificate
 }
 
+// CreateIssuedCertificate creates an issued certificate mock
+func CreateIssuedCertificate(certificate models.Certificate, user models.User) models.IssuedCertificate {
+	issuedCertificate := models.IssuedCertificate{
+		CertificateID: certificate.GetID(),
+		UserID:        user.GetID(),
+		SerialNumber:  uuid.NewRandom().String(),
+	}
+	if err := issuedCertificate.Create(); err != nil {
+		Fail("Couldn't create issued certificate")
+	}
+	return issuedCertificate
+}
+
 // CreateStudentCourse creates a student and assigns it a course for testing
 func CreateStudentCourse(user models.User, course models.Course) models.StudentCourse {
 	studentCourse := models.StudentCourse{
