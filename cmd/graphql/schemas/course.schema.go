@@ -49,9 +49,6 @@ var CourseSchema = graphql.NewObject(
 			},
 			"levels": &graphql.Field{
 				Type: graphql.NewList(LevelSchema),
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					return nil, nil
-				},
 			},
 		},
 	})
