@@ -6,48 +6,90 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
-// TargetGroupSchema graphql schema of TargetGroup model
-var TargetGroupSchema = graphql.NewObject(
+// TargetSchema graphql schema of target  model
+var TargetSchema = graphql.NewObject(
 	graphql.ObjectConfig{
-		Name: "TargetGroup",
+		Name: "Target",
 		Fields: graphql.Fields{
 			"id": &graphql.Field{
 				Type: graphql.String,
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					tg := p.Source.(*models.TargetGroup)
-					return tg.GetID(), nil
+					t := p.Source.(*models.Target)
+					return t.GetID(), nil
 				},
 			},
-			"name": &graphql.Field{
+			"role": &graphql.Field{
+				Type: graphql.String,
+			},
+			"title": &graphql.Field{
 				Type: graphql.String,
 			},
 			"description": &graphql.Field{
 				Type: graphql.String,
 			},
+			"completion_instructions": &graphql.Field{
+				Type: graphql.String,
+			},
+			"resource_url": &graphql.Field{
+				Type: graphql.String,
+			},
 			"sort_index": &graphql.Field{
 				Type: graphql.Int,
 			},
-			"milestone": &graphql.Field{
+			"session_at": &graphql.Field{
+				Type: graphql.String,
+			},
+			"link_to_complete": &graphql.Field{
+				Type: graphql.String,
+			},
+			"resubmittable": &graphql.Field{
 				Type: graphql.Boolean,
+			},
+			"check_list": &graphql.Field{
+				Type: graphql.String,
+			},
+			"review_checklist": &graphql.Field{
+				Type: graphql.String,
 			},
 		},
 	})
 
-// CreateTargetGroupSchema contains fields used to create a new target group
-var CreateTargetGroupSchema = graphql.FieldConfigArgument{
-	"name": &graphql.ArgumentConfig{
+// CreateTargetSchema contains fields to create a new target
+var CreateTargetSchema = graphql.FieldConfigArgument{
+	"target_group_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"role": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"title": &graphql.ArgumentConfig{
 		Type: graphql.String,
 	},
 	"description": &graphql.ArgumentConfig{
 		Type: graphql.String,
 	},
+	"completion_instructions": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"resource_url": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
 	"sort_index": &graphql.ArgumentConfig{
 		Type: graphql.Int,
 	},
-	"milestone": &graphql.ArgumentConfig{
+	"session_at": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"link_to_complete": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"resubmittable": &graphql.ArgumentConfig{
 		Type: graphql.Boolean,
 	},
-	"level_id": &graphql.ArgumentConfig{
+	"check_list": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"review_checklist": &graphql.ArgumentConfig{
 		Type: graphql.String,
 	},
 }
