@@ -25,7 +25,6 @@ func GetCourse(p graphql.ResolveParams) (interface{}, error) {
 		course := &models.Course{}
 		course.SetID(idQuery)
 		course.FetchByID()
-		course.GetLevels()
 		return course, nil
 	}
 	return nil, errors.New("Course not found")
