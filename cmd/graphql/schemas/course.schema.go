@@ -1,6 +1,7 @@
 package schemas
 
 import (
+	"errors"
 	"go-lms-of-pupilfirst/cmd/models"
 	"go-lms-of-pupilfirst/pkg/utils"
 	"time"
@@ -48,7 +49,21 @@ var CourseSchema = graphql.NewObject(
 				Type: graphql.Int,
 			},
 			"levels": &graphql.Field{
-				Type: graphql.NewList(LevelSchema),
+				Args:    FetchByIDArgument,
+				Type:    graphql.NewList(LevelSchema),
+				Resolve: GetCourseLevel,
+			},
+			"authors": &graphql.Field{
+				Type: graphql.NewList(CourseAuthorSchema),
+			},
+			"evaluation_criterias": &graphql.Field{
+				Type: graphql.NewList(EvaluationCriteriaSchema),
+			},
+			"students": &graphql.Field{
+				Type: graphql.NewList(StudentCourseSchema),
+			},
+			"certificates": &graphql.Field{
+				Type: graphql.NewList(CertificateSchema),
 			},
 		},
 	})
@@ -107,4 +122,23 @@ func CourseFromSchema(p graphql.ResolveParams) models.Course {
 	}
 
 	return course
+}
+
+// GetCourseLevel returns levels of a course
+func GetCourseLevel(p graphql.ResolveParams) (interface{}, error) {
+	course := p.Source.(*models.Course)
+	if idQuery, ok := p.Args["id"].(string); ok {
+		level := models.Level{}
+		level.SetID(idQuery)
+		level.FetchByID()
+		level.GetCourse()
+		if level.Course.GetID() == course.GetID() {
+			// course.Levels = models.LevelList{&level}
+			return models.LevelList{&level}, nil
+		}
+		return nil, errors.New("Level doesn't belong to course")
+
+	}
+	course.GetLevels()
+	return course.Levels, nil
 }
