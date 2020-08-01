@@ -33,6 +33,12 @@ func ApplyResolvers(r *gin.Engine, db *gorm.DB, auth *auth.Authenticator) {
 					Args:        schemas.FetchByIDArgument,
 					Resolve:     GetUser,
 				},
+				"student": &graphql.Field{
+					Type:        schemas.StudentSchema,
+					Description: "Returns a student by ID",
+					Args:        schemas.FetchByIDArgument,
+					Resolve:     GetStudent,
+				},
 				"course": &graphql.Field{
 					Type:        schemas.CourseSchema,
 					Description: "Returns a course by ID",
