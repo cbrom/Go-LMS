@@ -33,3 +33,13 @@ var CreateQuizSchema = graphql.FieldConfigArgument{
 		Type: graphql.String,
 	},
 }
+
+// QuizFromSchema is an adapter for quiz
+func QuizFromSchema(p graphql.ResolveParams) models.Quiz {
+	quiz := models.Quiz{
+		Title:    p.Args["title"].(string),
+		TargetID: p.Args["target_id"].(string),
+	}
+
+	return quiz
+}
