@@ -2,8 +2,11 @@ package schemas
 
 import (
 	"go-lms-of-pupilfirst/cmd/models"
+	"go-lms-of-pupilfirst/pkg/utils"
+	"time"
 
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm/dialects/postgres"
 )
 
 // TargetSchema graphql schema of target  model
@@ -92,4 +95,32 @@ var CreateTargetSchema = graphql.FieldConfigArgument{
 	"review_checklist": &graphql.ArgumentConfig{
 		Type: graphql.String,
 	},
+}
+
+// TargetFromSchema is an adapter for target
+func TargetFromSchema(p graphql.ResolveParams) models.Target {
+	sessionAtArg := p.Args["session_at"]
+	var sessionAt *time.Time
+	switch sessionAtArg.(type) {
+	case string:
+		sessionAt = utils.GetTimeFromStamp(sessionAtArg.(string))
+	case time.Time:
+		sessionAt = sessionAtArg.(*time.Time)
+	}
+	target := models.Target{
+		TargetGroupID:          p.Args["target_group_id"].(string),
+		Role:                   p.Args["role"].(string),
+		Title:                  p.Args["title"].(string),
+		Description:            p.Args["description"].(string),
+		CompletionInstructions: p.Args["completion_instructions"].(string),
+		ResourceURL:            p.Args["resource_url"].(string),
+		SortIndex:              p.Args["sort_index"].(int),
+		SessionAt:              sessionAt,
+		LinkToComplete:         p.Args["link_to_complete"].(string),
+		Resubmittable:          p.Args["resubmittable"].(bool),
+		CheckList:              postgres.Jsonb{[]byte(p.Args["check_list"].(string))},
+		ReviewChecklist:        postgres.Jsonb{[]byte(p.Args["review_checlist"].(string))},
+	}
+
+	return target
 }
