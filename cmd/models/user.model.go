@@ -35,6 +35,7 @@ type User struct {
 
 	AuthoredCourses CourseAuthorList  `gorm:"foreignkey:UserID"`
 	Courses         StudentCourseList `gorm:"foreignkey:UserID"`
+	AllCourses      CourseList
 }
 
 // TableName gorm standard table name
@@ -59,9 +60,14 @@ func (u *User) GetAuthoredCourses() error {
 	return handler.Model(u).Related(&u.AuthoredCourses).Error
 }
 
-// GetCourses returns a list of courses from a list of authored courses
-func (u *User) GetCourses() error {
+// GetStudentCourses returns a list of courses from a list of authored courses
+func (u *User) GetStudentCourses() error {
 	return handler.Model(u).Related(&u.Courses).Error
+}
+
+// GetCourses returns a lisst of all courses
+func (u *User) GetCourses() error {
+	return handler.Table("courses").Select("*").Joins("inner join student_courses on student_courses.course_id = courses.id").Joins("inner join users on users.id = student_courses._user_id").Error
 }
 
 /**

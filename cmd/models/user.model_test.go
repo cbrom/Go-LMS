@@ -120,7 +120,7 @@ var _ = Describe("User.Model", func() {
 				sc.Delete()
 			})
 			It("should get student's course list", func() {
-				user.GetCourses()
+				user.GetStudentCourses()
 				Expect(len(user.Courses)).To(Equal(1))
 			})
 		})
