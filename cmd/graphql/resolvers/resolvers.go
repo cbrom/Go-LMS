@@ -84,6 +84,12 @@ func ApplyResolvers(r *gin.Engine, db *gorm.DB, auth *auth.Authenticator) {
 					Description: "Create a new level",
 					Resolve:     CreateLevel,
 				},
+				"enrollStudent": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.CreateStudentCourseSchema,
+					Description: "Enroll a student to a given course",
+					Resolve:     EnrollStudentInCourse,
+				},
 			},
 		})
 
