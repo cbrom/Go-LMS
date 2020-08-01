@@ -67,7 +67,10 @@ func (u *User) GetStudentCourses() error {
 
 // GetCourses returns a lisst of all courses
 func (u *User) GetCourses() error {
-	return handler.Table("courses").Select("*").Joins("inner join student_courses on student_courses.course_id = courses.id").Joins("inner join users on users.id = student_courses._user_id").Error
+	return handler.Table("courses").Select("*").Joins(
+		"inner join student_courses on student_courses.course_id = courses.id").Joins(
+		"inner join users on users.id = student_courses.user_id").Scan(
+		&u.AllCourses).Error
 }
 
 /**
