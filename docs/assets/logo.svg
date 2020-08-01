@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="376px" height="150px" viewBox="0 0 376 150" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group">
+            <polygon id="Rectangle" fill="#E3D69A" opacity="0.481259301" points="56 38 112 94 56 150 0 94"></polygon>
+            <polygon id="Rectangle" fill="#E3D69A" opacity="0.607956659" points="56.5 17 106 66.5 56.5 116 7 66.5"></polygon>
+            <polygon id="Rectangle" fill="#E3D69A" opacity="0.776994978" points="55.5 0 98 43.2327586 55.5 86.4655172 13 43.2327586"></polygon>
+            <text id="Go-LMS" font-family="AppleSymbols, Apple Symbols" font-size="96" font-weight="normal" fill="#5CAFF7">
+                <tspan x="131" y="94">Go-LMS</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

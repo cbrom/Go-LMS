@@ -32,36 +32,14 @@ type User struct {
 	About                  string `gorm:"type:text" json:"about" validate:"omitempty"`
 
 	TimeZone *time.Time `json:"timezone" validation:"omitempty"`
+
+	AuthoredCourses CourseAuthorList  `gorm:"foreignkey:UserID"`
+	Courses         StudentCourseList `gorm:"foreignkey:UserID"`
 }
 
 // TableName gorm standard table name
 func (u *User) TableName() string {
 	return userTableName
-}
-
-// GetID returns Id of the user
-func (u *User) GetID() string {
-	return u.ID
-}
-
-// SetID sets Id of the user
-func (u *User) SetID(id string) {
-	u.ID = id
-}
-
-// SetCreatedAt sets field createdAt, should only be used in mongodb
-func (u *User) SetCreatedAt(t time.Time) {
-	u.CreatedAt = t
-}
-
-// SetUpdatedAt sets field UpdatedAt
-func (u *User) SetUpdatedAt(t time.Time) {
-	u.UpdatedAt = t
-}
-
-// SetDeletedAt sets field DeletedAt
-func (u *User) SetDeletedAt(t *time.Time) {
-	u.DeletedAt = t
 }
 
 // UserList defines array of user objects
@@ -73,11 +51,28 @@ func (u *UserList) TableName() string {
 }
 
 /**
+Relationship functions
+*/
+
+// GetAuthoredCourses returns a list of authored courses
+func (u *User) GetAuthoredCourses() error {
+	return handler.Model(u).Related(&u.AuthoredCourses).Error
+}
+
+// GetCourses returns a list of courses from a list of authored courses
+func (u *User) GetCourses() error {
+	return handler.Model(u).Related(&u.Courses).Error
+}
+
+/**
 CRUD functions
 */
 
 // Create creates a new user record
 func (u *User) Create() error {
+	if handler == nil {
+		return errHandlerNotSet
+	}
 	possible := handler.NewRecord(u)
 	if possible {
 		if err := handler.Create(u).Error; err != nil {
@@ -90,6 +85,9 @@ func (u *User) Create() error {
 
 // FetchByID fetches User by id
 func (u *User) FetchByID() error {
+	if handler == nil {
+		return errHandlerNotSet
+	}
 	err := handler.First(u).Error
 	if err != nil {
 		return err
@@ -100,6 +98,9 @@ func (u *User) FetchByID() error {
 
 // FetchByEmail fetches User by email
 func (u *User) FetchByEmail() error {
+	if handler == nil {
+		return errHandlerNotSet
+	}
 	err := handler.Where("email = ?", u.Email).First(&u).Error
 	if err != nil {
 		return err
@@ -110,18 +111,37 @@ func (u *User) FetchByEmail() error {
 
 // FetchAll fetchs all Users
 func (u *User) FetchAll(ul *UserList) error {
+	if handler == nil {
+		return errHandlerNotSet
+	}
 	err := handler.Find(ul).Error
 	return err
 }
 
 // UpdateOne updates a given user
 func (u *User) UpdateOne() error {
+	if handler == nil {
+		return errHandlerNotSet
+	}
 	err := handler.Save(u).Error
 	return err
 }
 
 // Delete deletes user by id
 func (u *User) Delete() error {
+	if handler == nil {
+		return errHandlerNotSet
+	}
+	err := handler.Unscoped().Delete(u).Error
+	return err
+}
+
+// SoftDelete set's deleted at date
+func (u *User) SoftDelete() error {
+	if handler == nil {
+		return errHandlerNotSet
+	}
+
 	err := handler.Delete(u).Error
 	return err
 }
