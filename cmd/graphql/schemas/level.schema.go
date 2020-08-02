@@ -1,6 +1,7 @@
 package schemas
 
 import (
+	"errors"
 	"go-lms-of-pupilfirst/cmd/models"
 	"go-lms-of-pupilfirst/pkg/utils"
 	"time"
@@ -33,7 +34,9 @@ var LevelSchema = graphql.NewObject(
 				Type: graphql.String,
 			},
 			"target_groups": &graphql.Field{
-				Type: graphql.NewList(TargetGroupSchema),
+				Type:    graphql.NewList(TargetGroupSchema),
+				Args:    FetchByIDArgument,
+				Resolve: GetLevelTargeGroup,
 			},
 		},
 	})
@@ -76,4 +79,22 @@ func CreateLevelFromSchema(p graphql.ResolveParams) models.Level {
 	}
 
 	return level
+}
+
+// GetLevelTargeGroup returns target groups of a level
+func GetLevelTargeGroup(p graphql.ResolveParams) (interface{}, error) {
+	level := p.Source.(*models.Level)
+	if idQuery, ok := p.Args["id"].(string); ok {
+		targetGroup := models.TargetGroup{}
+		targetGroup.SetID(idQuery)
+		targetGroup.FetchByID()
+		targetGroup.GetLevel()
+		if targetGroup.Level.GetID() == level.GetID() {
+			return models.TargetGroupList{&targetGroup}, nil
+		}
+		return nil, errors.New("Target group doesn't belong to level")
+	}
+
+	level.GetTargetGroups()
+	return level.TargetGroups, nil
 }
