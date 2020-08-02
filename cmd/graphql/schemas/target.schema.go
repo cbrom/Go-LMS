@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/graphql-go/graphql"
-	"github.com/jinzhu/gorm/dialects/postgres"
 )
 
 // TargetSchema graphql schema of target  model
@@ -107,6 +106,9 @@ func TargetFromSchema(p graphql.ResolveParams) models.Target {
 	case time.Time:
 		sessionAt = sessionAtArg.(*time.Time)
 	}
+	checkList := utils.ConvertStringToJsonb(p.Args["check_list"].(string))
+	checkListReview := utils.ConvertStringToJsonb(p.Args["review_checklist"].(string))
+
 	target := models.Target{
 		TargetGroupID:          p.Args["target_group_id"].(string),
 		Role:                   p.Args["role"].(string),
@@ -118,8 +120,8 @@ func TargetFromSchema(p graphql.ResolveParams) models.Target {
 		SessionAt:              sessionAt,
 		LinkToComplete:         p.Args["link_to_complete"].(string),
 		Resubmittable:          p.Args["resubmittable"].(bool),
-		CheckList:              postgres.Jsonb{[]byte(p.Args["check_list"].(string))},
-		ReviewChecklist:        postgres.Jsonb{[]byte(p.Args["review_checlist"].(string))},
+		CheckList:              checkList,
+		ReviewChecklist:        checkListReview,
 	}
 
 	return target
