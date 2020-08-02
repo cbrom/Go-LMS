@@ -1,8 +1,11 @@
 package utils
 
 import (
+	"encoding/json"
 	"strconv"
 	"time"
+
+	"github.com/jinzhu/gorm/dialects/postgres"
 
 	"github.com/jinzhu/gorm"
 	"github.com/pborman/uuid"
@@ -55,6 +58,18 @@ func GetTimeFromStamp(ts string) *time.Time {
 	}
 	tm := time.Unix(i, 0)
 	return &tm
+}
+
+// ConvertStringToJsonb returns a postgres jsonb type from string
+func ConvertStringToJsonb(input string) postgres.Jsonb {
+	bytes := []byte(input)
+	var anonymousInterface interface{}
+	json.Unmarshal(bytes, &anonymousInterface)
+	jsonValue := anonymousInterface.(map[string]interface{})
+	// value := map[string]interface{}{"name": "new"}
+
+	rawMessage, _ := json.Marshal(jsonValue)
+	return postgres.Jsonb{rawMessage}
 }
 
 // Error defines error type to be returned by handlers
