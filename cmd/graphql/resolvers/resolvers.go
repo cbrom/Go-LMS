@@ -90,6 +90,66 @@ func ApplyResolvers(r *gin.Engine, db *gorm.DB, auth *auth.Authenticator) {
 					Description: "Enroll a student to a given course",
 					Resolve:     EnrollStudentInCourse,
 				},
+				"createTargetGroup": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.CreateTargetGroupSchema,
+					Description: "Create a new target group",
+					Resolve:     CreateTargetGroup,
+				},
+				"createAuthor": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.CreateCourseAuthorSchema,
+					Description: "Assign an author to a course",
+					Resolve:     CreateAuthor,
+				},
+				"createCertificate": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.CreateCertificateSchema,
+					Description: "Create a new certificate",
+					Resolve:     CreateCertificate,
+				},
+				"createContentBlock": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.CreateContentBlockSchema,
+					Description: "Create a new content block",
+					Resolve:     CreateContentBlock,
+				},
+				"createEvaluationCriteria": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.CreateEvaluationCriteriaSchema,
+					Description: "Create a course evaluation criteria",
+					Resolve:     CreateEvaluationCriteria,
+				},
+				"createQuiz": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.CreateQuizSchema,
+					Description: "Create a new quiz",
+					Resolve:     CreateQuiz,
+				},
+				"createQuizQuestion": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.CreateQuizQuestionSchema,
+					Description: "Create a new quiz question",
+					Resolve:     CreateQuizQuestion,
+				},
+				"createAnswerOption": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.CreateAnswerOptionSchema,
+					Description: "Create a new answer option",
+					Resolve:     CreateAnswerOption,
+				},
+				"createTarget": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.CreateTargetSchema,
+					Description: "Create a new target",
+					Resolve:     CreateTarget,
+				},
+				"createTargetVersion": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.CreateTargetVersionSchema,
+					Description: "Create a new target version",
+					Resolve:     CreateTargetVersion,
+				},
 			},
 		})
 
