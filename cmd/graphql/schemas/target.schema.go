@@ -50,9 +50,19 @@ var TargetSchema = graphql.NewObject(
 			},
 			"check_list": &graphql.Field{
 				Type: graphql.String,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					t := p.Source.(*models.Target)
+					checkList := t.CheckList
+					return string(checkList.RawMessage), nil
+				},
 			},
 			"review_checklist": &graphql.Field{
 				Type: graphql.String,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					t := p.Source.(*models.Target)
+					reviewChecklist := t.ReviewChecklist
+					return string(reviewChecklist.RawMessage), nil
+				},
 			},
 			"target_versions": &graphql.Field{
 				Type:    graphql.NewList(TargetVersionSchema),
@@ -169,9 +179,9 @@ func GetQuizzes(p graphql.ResolveParams) (interface{}, error) {
 			return models.QuizList{&quiz}, nil
 		}
 
-		return nil, errors.New("target version doesn't velong to target")
+		return nil, errors.New("quiz doesn't velong to target")
 	}
 
-	target.GetVersions()
+	target.GetQuizzes()
 	return target.Quizzes, nil
 }
