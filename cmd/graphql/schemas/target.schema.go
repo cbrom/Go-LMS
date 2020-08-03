@@ -1,6 +1,7 @@
 package schemas
 
 import (
+	"errors"
 	"go-lms-of-pupilfirst/cmd/models"
 	"go-lms-of-pupilfirst/pkg/utils"
 	"time"
@@ -52,6 +53,16 @@ var TargetSchema = graphql.NewObject(
 			},
 			"review_checklist": &graphql.Field{
 				Type: graphql.String,
+			},
+			"target_versions": &graphql.Field{
+				Type:    graphql.NewList(TargetVersionSchema),
+				Args:    FetchByIDArgument,
+				Resolve: GetTargetVersions,
+			},
+			"quizzes": &graphql.Field{
+				Type:    graphql.NewList(QuizSchema),
+				Args:    FetchByIDArgument,
+				Resolve: GetQuizzes,
 			},
 		},
 	})
@@ -125,4 +136,42 @@ func TargetFromSchema(p graphql.ResolveParams) models.Target {
 	}
 
 	return target
+}
+
+// GetTargetVersions returns a list of target versions of the target
+func GetTargetVersions(p graphql.ResolveParams) (interface{}, error) {
+	target := p.Source.(*models.Target)
+	if idQuery, ok := p.Args["id"].(string); ok {
+		targetVersion := models.TargetVersion{}
+		targetVersion.SetID(idQuery)
+		targetVersion.FetchByID()
+		targetVersion.GetTarget()
+		if targetVersion.Target.GetID() == target.GetID() {
+			return models.TargetVersionList{&targetVersion}, nil
+		}
+
+		return nil, errors.New("target version doesn't velong to target")
+	}
+
+	target.GetVersions()
+	return target.TargetVersions, nil
+}
+
+// GetQuizzes returns a list of quizzes of the target
+func GetQuizzes(p graphql.ResolveParams) (interface{}, error) {
+	target := p.Source.(*models.Target)
+	if idQuery, ok := p.Args["id"].(string); ok {
+		quiz := models.Quiz{}
+		quiz.SetID(idQuery)
+		quiz.FetchByID()
+		quiz.GetTarget()
+		if quiz.Target.GetID() == target.GetID() {
+			return models.QuizList{&quiz}, nil
+		}
+
+		return nil, errors.New("target version doesn't velong to target")
+	}
+
+	target.GetVersions()
+	return target.Quizzes, nil
 }
