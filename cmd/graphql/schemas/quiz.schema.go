@@ -1,6 +1,7 @@
 package schemas
 
 import (
+	"errors"
 	"go-lms-of-pupilfirst/cmd/models"
 
 	"github.com/graphql-go/graphql"
@@ -20,6 +21,11 @@ var QuizSchema = graphql.NewObject(
 			},
 			"title": &graphql.Field{
 				Type: graphql.String,
+			},
+			"quiz_questions": &graphql.Field{
+				Type:    graphql.NewList(QuizQuestionSchema),
+				Args:    FetchByIDArgument,
+				Resolve: GetQuizQuestions,
 			},
 		},
 	})
@@ -42,4 +48,21 @@ func QuizFromSchema(p graphql.ResolveParams) models.Quiz {
 	}
 
 	return quiz
+}
+
+// GetQuizQuestions returns a list of quiz questions of quiz
+func GetQuizQuestions(p graphql.ResolveParams) (interface{}, error) {
+	quiz := p.Source.(*models.Quiz)
+	if idQuery, ok := p.Args["id"].(string); ok {
+		quizQuestion := models.QuizQuestion{}
+		quizQuestion.SetID(idQuery)
+		quizQuestion.FetchByID()
+		quizQuestion.GetQuiz()
+		if quizQuestion.Quiz.GetID() == quiz.GetID() {
+			return models.QuizQuestionList{&quizQuestion}, nil
+		}
+		return nil, errors.New("Quiz question doesn't belong to quiz")
+	}
+	quiz.GetQuizQuestions()
+	return quiz.QuizQuestions, nil
 }
