@@ -21,11 +21,13 @@ type Course struct {
 	About               string `gorm:"type:varchar(100)"`
 	ProgressionBehavior string `gorm:"type:varchar(100)"`
 	ProgressionLimit    int
-	Certificates        CertificateList        `gorm:"foreignkey:CourceID"`
-	Authors             CourseAuthorList       `gorm:"foreignkey:CourseID"`
+	Certificates        CertificateList  `gorm:"foreignkey:CourceID"`
+	Authors             CourseAuthorList `gorm:"foreignkey:CourseID"`
+	CourseAuthors       UserList
 	EvaluationCriterias EvaluationCriteriaList `gorm:"foreignkey:CourseID"`
 	Levels              LevelList              `gorm:"foreignkey:CourseID"`
 	Students            StudentCourseList      `gorm:"foreignkey:CourseID"`
+	AllStudents         UserList
 }
 
 // TableName gorm standard table name
@@ -53,6 +55,22 @@ func (c *Course) GetCertificates() error {
 // GetAuthors returns course authors
 func (c *Course) GetAuthors() error {
 	return handler.Model(c).Related(&c.Authors).Error
+}
+
+// GetCourseAuthors returns actual course authors
+func (c *Course) GetCourseAuthors() error {
+	return handler.Table("users").Select("*").Joins(
+		"inner join course_authors on course_authors.user_id = users.id").Joins(
+		"inner join courses on courses.id = course_authors.course_id").Scan(
+		&c.CourseAuthors).Error
+}
+
+// GetCourseStudents returns a list of student users registered in a course
+func (c *Course) GetCourseStudents() error {
+	return handler.Table("users").Select("*").Joins(
+		"inner join student_courses on student_courses.user_id = users.id").Joins(
+		"inner join courses on courses.id = student_courses.course_id").Scan(
+		&c.AllStudents).Error
 }
 
 // GetEvaluationCriterias returns course evaluation criterias
