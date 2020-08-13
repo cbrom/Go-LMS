@@ -2,6 +2,7 @@ package schemas
 
 import (
 	"errors"
+	"fmt"
 	"go-lms-of-pupilfirst/cmd/models"
 	"go-lms-of-pupilfirst/pkg/utils"
 	"time"
@@ -54,13 +55,17 @@ var CourseSchema = graphql.NewObject(
 				Resolve: GetCourseLevel,
 			},
 			"authors": &graphql.Field{
-				Type: graphql.NewList(CourseAuthorSchema),
+				Args:    FetchByIDArgument,
+				Type:    graphql.NewList(UserSchema),
+				Resolve: GetCourseAuthors,
 			},
 			"evaluation_criterias": &graphql.Field{
 				Type: graphql.NewList(EvaluationCriteriaSchema),
 			},
 			"students": &graphql.Field{
-				Type: graphql.NewList(StudentCourseSchema),
+				Args:    FetchByIDArgument,
+				Type:    graphql.NewList(UserSchema),
+				Resolve: GetStudents,
 			},
 			"certificates": &graphql.Field{
 				Type: graphql.NewList(CertificateSchema),
@@ -141,4 +146,26 @@ func GetCourseLevel(p graphql.ResolveParams) (interface{}, error) {
 	}
 	course.GetLevels()
 	return course.Levels, nil
+}
+
+// GetCourseAuthors returns authors of a course
+func GetCourseAuthors(p graphql.ResolveParams) (interface{}, error) {
+	course := p.Source.(*models.Course)
+	if idQuery, ok := p.Args["id"].(string); ok {
+		author := models.User{}
+		author.SetID(idQuery)
+		author.FetchByID()
+
+	}
+	course.GetCourseAuthors()
+	fmt.Printf("%v", course.Authors)
+	return course.CourseAuthors, nil
+}
+
+// GetStudents returns authors of a course
+func GetStudents(p graphql.ResolveParams) (interface{}, error) {
+	course := p.Source.(*models.Course)
+	course.GetCourseStudents()
+	fmt.Printf("%v", course.AllStudents)
+	return course.AllStudents, nil
 }
