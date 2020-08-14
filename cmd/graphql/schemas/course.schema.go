@@ -60,7 +60,9 @@ var CourseSchema = graphql.NewObject(
 				Resolve: GetCourseAuthors,
 			},
 			"evaluation_criterias": &graphql.Field{
-				Type: graphql.NewList(EvaluationCriteriaSchema),
+				Args:    FetchByIDArgument,
+				Type:    graphql.NewList(EvaluationCriteriaSchema),
+				Resolve: GetEvaluationCriterias,
 			},
 			"students": &graphql.Field{
 				Args:    FetchByIDArgument,
@@ -68,7 +70,9 @@ var CourseSchema = graphql.NewObject(
 				Resolve: GetStudents,
 			},
 			"certificates": &graphql.Field{
-				Type: graphql.NewList(CertificateSchema),
+				Args:    FetchByIDArgument,
+				Type:    graphql.NewList(CertificateSchema),
+				Resolve: GetCertificates,
 			},
 		},
 	})
@@ -146,6 +150,44 @@ func GetCourseLevel(p graphql.ResolveParams) (interface{}, error) {
 	}
 	course.GetLevels()
 	return course.Levels, nil
+}
+
+// GetEvaluationCriterias returns evaluation criterias of a course
+func GetEvaluationCriterias(p graphql.ResolveParams) (interface{}, error) {
+	course := p.Source.(*models.Course)
+	if idQuery, ok := p.Args["id"].(string); ok {
+		evaluationCriteria := models.EvaluationCriteria{}
+		evaluationCriteria.SetID(idQuery)
+		evaluationCriteria.FetchByID()
+		evaluationCriteria.GetCourse()
+		if evaluationCriteria.Course.GetID() == course.GetID() {
+			// course.EvaluationCriterias = models.EvaluationCriteriaList{&evaluationCriteria}
+			return models.EvaluationCriteriaList{&evaluationCriteria}, nil
+		}
+		return nil, errors.New("EvaluationCriteria doesn't belong to course")
+
+	}
+	course.GetEvaluationCriterias()
+	return course.EvaluationCriterias, nil
+}
+
+// GetCertificates returns certificates of a course
+func GetCertificates(p graphql.ResolveParams) (interface{}, error) {
+	course := p.Source.(*models.Course)
+	if idQuery, ok := p.Args["id"].(string); ok {
+		certificate := models.Certificate{}
+		certificate.SetID(idQuery)
+		certificate.FetchByID()
+		certificate.GetCourse()
+		if certificate.Course.GetID() == course.GetID() {
+			// course.Certificates = models.Certificateist{&certificate}
+			return models.CertificateList{&certificate}, nil
+		}
+		return nil, errors.New("Certificate doesn't belong to course")
+
+	}
+	course.GetCertificates()
+	return course.Certificates, nil
 }
 
 // GetCourseAuthors returns authors of a course
