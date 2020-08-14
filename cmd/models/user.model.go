@@ -33,9 +33,10 @@ type User struct {
 
 	TimeZone *time.Time `json:"timezone" validation:"omitempty"`
 
-	AuthoredCourses CourseAuthorList  `gorm:"foreignkey:UserID"`
-	Courses         StudentCourseList `gorm:"foreignkey:UserID"`
-	AllCourses      CourseList
+	AuthoredCourses     CourseAuthorList  `gorm:"foreignkey:UserID"`
+	Courses             StudentCourseList `gorm:"foreignkey:UserID"`
+	AllCourses          CourseList
+	StudentCertificates CertificateList
 }
 
 // TableName gorm standard table name
@@ -71,6 +72,14 @@ func (u *User) GetCourses() error {
 		"inner join student_courses on student_courses.course_id = courses.id").Joins(
 		"inner join users on users.id = student_courses.user_id").Scan(
 		&u.AllCourses).Error
+}
+
+// GetStudentCertificates returns students certificates
+func (u *User) GetStudentCertificates() error {
+	return handler.Table("certificates").Select("*").Joins(
+		"inner join issued_certificates on issued_certificates.certificate_id = certificates.id").Joins(
+		"inner join users on users.id = issued_certificates.user_id").Scan(
+		&u.StudentCertificates).Error
 }
 
 /**
