@@ -16,3 +16,13 @@ func CreateCertificate(p graphql.ResolveParams) (interface{}, error) {
 
 	return nil, errors.New("Unable to create certificate")
 }
+
+// CreateIssuedCertificate issues a new certificate
+func CreateIssuedCertificate(p graphql.ResolveParams) (interface{}, error) {
+	issuedCertificate := schemas.IssuedCertificateFromSchema(p)
+	if err := issuedCertificate.Create(); err == nil {
+		return issuedCertificate.GetID(), nil
+	}
+
+	return nil, errors.New("Unable to create issued certificate")
+}
