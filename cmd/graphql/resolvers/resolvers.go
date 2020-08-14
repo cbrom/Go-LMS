@@ -108,6 +108,12 @@ func ApplyResolvers(r *gin.Engine, db *gorm.DB, auth *auth.Authenticator) {
 					Description: "Create a new certificate",
 					Resolve:     CreateCertificate,
 				},
+				"issueCertificate": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.CreateIssuedCertificateSchema,
+					Description: "Issue a certificate to a student",
+					Resolve:     CreateIssuedCertificate,
+				},
 				"createContentBlock": &graphql.Field{
 					Type:        graphql.String,
 					Args:        schemas.CreateContentBlockSchema,
