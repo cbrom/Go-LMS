@@ -72,6 +72,9 @@ func ApplyResolvers(r *gin.Engine, db *gorm.DB, auth *auth.Authenticator) {
 					Resolve:     SignUp,
 				},
 
+				/*
+				Create a new course
+				*/
 				"createCourse": &graphql.Field{
 					Type:        graphql.String,
 					Args:        schemas.CreateCourseSchema,
@@ -156,6 +159,101 @@ func ApplyResolvers(r *gin.Engine, db *gorm.DB, auth *auth.Authenticator) {
 					Description: "Create a new target version",
 					Resolve:     CreateTargetVersion,
 				},
+
+				/*
+				* Delete records
+				*/
+
+				"deleteUser": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an existing user",
+					Resolve: DeleteResource,
+				},
+				"deleteCourse": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an existing course",
+					Resolve: DeleteResource,
+				},
+				"deleteLevel": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an existing level",
+					Resolve: DeleteResource,
+				},
+				"unEnrollStudent": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an enrolled student",
+					Resolve: DeleteResource,
+				},
+				"deleteTargetGroup": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an existing target group",
+					Resolve: DeleteResource,
+				},
+				"deleteAuthor": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an existing author",
+					Resolve: DeleteResource,
+				},
+				"deleteCertificate": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an existing certificate",
+					Resolve: DeleteResource,
+				},
+				"deleteIssuedCertificate": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an issued certificate",
+					Resolve: DeleteResource,
+				},
+				"deleteContentBlock": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an existing content block",
+					Resolve: DeleteResource,
+				},
+				"deleteEvaluationCriteria": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an existing evaluation criteria",
+					Resolve: DeleteResource,
+				},
+				"deleteQuiz": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an existing quiz",
+					Resolve: DeleteResource,
+				},
+				"deleteQuizQuestion": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an existing quiz question",
+					Resolve: DeleteResource,
+				},
+				"deleteAnswerOption": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an existing answer option",
+					Resolve: DeleteResource,
+				},
+				"deleteTarget": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an existing target",
+					Resolve: DeleteResource,
+				},
+				"deleteTargetVersion": &graphql.Field{
+					Type: graphql.String,
+					Args: StringArgs,
+					Description: "Delete an existing target version",
+					Resolve: DeleteResource,
+				},
 			},
 		})
 
@@ -186,4 +284,14 @@ func executeQuery(query string, schema graphql.Schema, ctx *gin.Context) *graphq
 		fmt.Printf("wrong result, unexpected errors: %+v", result.Errors)
 	}
 	return result
+}
+
+func DeleteCourse(p graphql.ResolveParams) (interface{}, error) {
+	return nil, nil
+}
+
+var StringArgs = graphql.FieldConfigArgument{
+	"id": &graphql.ArgumentConfig{
+		Type: graphql.String
+	}
 }
