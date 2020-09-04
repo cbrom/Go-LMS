@@ -60,6 +60,37 @@ func QuizQuestionFromSchema(p graphql.ResolveParams) models.QuizQuestion {
 	return quizQuestion
 }
 
+// UpdateQuizQuestionSchema contains fields to updates a quiz questionn
+var UpdateQuizQuestionSchema = graphql.FieldConfigArgument{
+	"id": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"quiz_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"question": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"description": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"correct_answer_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+}
+
+// QuizQuestionFromUpdateSchema is an adapter for quiz question
+func QuizQuestionFromUpdateSchema(p graphql.ResolveParams) models.QuizQuestion {
+	quizQuestion := models.QuizQuestion{
+		QuizID:      p.Args["quiz_id"].(string),
+		Question:    p.Args["question"].(string),
+		Description: p.Args["description"].(string),
+	}
+
+	quizQuestion.SetID(p.Args["id"].(string))
+	return quizQuestion
+}
+
 // GetAnswerOptions returns a list of answer options for quiz question
 func GetAnswerOptions(p graphql.ResolveParams) (interface{}, error) {
 	quizQuestion := p.Source.(*models.QuizQuestion)

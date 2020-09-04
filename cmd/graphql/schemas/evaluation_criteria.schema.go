@@ -66,3 +66,40 @@ func EvaluationCriteriaFromSchema(p graphql.ResolveParams) models.EvaluationCrit
 
 	return evaluationCriteria
 }
+
+// UpdateEvaluationCriteriaSchema contains fields to update an evaluation criteria
+var UpdateEvaluationCriteriaSchema = graphql.FieldConfigArgument{
+	"id": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"name": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"course_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"max_grade": &graphql.ArgumentConfig{
+		Type: graphql.Int,
+	},
+	"pass_grade": &graphql.ArgumentConfig{
+		Type: graphql.Int,
+	},
+	"grade_labels": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+}
+
+// EvaluationCriteriaFromUpdateSchema is an adapter for evaluation criteria
+func EvaluationCriteriaFromUpdateSchema(p graphql.ResolveParams) models.EvaluationCriteria {
+	evaluationCriteria := models.EvaluationCriteria{
+		Name:        p.Args["name"].(string),
+		CourseID:    p.Args["course_id"].(string),
+		MaxGrade:    uint(p.Args["max_grade"].(int)),
+		PassGrade:   uint(p.Args["pass_grade"].(int)),
+		GradeLabels: postgres.Jsonb{[]byte(p.Args["grade_labels"].(string))},
+	}
+
+	evaluationCriteria.SetID(p.Args["id"].(string))
+
+	return evaluationCriteria
+}

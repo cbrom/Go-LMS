@@ -50,6 +50,30 @@ func TargetVersionFromSchema(p graphql.ResolveParams) models.TargetVersion {
 	return targetVersion
 }
 
+// UpdateTargetVersionSchema contains fields to update a target version
+var UpdateTargetVersionSchema = graphql.FieldConfigArgument{
+	"id": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"version_name": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"target_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+}
+
+// TargetVersionFromUpdateSchema is an adapter for target version
+func TargetVersionFromUpdateSchema(p graphql.ResolveParams) models.TargetVersion {
+	targetVersion := models.TargetVersion{
+		VersionName: p.Args["version_name"].(string),
+		TargetID:    p.Args["target_id"].(string),
+	}
+	targetVersion.SetID(p.Args["id"].(string))
+
+	return targetVersion
+}
+
 // GetContentBlocks returns a list of content blocks of a target version
 func GetContentBlocks(p graphql.ResolveParams) (interface{}, error) {
 	targetVersion := p.Source.(*models.TargetVersion)

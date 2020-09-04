@@ -70,6 +70,30 @@ func StudentCourseFromSchema(p graphql.ResolveParams) models.StudentCourse {
 	return studentCourse
 }
 
+// UpdateStudentCourseSchema contains fields to update a student course
+var UpdateStudentCourseSchema = graphql.FieldConfigArgument{
+	"id": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"user_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"course_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+}
+
+// StudentCourseFromUPdateSchema is an adapter for student course
+func StudentCourseFromUpdateSchema(p graphql.ResolveParams) models.StudentCourse {
+	studentCourse := models.StudentCourse{
+		UserID:   p.Args["user_id"].(string),
+		CourseID: p.Args["course_id"].(string),
+	}
+
+	studentCourse.SetID(p.Args["id"].(string))
+	return studentCourse
+}
+
 // GetStudentUser  returns user info of a student
 func GetStudentUser(p graphql.ResolveParams) (interface{}, error) {
 	student := p.Source.(Student)

@@ -63,3 +63,29 @@ var CreateUserSchema = graphql.FieldConfigArgument{
 		Type: graphql.Int,
 	},
 }
+
+
+// UpdateUserSchema contains fields to update a user
+var UpdateUserSchema = graphql.FieldConfigArgument{
+	"id": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"name": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"email": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"password": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"password_confirm": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"timezone": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"role": &graphql.ArgumentConfig{
+		Type: graphql.Int,
+	},
+}

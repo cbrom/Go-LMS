@@ -81,6 +81,51 @@ func CreateLevelFromSchema(p graphql.ResolveParams) models.Level {
 	return level
 }
 
+// UpdateLevelSchema contains fields to update a level
+var UpdateLevelSchema = graphql.FieldConfigArgument{
+	"id": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"name": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"description": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"number": &graphql.ArgumentConfig{
+		Type: graphql.Int,
+	},
+	"unlock_on": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"course_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+}
+
+// CreateLevelFromUpdateSchema adapter for level schema and level model
+func LevelFromUpdateSchema(p graphql.ResolveParams) models.Level {
+	unlockOnArg := p.Args["unlock_on"]
+	var unlockOn *time.Time
+	switch unlockOnArg.(type) {
+	case string:
+		unlockOn = utils.GetTimeFromStamp(unlockOnArg.(string))
+	case time.Time:
+		unlockOn = unlockOnArg.(*time.Time)
+	}
+	level := models.Level{
+		Name:        p.Args["name"].(string),
+		CourseID:    p.Args["course_id"].(string),
+		Description: p.Args["description"].(string),
+		Number:      p.Args["number"].(int),
+		UnlockOn:    unlockOn,
+	}
+
+	level.SetID(p.Args["id"].(string))
+
+	return level
+}
+
 // GetLevelTargeGroup returns target groups of a level
 func GetLevelTargeGroup(p graphql.ResolveParams) (interface{}, error) {
 	level := p.Source.(*models.Level)

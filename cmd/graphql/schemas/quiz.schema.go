@@ -50,6 +50,31 @@ func QuizFromSchema(p graphql.ResolveParams) models.Quiz {
 	return quiz
 }
 
+// UpdateQuizSchema contains fields to create a new quiz
+var UpdateQuizSchema = graphql.FieldConfigArgument{
+	"id": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"title": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"target_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+}
+
+// QuizFromUpdateSchema is an adapter for quiz
+func QuizFromUpdateSchema(p graphql.ResolveParams) models.Quiz {
+	quiz := models.Quiz{
+		Title:    p.Args["title"].(string),
+		TargetID: p.Args["target_id"].(string),
+	}
+
+	quiz.SetID(p.Args["id"].(string))
+
+	return quiz
+}
+
 // GetQuizQuestions returns a list of quiz questions of quiz
 func GetQuizQuestions(p graphql.ResolveParams) (interface{}, error) {
 	quiz := p.Source.(*models.Quiz)

@@ -77,7 +77,7 @@ var CourseSchema = graphql.NewObject(
 		},
 	})
 
-// CreateCourseSchema contains fields to create a new user
+// CreateCourseSchema contains fields to create a new course
 var CreateCourseSchema = graphql.FieldConfigArgument{
 	"name": &graphql.ArgumentConfig{
 		Type: graphql.String,
@@ -129,6 +129,67 @@ func CourseFromSchema(p graphql.ResolveParams) models.Course {
 		ProgressionBehavior: p.Args["progression_behaviour"].(string),
 		ProgressionLimit:    p.Args["progression_limit"].(int),
 	}
+
+	return course
+}
+
+// UpdateCourseSchema contains fields to update a course
+var UpdateCourseSchema = graphql.FieldConfigArgument{
+	"id": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"name": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"ends_at": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"description": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"enable_leadboard": &graphql.ArgumentConfig{
+		Type: graphql.Boolean,
+	},
+	"public_signup": &graphql.ArgumentConfig{
+		Type: graphql.Boolean,
+	},
+	"featured": &graphql.ArgumentConfig{
+		Type: graphql.Boolean,
+	},
+	"about": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"progression_behaviour": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"progression_limit": &graphql.ArgumentConfig{
+		Type: graphql.Int,
+	},
+}
+
+// CourseFromUpdateSchema course schema adapter returns course from course schema
+func CourseFromUpdateSchema(p graphql.ResolveParams) models.Course {
+	endsAtArg := p.Args["ends_at"]
+	var endsAt *time.Time
+	switch endsAtArg.(type) {
+	case string:
+		endsAt = utils.GetTimeFromStamp(endsAtArg.(string))
+	case time.Time:
+		endsAt = endsAtArg.(*time.Time)
+	}
+	course := models.Course{
+		Name:                p.Args["name"].(string),
+		EndsAt:              endsAt,
+		Description:         p.Args["description"].(string),
+		EnableLeadboard:     p.Args["enable_leadboard"].(bool),
+		PublicSignup:        p.Args["public_signup"].(bool),
+		Featured:            p.Args["featured"].(bool),
+		About:               p.Args["about"].(string),
+		ProgressionBehavior: p.Args["progression_behaviour"].(string),
+		ProgressionLimit:    p.Args["progression_limit"].(int),
+	}
+
+	course.SetID(p.Args["id"].(string))
 
 	return course
 }

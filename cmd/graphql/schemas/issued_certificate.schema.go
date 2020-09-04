@@ -43,3 +43,28 @@ func IssuedCertificateFromSchema(p graphql.ResolveParams) models.IssuedCertifica
 
 	return issuedCertificate
 }
+
+
+// UpdateIssuedCertificateSchema contains fields to update an issued certificate
+var UpdateIssuedCertificateSchema = graphql.FieldConfigArgument{
+	"id": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"user_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"certificate_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+}
+
+// IssuedCertificateFromUpdateSchema is an adapter for issued certificate
+func IssuedCertificateFromUpdateSchema(p graphql.ResolveParams) models.IssuedCertificate {
+	issuedCertificate := models.IssuedCertificate{
+		UserID:        p.Args["user_id"].(string),
+		CertificateID: p.Args["certificate_id"].(string),
+	}
+	issuedCertificate.SetID(p.Args["id"].(string))
+
+	return issuedCertificate
+}

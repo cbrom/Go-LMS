@@ -88,3 +88,54 @@ func CertificateFromSchema(p graphql.ResolveParams) models.Certificate {
 	}
 	return certificate
 }
+
+// UpdateCertificateSchema contains fields to update a certificate
+var UpdateCertificateSchema = graphql.FieldConfigArgument{
+	"id": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"qr_corner": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"qr_scale": &graphql.ArgumentConfig{
+		Type: graphql.Int,
+	},
+	"margin": &graphql.ArgumentConfig{
+		Type: graphql.Int,
+	},
+	"name_offset_top": &graphql.ArgumentConfig{
+		Type: graphql.Int,
+	},
+	"font_size": &graphql.ArgumentConfig{
+		Type: graphql.Int,
+	},
+	"message": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"active": &graphql.ArgumentConfig{
+		Type: graphql.Boolean,
+	},
+	"course_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"course_author_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+}
+
+// CertificateFromSchema is an adapter for certificate update schema
+func CertificateFromUpdateSchema(p graphql.ResolveParams) models.Certificate {
+	certificate := models.Certificate{
+		QRCorner:       p.Args["qr_corner"].(string),
+		QRScale:        p.Args["qr_scale"].(int),
+		Margin:         p.Args["margin"].(int),
+		NameOffsetTop:  p.Args["name_offset_top"].(int),
+		FontSize:       p.Args["font_size"].(int),
+		Message:        p.Args["message"].(string),
+		Active:         p.Args["active"].(bool),
+		CourseID:       p.Args["course_id"].(string),
+		CourseAuthorID: p.Args["course_author_id"].(string),
+	}
+	certificate.SetID(p.Args["id"].(string))
+	return certificate
+}

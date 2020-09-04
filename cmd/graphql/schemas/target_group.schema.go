@@ -71,6 +71,43 @@ func TargetGroupFromSchema(p graphql.ResolveParams) models.TargetGroup {
 	return targetGroup
 }
 
+// UpdateTargetGroupSchema contains fields used to update a target group
+var UpdateTargetGroupSchema = graphql.FieldConfigArgument{
+	"id": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"name": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"description": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"sort_index": &graphql.ArgumentConfig{
+		Type: graphql.Int,
+	},
+	"milestone": &graphql.ArgumentConfig{
+		Type: graphql.Boolean,
+	},
+	"level_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+}
+
+// TargetGroupFromUpdateSchema is an adapter for target group
+func TargetGroupFromUpdateSchema(p graphql.ResolveParams) models.TargetGroup {
+	targetGroup := models.TargetGroup{
+		Name:        p.Args["name"].(string),
+		Description: p.Args["description"].(string),
+		SortIndex:   p.Args["sort_index"].(int),
+		Milestone:   p.Args["milestone"].(bool),
+		LevelID:     p.Args["level_id"].(string),
+	}
+
+	targetGroup.SetID(p.Args["id"].(string))
+
+	return targetGroup
+}
+
 // GetTargets returns a list of targets of a target group
 func GetTargets(p graphql.ResolveParams) (interface{}, error) {
 	targetGroup := p.Source.(*models.TargetGroup)

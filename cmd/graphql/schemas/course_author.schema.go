@@ -40,3 +40,27 @@ func CourseAuthorFromSchema(p graphql.ResolveParams) models.CourseAuthor {
 
 	return courseAuthor
 }
+
+// UpdateCourseAuthorSchema contains fields to update a course author
+var UpdateCourseAuthorSchema = graphql.FieldConfigArgument{
+	"id": &graphql.ArgumentConfig{
+		Type: graphql.NewNonNull(graphql.String),
+	},
+	"user_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+	"course_id": &graphql.ArgumentConfig{
+		Type: graphql.String,
+	},
+}
+
+// CourseAuthorFromUpdateSchema is an adapter for course author
+func CourseAuthorFromUpdateSchema(p graphql.ResolveParams) models.CourseAuthor {
+	courseAuthor := models.CourseAuthor{
+		UserID:   p.Args["user_id"].(string),
+		CourseID: p.Args["course_id"].(string),
+	}
+	courseAuthor.SetID(p.Args["id"].(string))
+
+	return courseAuthor
+}
