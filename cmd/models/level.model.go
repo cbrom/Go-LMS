@@ -13,7 +13,7 @@ var (
 type Level struct {
 	utils.Base
 	Name         string `gorm:"type:varchar(100)"`
-	CourseID     string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	CourseID     string `sql:"type:uuid REFERENCES courses(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
 	Description  string
 	Number       int
 	UnlockOn     *time.Time

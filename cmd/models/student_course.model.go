@@ -11,8 +11,8 @@ var (
 // StudentCourse defines a model for course students
 type StudentCourse struct {
 	utils.Base
-	UserID   string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	CourseID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	UserID   string `sql:"type:uuid REFERENCES users(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
+	CourseID string `sql:"type:uuid REFERENCES courses(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
 	Course   Course `gorm:"foreignkey:CourseID"`
 	User     User   `gorm:"foreignkey:UserID"`
 }

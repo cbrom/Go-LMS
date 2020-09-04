@@ -9,9 +9,9 @@ var (
 // QuizUserAnswer defines a model for questions in a quiz
 type QuizUserAnswer struct {
 	utils.Base
-	QuestionID string        `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	AnswerID   string        `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	UserID     string        `sql:"type:uuid" validate:"omitempty,uuid,required"`
+	QuestionID string        `sql:"type:uuid REFERENCES quiz_questions(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
+	AnswerID   string        `sql:"type:uuid REFERENCES answer_options(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
+	UserID     string        `sql:"type:uuid REFERENCES users(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
 	Question   *QuizQuestion `gorm:"foreignkey:QuestionID"`
 	Answer     *AnswerOption `gorm:"foreignkey:AnswerID"`
 	User       *User         `gorm:"foreignkey:UserID"`

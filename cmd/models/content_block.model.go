@@ -16,7 +16,7 @@ type ContentBlock struct {
 	BlockType       string `gorm:"type:varchar(100)"`
 	Content         postgres.Jsonb
 	SortIndex       int
-	TargetVersionID string        `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	TargetVersionID string        `sql:"type:uuid REFERENCES target_versions(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
 	TargetVersion   TargetVersion `gorm:"foreignkey:TargetVersionID"`
 }
 

@@ -14,7 +14,7 @@ var (
 type EvaluationCriteria struct {
 	utils.Base
 	Name        string `gorm:"type:varchar(100)"`
-	CourseID    string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	CourseID    string `sql:"type:uuid REFERENCES courses(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
 	MaxGrade    uint
 	PassGrade   uint
 	GradeLabels postgres.Jsonb

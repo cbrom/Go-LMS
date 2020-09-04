@@ -11,7 +11,7 @@ var (
 // TargetVersion defines a model for a specific version of a target
 type TargetVersion struct {
 	utils.Base
-	TargetID      string           `sql:"type:uuid" validate:"omitempty,required,uuid"`
+	TargetID      string           `sql:"type:uuid REFERENCES targets(id) ON DELETE CASCADE;" validate:"omitempty,required,uuid"`
 	VersionName   string           `gorm:"type:varchar(100)"`
 	Target        Target           `gorm:"foreignkey:TargetID"`
 	ContentBlocks ContentBlockList `gorm:"foreignkey:TargetVersion"`

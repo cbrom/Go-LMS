@@ -11,7 +11,7 @@ var (
 // AnswerOption is a model for options of Answers for a target
 type AnswerOption struct {
 	utils.Base
-	QuizQuestionID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	QuizQuestionID string `sql:"type:uuid REFERENCES quiz_questions(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
 	Value          string
 	Hint           string `gorm:"type:varchar(255)"`
 

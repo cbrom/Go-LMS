@@ -19,7 +19,7 @@ type Target struct {
 	Description            string
 	CompletionInstructions string
 	ResourceURL            string `gorm:"type:varchar(255)"`
-	TargetGroupID          string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	TargetGroupID          string `sql:"type:uuid REFERENCES target_groups(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
 	SortIndex              int
 	SessionAt              *time.Time
 	LinkToComplete         string `gorm:"type:varchar(255)"`

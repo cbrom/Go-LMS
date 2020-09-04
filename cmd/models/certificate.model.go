@@ -11,8 +11,8 @@ var (
 // Certificate defines a model for student certificates in a model
 type Certificate struct {
 	utils.Base
-	CourseID       string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	CourseAuthorID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	CourseID       string `sql:"type:uuid REFERENCES courses(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
+	CourseAuthorID string `sql:"type:uuid REFERENCES course_authors(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
 	QRCorner       string
 	QRScale        int
 	Margin         int

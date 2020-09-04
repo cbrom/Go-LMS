@@ -15,7 +15,7 @@ type TargetGroup struct {
 	Description string
 	SortIndex   int
 	Milestone   bool
-	LevelID     string     `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	LevelID     string     `sql:"type:uuid REFERENCES levels(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
 	Level       Level      `gorm:"foreignkey:LevelID"`
 	Targets     TargetList `gorm:"foreignkey:TargetGroupID"`
 }

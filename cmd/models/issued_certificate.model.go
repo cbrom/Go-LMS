@@ -11,8 +11,8 @@ var (
 // IssuedCertificate defines a model for user certificates for a course
 type IssuedCertificate struct {
 	utils.Base
-	CertificateID string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
-	UserID        string `sql:"type:uuid;" validate:"omitempty,uuid,required"`
+	CertificateID string `sql:"type:uuid REFERENCES certificates(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
+	UserID        string `sql:"type:uuid REFERENCES users(id) ON DELETE CASCADE;" validate:"omitempty,uuid,required"`
 	SerialNumber  string
 	Certificate   Certificate `gorm:"foreignkey:CertificateID"`
 }

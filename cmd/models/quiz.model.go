@@ -12,7 +12,7 @@ var (
 type Quiz struct {
 	utils.Base
 	Title         string
-	TargetID      string           `sql:"type:uuid" validate:"required,omitempty,uuid"`
+	TargetID      string           `sql:"type:uuid REFERENCES targets(id) ON DELETE CASCADE;" validate:"required,omitempty,uuid"`
 	Target        Target           `gorm:"foreignkey:TargetID"`
 	QuizQuestions QuizQuestionList `gorm:"foreignkey:QuizID"`
 }
