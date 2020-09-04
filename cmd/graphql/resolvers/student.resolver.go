@@ -33,3 +33,16 @@ func EnrollStudentInCourse(p graphql.ResolveParams) (interface{}, error) {
 
 	return nil, errors.New("Unable enroll student in a coures")
 }
+
+// UnenrollStudent removes a student from a course
+func UnenrollStudent(p graphql.ResolveParams) (interface{}, error ) {
+	idQuery, ok := p.Args["id"].(string)
+	if ok {
+		studentCourse := &models.StudentCourse{}
+		studentCourse.SetID(idQuery)
+		err := studentCourse.SoftDelete()
+		return nil, err
+	}
+
+	return nil, errors.New("Enrollement id not provided")
+}

@@ -3,6 +3,7 @@ package resolvers
 import (
 	"fmt"
 	"go-lms-of-pupilfirst/cmd/graphql/schemas"
+	"go-lms-of-pupilfirst/cmd/models"
 
 	"github.com/graphql-go/graphql"
 	"github.com/pkg/errors"
@@ -27,4 +28,30 @@ func CreateTargetVersion(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	return nil, errors.New("Unable to create targetVersion")
+}
+
+// DeleteTarget deletes an existing target
+func DeleteTarget(p graphql.ResolveParams) (interface{}, error) {
+	idQuery, ok := p.Args["id"].(string) 
+	if ok {
+		target := &models.Target{}
+		target.SetID(idQuery)
+		err := target.SoftDelete()
+		return nil, err
+	}
+
+	return nil, errors.New("Target id not provided")
+}
+
+// DeleteTargetVersion deletes an existing target version
+func DeleteTargetVersion(p graphql.ResolveParams) (interface{}, error) {
+	idQuery, ok := p.Args["id"].(string)
+	if ok {
+		targetVersion := &models.TargetVersion{}
+		targetVersion.SetID(idQuery)
+		err := targetVersion.SoftDelete() 
+		return nil, err
+	}
+
+	return nil, errors.New("Target version id not provided")
 }

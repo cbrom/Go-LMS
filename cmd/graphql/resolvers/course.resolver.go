@@ -18,6 +18,19 @@ func CreateCourse(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("Unable to create course ")
 }
 
+// DeleteCourse deletes an existing course
+func DeleteCourse(p graphql.ResolveParams) (interface{}, error) {
+	idQuery, ok := p.Args["id"].(string)
+	if ok {
+		course := &models.Course{}
+		course.SetID(idQuery)
+		err := course.SoftDelete()
+		return nil, err
+	}
+
+	return nil, errors.New("Course id not provided")
+}
+
 // GetCourse returns a coures object for a graphql
 func GetCourse(p graphql.ResolveParams) (interface{}, error) {
 	idQuery, ok := p.Args["id"].(string)

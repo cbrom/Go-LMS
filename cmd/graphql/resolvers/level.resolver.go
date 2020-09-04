@@ -17,6 +17,19 @@ func CreateLevel(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("Unable to create level")
 }
 
+// DeleteLevel deletes an existing level
+func DeleteLevel(p graphql.ResolveParams) (interface{}, error) {
+	idQuery, ok := p.Args["id"].(string)
+	if ok {
+		level := &models.Level{}
+		level.SetID(idQuery)
+		err := level.SoftDelete()
+		return nil, err
+	}
+
+	return nil, errors.New("Level id not provided")
+}
+
 // GetCourseLevels returns level by id with no graphql query
 func GetCourseLevels(p graphql.ResolveParams) (interface{}, error) {
 	courseID := p.Source.(*models.Level).GetID()

@@ -286,12 +286,12 @@ func executeQuery(query string, schema graphql.Schema, ctx *gin.Context) *graphq
 	return result
 }
 
-func DeleteCourse(p graphql.ResolveParams) (interface{}, error) {
+func DeleteResource(p graphql.ResolveParams) (interface{}, error) {
 	return nil, nil
 }
 
 var StringArgs = graphql.FieldConfigArgument{
 	"id": &graphql.ArgumentConfig{
-		Type: graphql.String
-	}
+		Type: graphql.String,
+	},
 }

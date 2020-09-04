@@ -27,6 +27,19 @@ func GetUser(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("User ID not Provided")
 }
 
+// Delete User deletes a user
+func DeleteUser(p graphql.ResolveParams) (interface{}, error) {
+	idQuery, ok := p.Args["id"].(string)
+	if ok {
+		usr := &models.User{}
+		usr.SetID(idQuery)
+		err := usr.SoftDelete()
+		return nil, err
+	}
+
+	return nil, errors.New("User ID not Provided")
+}
+
 // SignUp creates a new user
 func SignUp(p graphql.ResolveParams) (interface{}, error) {
 	passwordSalt := uuid.NewRandom().String()

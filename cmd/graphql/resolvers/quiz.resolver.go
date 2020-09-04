@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"go-lms-of-pupilfirst/cmd/graphql/schemas"
+	"go-lms-of-pupilfirst/cmd/models"
 
 	"github.com/graphql-go/graphql"
 	"github.com/pkg/errors"
@@ -17,6 +18,18 @@ func CreateQuiz(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("Unable to create quiz")
 }
 
+// DeleteQuiz deletes an existing quiz
+func DeleteQuiz(p graphql.ResolveParams) (interface{}, error) {
+	idQuery, ok := p.Args["id"].(string)
+	if ok {
+		quiz := &models.Quiz{}
+		quiz.SetID(idQuery)
+		err := quiz.SoftDelete() 
+		return nil, err
+	}
+	return nil, errors.New("Quiz id not provided")
+}
+
 // CreateQuizQuestion creates a new quizQuestion
 func CreateQuizQuestion(p graphql.ResolveParams) (interface{}, error) {
 	quizQuestion := schemas.QuizQuestionFromSchema(p)
@@ -27,6 +40,19 @@ func CreateQuizQuestion(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("Unable to create quizQuestion")
 }
 
+// DeleteQuizQuestion deletes an existing quiz question
+func DeleteQuizQuestion(p graphql.ResolveParams) (interface{}, error) {
+	idQuery, ok := p.Args["id"].(string)
+	if ok {
+		quizQuestion := &models.QuizQuestion{}
+		quizQuestion.SetID(idQuery)
+		err := quizQuestion.SoftDelete()
+		return nil, err
+	}
+
+	return nil, errors.New("Quiz question id not provided")
+}
+
 // CreateAnswerOption creates a new answerOption
 func CreateAnswerOption(p graphql.ResolveParams) (interface{}, error) {
 	answerOption := schemas.AnswerOptionFromSchema(p)
@@ -35,4 +61,17 @@ func CreateAnswerOption(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	return nil, errors.New("Unable to create answerOption")
+}
+
+// DeleteAnswerOption deletes an existing answer option
+func DeleteAnswerOption(p graphql.ResolveParams) (interface{}, error) {
+	idQuery, ok := p.Args["id"].(string)
+	if ok {
+		answerOption := &models.AnswerOption{}
+		answerOption.SetID(idQuery)
+		err := answerOption.SoftDelete()
+		return nil, err
+	}
+
+	return nil, errors.New("Answer option id not provided")
 }

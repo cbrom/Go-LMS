@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"go-lms-of-pupilfirst/cmd/graphql/schemas"
+	"go-lms-of-pupilfirst/cmd/models"
 
 	"github.com/graphql-go/graphql"
 	"github.com/pkg/errors"
@@ -17,6 +18,19 @@ func CreateCertificate(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("Unable to create certificate")
 }
 
+// DeleteCertificate deletes an existing certificate
+func DeleteCertificate(p graphql.ResolveParams) (interface{}, error) {
+	idQuery, ok := p.Args["id"].(string)
+	if ok {
+		certificate := &models.Certificate{}
+		certificate.SetID(idQuery)
+		err := certificate.SoftDelete()
+		return nil, err
+	}
+
+	return nil, errors.New("Certificate id not provided")
+}
+
 // CreateIssuedCertificate issues a new certificate
 func CreateIssuedCertificate(p graphql.ResolveParams) (interface{}, error) {
 	issuedCertificate := schemas.IssuedCertificateFromSchema(p)
@@ -25,4 +39,17 @@ func CreateIssuedCertificate(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	return nil, errors.New("Unable to create issued certificate")
+}
+
+// UnissueCertificate deletes an issued certificate
+func UnissueCertificate(p graphql.ResolveParams) (interface{}, error) {
+	idQuery, ok := p.Args["id"].(string)
+	if ok {
+		issuedCertificate := &models.IssuedCertificate{}
+		issuedCertificate.SetID(idQuery)
+		err := issuedCertificate.SoftDelete()
+		return nil, err
+	}
+
+	return nil, errors.New("Issued Certificate id not provided")
 }
