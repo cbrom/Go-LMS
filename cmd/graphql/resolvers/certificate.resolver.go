@@ -18,6 +18,16 @@ func CreateCertificate(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("Unable to create certificate")
 }
 
+// UpdateCertificate updates an existing certificate
+func UpdateCertificate(p graphql.ResolveParams) (interface{}, error) {
+	certificate := schemas. CertificateFromUpdateSchema(p)
+	if err := certificate.UpdateOne(); err == nil {
+		return certificate.GetID(), nil
+	}
+
+	return nil, errors.New("Unable to update certificate ")
+}
+
 // DeleteCertificate deletes an existing certificate
 func DeleteCertificate(p graphql.ResolveParams) (interface{}, error) {
 	idQuery, ok := p.Args["id"].(string)

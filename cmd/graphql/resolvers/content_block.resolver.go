@@ -18,6 +18,16 @@ func CreateContentBlock(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("Unable to create contentBlock")
 }
 
+// UpdateContentBlock updates an existing content block
+func UpdateContentBlock (p graphql.ResolveParams) (interface{}, error) {
+	contentBlock := schemas. ContentBlockFromUpdateSchema(p)
+	if err := contentBlock.UpdateOne(); err == nil {
+		return contentBlock.GetID(), nil
+	}
+
+	return nil, errors.New("Unable to update content block ")
+}
+
 // DeleteContentBlock deletes an existing content block
 func DeleteContentBlock(p graphql.ResolveParams) (interface{}, error) {
 	idQuery, ok := p.Args["id"].(string)

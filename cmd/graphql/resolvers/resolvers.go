@@ -160,6 +160,83 @@ func ApplyResolvers(r *gin.Engine, db *gorm.DB, auth *auth.Authenticator) {
 					Resolve:     CreateTargetVersion,
 				},
 
+
+				/*
+				Update endpoints
+				*/
+				"updateCourse": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.UpdateCourseSchema,
+					Description: "Update a new course",
+					Resolve:     UpdateCourse,
+				},
+				"updateLevel": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.UpdateLevelSchema,
+					Description: "Update a new level",
+					Resolve:     UpdateLevel,
+				},
+				"updateTargetGroup": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.UpdateTargetGroupSchema,
+					Description: "Update a new target group",
+					Resolve:     UpdateTargetGroup,
+				},
+				"updateAuthor": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.UpdateCourseAuthorSchema,
+					Description: "Assign an author to a course",
+					Resolve:     UpdateCourseAuthor,
+				},
+				"updateCertificate": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.UpdateCertificateSchema,
+					Description: "Update a new certificate",
+					Resolve:     UpdateCertificate,
+				},
+				"updateContentBlock": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.UpdateContentBlockSchema,
+					Description: "Update a new content block",
+					Resolve:     UpdateContentBlock,
+				},
+				"updateEvaluationCriteria": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.UpdateEvaluationCriteriaSchema,
+					Description: "Update a course evaluation criteria",
+					Resolve:     UpdateEvaluationCriteria,
+				},
+				"updateQuiz": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.UpdateQuizSchema,
+					Description: "Update a new quiz",
+					Resolve:     UpdateQuiz,
+				},
+				"updateQuizQuestion": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.UpdateQuizQuestionSchema,
+					Description: "Update a new quiz question",
+					Resolve:     UpdateQuizQuestion,
+				},
+				"updateAnswerOption": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.UpdateAnswerOptionSchema,
+					Description: "Update a new answer option",
+					Resolve:     UpdateAnswerOption,
+				},
+				"updateTarget": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.UpdateTargetSchema,
+					Description: "Update a new target",
+					Resolve:     UpdateTarget,
+				},
+				"updateTargetVersion": &graphql.Field{
+					Type:        graphql.String,
+					Args:        schemas.UpdateTargetVersionSchema,
+					Description: "Update a new target version",
+					Resolve:     UpdateTargetVersion,
+				},
+
 				/*
 				* Delete records
 				*/

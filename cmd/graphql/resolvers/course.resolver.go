@@ -31,6 +31,16 @@ func DeleteCourse(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("Course id not provided")
 }
 
+// UpdateCourse updates an existing course
+func UpdateCourse(p graphql.ResolveParams) (interface{}, error) {
+	course := schemas.CourseFromUpdateSchema(p)
+	if err := course.UpdateOne(); err == nil {
+		return course.GetID(), nil
+	}
+
+	return nil, errors.New("Unable to update course")
+}
+
 // GetCourse returns a coures object for a graphql
 func GetCourse(p graphql.ResolveParams) (interface{}, error) {
 	idQuery, ok := p.Args["id"].(string)

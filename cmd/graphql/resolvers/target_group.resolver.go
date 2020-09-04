@@ -18,6 +18,16 @@ func CreateTargetGroup(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("Unable to create target group")
 }
 
+// UpdateTargetGroup updates an existing target group
+func UpdateTargetGroup(p graphql.ResolveParams) (interface{}, error) {
+	targetGroup := schemas. TargetGroupFromUpdateSchema(p)
+	if err := targetGroup.UpdateOne(); err == nil {
+		return targetGroup.GetID(), nil
+	}
+
+	return nil, errors.New("Unable to update target group ")
+}
+
 // DeleteTargetGroup deletes an existing target group
 func DeleteTargetGroup(p graphql.ResolveParams) (interface{}, error) {
 	idQuery, ok := p.Args["id"].(string)

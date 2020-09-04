@@ -18,6 +18,16 @@ func CreateAuthor(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("Unable to create author")
 }
 
+// UpdateCourseAuthor updates an existing course author
+func UpdateCourseAuthor (p graphql.ResolveParams) (interface{}, error) {
+	courseAuthor := schemas. CourseAuthorFromUpdateSchema(p)
+	if err := courseAuthor.UpdateOne(); err == nil {
+		return courseAuthor.GetID(), nil
+	}
+
+	return nil, errors.New("Unable to update course author ")
+}
+
 // DeleteAuthor deletes an author from a course
 func DeleteAuthor(p graphql.ResolveParams) (interface{}, error) {
 	idQuery, ok := p.Args["id"].(string)

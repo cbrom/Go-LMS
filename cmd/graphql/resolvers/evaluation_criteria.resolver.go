@@ -18,6 +18,16 @@ func CreateEvaluationCriteria(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("Unable to create evaluationCriteria")
 }
 
+// UpdateEvaluationCriteria updates an existing evaluation criteria
+func UpdateEvaluationCriteria(p graphql.ResolveParams) (interface{}, error) {
+	evaluationCriteria := schemas.EvaluationCriteriaFromUpdateSchema(p)
+	if err := evaluationCriteria.UpdateOne(); err == nil {
+		return evaluationCriteria.GetID(), nil
+	}
+
+	return nil, errors.New("Unable to update evaluation criteria ")
+}
+
 // DeleteEvaluationCriteria deletes an existing evaluation criteria
 func DeleteEvaluationCriteria(p graphql.ResolveParams) (interface{}, error) {
 	idQuery, ok := p.Args["id"].(string)

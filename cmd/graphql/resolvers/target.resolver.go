@@ -20,14 +20,14 @@ func CreateTarget(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("Unable to create target")
 }
 
-// CreateTargetVersion creates a new targetVersion
-func CreateTargetVersion(p graphql.ResolveParams) (interface{}, error) {
-	targetVersion := schemas.TargetVersionFromSchema(p)
-	if err := targetVersion.Create(); err == nil {
-		return targetVersion.GetID(), nil
+// UpdateTarget updates an existing target
+func UpdateTarget(p graphql.ResolveParams) (interface{}, error) {
+	target := schemas.TargetFromUpdateSchema(p)
+	if err := target.UpdateOne(); err == nil {
+		return target.GetID(), nil
 	}
 
-	return nil, errors.New("Unable to create targetVersion")
+	return nil, errors.New("Unable to update target ")
 }
 
 // DeleteTarget deletes an existing target
@@ -41,6 +41,26 @@ func DeleteTarget(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	return nil, errors.New("Target id not provided")
+}
+
+// CreateTargetVersion creates a new targetVersion
+func CreateTargetVersion(p graphql.ResolveParams) (interface{}, error) {
+	targetVersion := schemas.TargetVersionFromSchema(p)
+	if err := targetVersion.Create(); err == nil {
+		return targetVersion.GetID(), nil
+	}
+
+	return nil, errors.New("Unable to create targetVersion")
+}
+
+// UpdateTargetVersion updates an existing target version
+func UpdateTargetVersion(p graphql.ResolveParams) (interface{}, error) {
+	targetVersion := schemas.TargetVersionFromUpdateSchema(p)
+	if err := targetVersion.UpdateOne(); err == nil {
+		return targetVersion.GetID(), nil
+	}
+
+	return nil, errors.New("Unable to update target version ")
 }
 
 // DeleteTargetVersion deletes an existing target version

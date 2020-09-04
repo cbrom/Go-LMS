@@ -17,6 +17,16 @@ func CreateLevel(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("Unable to create level")
 }
 
+// UpdateLevel updates an existing level
+func UpdateLevel(p graphql.ResolveParams) (interface{}, error) {
+	level := schemas.LevelFromUpdateSchema(p)
+	if err := level.UpdateOne(); err == nil {
+		return level.GetID(), nil
+	}
+
+	return nil, errors.New("Unable to update level ")
+}
+
 // DeleteLevel deletes an existing level
 func DeleteLevel(p graphql.ResolveParams) (interface{}, error) {
 	idQuery, ok := p.Args["id"].(string)

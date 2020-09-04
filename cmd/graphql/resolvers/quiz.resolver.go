@@ -18,6 +18,16 @@ func CreateQuiz(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("Unable to create quiz")
 }
 
+// UpdateQuiz updates an existing quiz
+func UpdateQuiz(p graphql.ResolveParams) (interface{}, error) {
+	quiz := schemas.QuizFromUpdateSchema(p)
+	if err := quiz.UpdateOne(); err == nil {
+		return quiz.GetID(), nil
+	}
+
+	return nil, errors.New("Unable to update quiz ")
+}
+
 // DeleteQuiz deletes an existing quiz
 func DeleteQuiz(p graphql.ResolveParams) (interface{}, error) {
 	idQuery, ok := p.Args["id"].(string)
@@ -38,6 +48,16 @@ func CreateQuizQuestion(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	return nil, errors.New("Unable to create quizQuestion")
+}
+
+// UpdateQuizQuestion updates an existing quiz question
+func UpdateQuizQuestion(p graphql.ResolveParams) (interface{}, error) {
+	quizQuestion := schemas.QuizQuestionFromUpdateSchema(p)
+	if err := quizQuestion.UpdateOne(); err == nil {
+		return quizQuestion.GetID(), nil
+	}
+
+	return nil, errors.New("Unable to update quiz question ")
 }
 
 // DeleteQuizQuestion deletes an existing quiz question
@@ -61,6 +81,16 @@ func CreateAnswerOption(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	return nil, errors.New("Unable to create answerOption")
+}
+
+// UpdateAnswerOption updates an existing answer option
+func UpdateAnswerOption(p graphql.ResolveParams) (interface{}, error) {
+	answerOption := schemas.AnswerOptionFromUpdateSchema(p)
+	if err := answerOption.UpdateOne(); err == nil {
+		return answerOption.GetID(), nil
+	}
+
+	return nil, errors.New("Unable to update answer option ")
 }
 
 // DeleteAnswerOption deletes an existing answer option
