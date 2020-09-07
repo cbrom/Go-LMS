@@ -123,18 +123,36 @@ var UpdateCertificateSchema = graphql.FieldConfigArgument{
 	},
 }
 
-// CertificateFromSchema is an adapter for certificate update schema
+// CertificateFromUpdateSchema is an adapter for certificate update schema
 func CertificateFromUpdateSchema(p graphql.ResolveParams) models.Certificate {
-	certificate := models.Certificate{
-		QRCorner:       p.Args["qr_corner"].(string),
-		QRScale:        p.Args["qr_scale"].(int),
-		Margin:         p.Args["margin"].(int),
-		NameOffsetTop:  p.Args["name_offset_top"].(int),
-		FontSize:       p.Args["font_size"].(int),
-		Message:        p.Args["message"].(string),
-		Active:         p.Args["active"].(bool),
-		CourseID:       p.Args["course_id"].(string),
-		CourseAuthorID: p.Args["course_author_id"].(string),
+	certificate := models.Certificate{}
+
+	if qrCorner, ok := p.Args["qr_corner"]; ok {
+		certificate.QRCorner = qrCorner.(string)
+	}
+	if qrScale, ok := p.Args["qr_scale"]; ok {
+		certificate.QRScale = qrScale.(int)
+	}
+	if margin, ok := p.Args["margin"]; ok {
+		certificate.Margin = margin.(int)
+	}
+	if nameOffsetTop, ok := p.Args["name_offset_top"]; ok {
+		certificate.NameOffsetTop = nameOffsetTop.(int)
+	}
+	if fontSize, ok := p.Args["font_size"]; ok {
+		certificate.FontSize = fontSize.(int)
+	}
+	if message, ok := p.Args["message"]; ok {
+		certificate.Message = message.(string)
+	}
+	if active, ok := p.Args["active"]; ok {
+		certificate.Active = active.(bool)
+	}
+	if courseID, ok := p.Args["course_id"]; ok {
+		certificate.CourseID = courseID.(string)
+	}
+	if courseAuthorID, ok := p.Args["course_author_id"]; ok {
+		certificate.CourseAuthorID = courseAuthorID.(string)
 	}
 	certificate.SetID(p.Args["id"].(string))
 	return certificate

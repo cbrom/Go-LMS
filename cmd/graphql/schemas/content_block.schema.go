@@ -86,12 +86,22 @@ var UpdateContentBlockSchema = graphql.FieldConfigArgument{
 
 // ContentBlockFromUpdateSchema is an adapter for content block
 func ContentBlockFromUpdateSchema(p graphql.ResolveParams) models.ContentBlock {
-	content := utils.ConvertStringToJsonb(p.Args["content"].(string))
-	contentBlock := models.ContentBlock{
-		BlockType:       p.Args["block_type"].(string),
-		Content:         content,
-		SortIndex:       p.Args["sort_index"].(int),
-		TargetVersionID: p.Args["target_version_id"].(string),
+	contentBlock := models.ContentBlock{}
+
+	if blockType, ok := p.Args["block_type"]; ok {
+		contentBlock.BlockType = blockType.(string)
+	}
+	if content, ok := p.Args["content"]; ok {
+		convertedContent := utils.ConvertStringToJsonb(content.(string))
+		contentBlock.Content = convertedContent
+	}
+
+	if sortIndex, ok := p.Args["sort_index"]; ok {
+		contentBlock.SortIndex = sortIndex.(int)
+	}
+
+	if targetVersionID, ok := p.Args["target_version_id"]; ok {
+		contentBlock.TargetVersionID = targetVersionID.(string)
 	}
 
 	contentBlock.SetID(p.Args["id"].(string))

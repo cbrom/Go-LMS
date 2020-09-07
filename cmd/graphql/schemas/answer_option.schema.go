@@ -50,7 +50,6 @@ func AnswerOptionFromSchema(p graphql.ResolveParams) models.AnswerOption {
 	return answerOption
 }
 
-
 // UpdateAnswerOptionSchema contains fields to update an answer option
 var UpdateAnswerOptionSchema = graphql.FieldConfigArgument{
 	"id": &graphql.ArgumentConfig{
@@ -69,10 +68,15 @@ var UpdateAnswerOptionSchema = graphql.FieldConfigArgument{
 
 // AnswerOptionFromUpdateSchema is an adapter for update answer option schema
 func AnswerOptionFromUpdateSchema(p graphql.ResolveParams) models.AnswerOption {
-	answerOption := models.AnswerOption{
-		QuizQuestionID: p.Args["quiz_question_id"].(string),
-		Value:          p.Args["value"].(string),
-		Hint:           p.Args["hint"].(string),
+	answerOption := models.AnswerOption{}
+	if quizQuestionID, ok := p.Args["quiz_question_id"]; ok {
+		answerOption.QuizQuestionID = quizQuestionID.(string)
+	}
+	if value, ok := p.Args["value"]; ok {
+		answerOption.Value = value.(string)
+	}
+	if hint, ok := p.Args["hint"]; ok {
+		answerOption.Hint = hint.(string)
 	}
 	answerOption.SetID(p.Args["id"].(string))
 	return answerOption
