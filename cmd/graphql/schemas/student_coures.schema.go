@@ -30,6 +30,7 @@ var StudentSchema = graphql.NewObject(
 		},
 	})
 
+// Student is a schema for a student
 type Student struct {
 	ID       string
 	UserInfo models.User
