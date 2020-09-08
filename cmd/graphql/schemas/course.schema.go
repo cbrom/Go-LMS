@@ -169,24 +169,42 @@ var UpdateCourseSchema = graphql.FieldConfigArgument{
 
 // CourseFromUpdateSchema course schema adapter returns course from course schema
 func CourseFromUpdateSchema(p graphql.ResolveParams) models.Course {
-	endsAtArg := p.Args["ends_at"]
-	var endsAt *time.Time
-	switch endsAtArg.(type) {
-	case string:
-		endsAt = utils.GetTimeFromStamp(endsAtArg.(string))
-	case time.Time:
-		endsAt = endsAtArg.(*time.Time)
+
+	course := models.Course{}
+
+	if name, ok := p.Args["name"]; ok {
+		course.Name = name.(string)
 	}
-	course := models.Course{
-		Name:                p.Args["name"].(string),
-		EndsAt:              endsAt,
-		Description:         p.Args["description"].(string),
-		EnableLeadboard:     p.Args["enable_leadboard"].(bool),
-		PublicSignup:        p.Args["public_signup"].(bool),
-		Featured:            p.Args["featured"].(bool),
-		About:               p.Args["about"].(string),
-		ProgressionBehavior: p.Args["progression_behaviour"].(string),
-		ProgressionLimit:    p.Args["progression_limit"].(int),
+	if endsAtArg, ok := p.Args["ends_at"]; ok {
+		var endsAt *time.Time
+		switch endsAtArg.(type) {
+		case string:
+			endsAt = utils.GetTimeFromStamp(endsAtArg.(string))
+		case time.Time:
+			endsAt = endsAtArg.(*time.Time)
+		}
+		course.EndsAt = endsAt
+	}
+	if description, ok := p.Args["description"]; ok {
+		course.Description = description.(string)
+	}
+	if enableLeadboard, ok := p.Args["enable_leadboard"]; ok {
+		course.EnableLeadboard = enableLeadboard.(bool)
+	}
+	if publicSignup, ok := p.Args["public_signup"]; ok {
+		course.PublicSignup = publicSignup.(bool)
+	}
+	if featured, ok := p.Args["featured"]; ok {
+		course.Featured = featured.(bool)
+	}
+	if about, ok := p.Args["about"]; ok {
+		course.About = about.(string)
+	}
+	if progressionBehaviour, ok := p.Args["progression_behavior"]; ok {
+		course.ProgressionBehavior = progressionBehaviour.(string)
+	}
+	if progressionLimit, ok := p.Args["progression_limit"]; ok {
+		course.ProgressionLimit = progressionLimit.(int)
 	}
 
 	course.SetID(p.Args["id"].(string))

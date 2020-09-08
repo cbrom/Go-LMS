@@ -65,9 +65,13 @@ var UpdateTargetVersionSchema = graphql.FieldConfigArgument{
 
 // TargetVersionFromUpdateSchema is an adapter for target version
 func TargetVersionFromUpdateSchema(p graphql.ResolveParams) models.TargetVersion {
-	targetVersion := models.TargetVersion{
-		VersionName: p.Args["version_name"].(string),
-		TargetID:    p.Args["target_id"].(string),
+	targetVersion := models.TargetVersion{}
+
+	if versionName, ok := p.Args["version_name"]; ok {
+		targetVersion.VersionName = versionName.(string)
+	}
+	if targetID, ok := p.Args["target_id"]; ok {
+		targetVersion.TargetID = targetID.(string)
 	}
 	targetVersion.SetID(p.Args["id"].(string))
 

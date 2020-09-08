@@ -95,12 +95,22 @@ var UpdateTargetGroupSchema = graphql.FieldConfigArgument{
 
 // TargetGroupFromUpdateSchema is an adapter for target group
 func TargetGroupFromUpdateSchema(p graphql.ResolveParams) models.TargetGroup {
-	targetGroup := models.TargetGroup{
-		Name:        p.Args["name"].(string),
-		Description: p.Args["description"].(string),
-		SortIndex:   p.Args["sort_index"].(int),
-		Milestone:   p.Args["milestone"].(bool),
-		LevelID:     p.Args["level_id"].(string),
+	targetGroup := models.TargetGroup{}
+
+	if name, ok := p.Args["name"]; ok {
+		targetGroup.Name = name.(string)
+	}
+	if description, ok := p.Args["description"]; ok {
+		targetGroup.Description = description.(string)
+	}
+	if sortIndex, ok := p.Args["sort_index"]; ok {
+		targetGroup.SortIndex = sortIndex.(int)
+	}
+	if milestone, ok := p.Args["milestone"]; ok {
+		targetGroup.Milestone = milestone.(bool)
+	}
+	if levelID, ok := p.Args["level_id"]; ok {
+		targetGroup.LevelID = levelID.(string)
 	}
 
 	targetGroup.SetID(p.Args["id"].(string))

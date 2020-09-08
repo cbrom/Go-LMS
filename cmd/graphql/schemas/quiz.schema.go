@@ -65,9 +65,13 @@ var UpdateQuizSchema = graphql.FieldConfigArgument{
 
 // QuizFromUpdateSchema is an adapter for quiz
 func QuizFromUpdateSchema(p graphql.ResolveParams) models.Quiz {
-	quiz := models.Quiz{
-		Title:    p.Args["title"].(string),
-		TargetID: p.Args["target_id"].(string),
+	quiz := models.Quiz{}
+
+	if title, ok := p.Args["title"]; ok {
+		quiz.Title = title.(string)
+	}
+	if targetID, ok := p.Args["target_id"]; ok {
+		quiz.TargetID = targetID.(string)
 	}
 
 	quiz.SetID(p.Args["id"].(string))

@@ -103,22 +103,32 @@ var UpdateLevelSchema = graphql.FieldConfigArgument{
 	},
 }
 
-// CreateLevelFromUpdateSchema adapter for level schema and level model
+// LevelFromUpdateSchema adapter for level schema and level model
 func LevelFromUpdateSchema(p graphql.ResolveParams) models.Level {
-	unlockOnArg := p.Args["unlock_on"]
-	var unlockOn *time.Time
-	switch unlockOnArg.(type) {
-	case string:
-		unlockOn = utils.GetTimeFromStamp(unlockOnArg.(string))
-	case time.Time:
-		unlockOn = unlockOnArg.(*time.Time)
+
+	level := models.Level{}
+
+	if name, ok := p.Args["name"]; ok {
+		level.Name = name.(string)
 	}
-	level := models.Level{
-		Name:        p.Args["name"].(string),
-		CourseID:    p.Args["course_id"].(string),
-		Description: p.Args["description"].(string),
-		Number:      p.Args["number"].(int),
-		UnlockOn:    unlockOn,
+	if courseID, ok := p.Args["course_id"]; ok {
+		level.CourseID = courseID.(string)
+	}
+	if description, ok := p.Args["description"]; ok {
+		level.Description = description.(string)
+	}
+	if number, ok := p.Args["number"]; ok {
+		level.Number = number.(int)
+	}
+	if unlockOnArg, ok := p.Args["unlock_on"]; ok {
+		var unlockOn *time.Time
+		switch unlockOnArg.(type) {
+		case string:
+			unlockOn = utils.GetTimeFromStamp(unlockOnArg.(string))
+		case time.Time:
+			unlockOn = unlockOnArg.(*time.Time)
+		}
+		level.UnlockOn = unlockOn
 	}
 
 	level.SetID(p.Args["id"].(string))

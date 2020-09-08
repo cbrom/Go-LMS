@@ -56,9 +56,12 @@ var UpdateCourseAuthorSchema = graphql.FieldConfigArgument{
 
 // CourseAuthorFromUpdateSchema is an adapter for course author
 func CourseAuthorFromUpdateSchema(p graphql.ResolveParams) models.CourseAuthor {
-	courseAuthor := models.CourseAuthor{
-		UserID:   p.Args["user_id"].(string),
-		CourseID: p.Args["course_id"].(string),
+	courseAuthor := models.CourseAuthor{}
+	if userID, ok := p.Args["user_id"]; ok {
+		courseAuthor.UserID = userID.(string)
+	}
+	if courseID, ok := p.Args["course_id"]; ok {
+		courseAuthor.CourseID = courseID.(string)
 	}
 	courseAuthor.SetID(p.Args["id"].(string))
 

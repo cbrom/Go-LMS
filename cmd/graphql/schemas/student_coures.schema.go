@@ -83,11 +83,15 @@ var UpdateStudentCourseSchema = graphql.FieldConfigArgument{
 	},
 }
 
-// StudentCourseFromUPdateSchema is an adapter for student course
+// StudentCourseFromUpdateSchema is an adapter for student course
 func StudentCourseFromUpdateSchema(p graphql.ResolveParams) models.StudentCourse {
-	studentCourse := models.StudentCourse{
-		UserID:   p.Args["user_id"].(string),
-		CourseID: p.Args["course_id"].(string),
+	studentCourse := models.StudentCourse{}
+
+	if userID, ok := p.Args["user_id"]; ok {
+		studentCourse.UserID = userID.(string)
+	}
+	if courseID, ok := p.Args["course_id"]; ok {
+		studentCourse.CourseID = courseID.(string)
 	}
 
 	studentCourse.SetID(p.Args["id"].(string))

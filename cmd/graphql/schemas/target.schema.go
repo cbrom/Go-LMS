@@ -193,30 +193,53 @@ var UpdateTargetSchema = graphql.FieldConfigArgument{
 
 // TargetFromUpdateSchema is an adapter for target
 func TargetFromUpdateSchema(p graphql.ResolveParams) models.Target {
-	sessionAtArg := p.Args["session_at"]
-	var sessionAt *time.Time
-	switch sessionAtArg.(type) {
-	case string:
-		sessionAt = utils.GetTimeFromStamp(sessionAtArg.(string))
-	case time.Time:
-		sessionAt = sessionAtArg.(*time.Time)
-	}
-	checkList := utils.ConvertStringToJsonb(p.Args["check_list"].(string))
-	checkListReview := utils.ConvertStringToJsonb(p.Args["review_checklist"].(string))
 
-	target := models.Target{
-		TargetGroupID:          p.Args["target_group_id"].(string),
-		Role:                   p.Args["role"].(string),
-		Title:                  p.Args["title"].(string),
-		Description:            p.Args["description"].(string),
-		CompletionInstructions: p.Args["completion_instructions"].(string),
-		ResourceURL:            p.Args["resource_url"].(string),
-		SortIndex:              p.Args["sort_index"].(int),
-		SessionAt:              sessionAt,
-		LinkToComplete:         p.Args["link_to_complete"].(string),
-		Resubmittable:          p.Args["resubmittable"].(bool),
-		CheckList:              checkList,
-		ReviewChecklist:        checkListReview,
+	target := models.Target{}
+
+	if targetGroupID, ok := p.Args["target_group_id"]; ok {
+		target.TargetGroupID = targetGroupID.(string)
+	}
+	if role, ok := p.Args["role"]; ok {
+		target.Role = role.(string)
+	}
+	if title, ok := p.Args["title"]; ok {
+		target.Title = title.(string)
+	}
+	if description, ok := p.Args["description"]; ok {
+		target.Description = description.(string)
+	}
+	if completionInstructions, ok := p.Args["completion_instructions"]; ok {
+		target.CompletionInstructions = completionInstructions.(string)
+	}
+	if resourceURL, ok := p.Args["resource_url"]; ok {
+		target.ResourceURL = resourceURL.(string)
+	}
+	if sortIndex, ok := p.Args["sort_index"]; ok {
+		target.SortIndex = sortIndex.(int)
+	}
+	if sessionAtArg, ok := p.Args["session_at"]; ok {
+		var sessionAt *time.Time
+		switch sessionAtArg.(type) {
+		case string:
+			sessionAt = utils.GetTimeFromStamp(sessionAtArg.(string))
+		case time.Time:
+			sessionAt = sessionAtArg.(*time.Time)
+		}
+		target.SessionAt = sessionAt
+	}
+	if linkToComplete, ok := p.Args["link_to_complete"]; ok {
+		target.LinkToComplete = linkToComplete.(string)
+	}
+	if resubmittable, ok := p.Args["resubmittable"]; ok {
+		target.Resubmittable = resubmittable.(bool)
+	}
+	if checkListArg, ok := p.Args["check_list"]; ok {
+		checkList := utils.ConvertStringToJsonb(checkListArg.(string))
+		target.CheckList = checkList
+	}
+	if reviewChecklistArg, ok := p.Args["review_checklist"]; ok {
+		checkListReview := utils.ConvertStringToJsonb(reviewChecklistArg.(string))
+		target.ReviewChecklist = checkListReview
 	}
 	target.SetID(p.Args["id"].(string))
 
