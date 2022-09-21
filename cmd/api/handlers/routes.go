@@ -35,5 +35,6 @@ func ApplyRoutes(r *gin.Engine, auth *auth.Authenticator, db *gorm.DB) {
 		apiV1.POST("/users/login", SignUp) //done
 		apiV1.GET("/users/:id", Getuser)   // done
 		apiV1.GET("/users/all", Getusers)
+		
 	}
 }
