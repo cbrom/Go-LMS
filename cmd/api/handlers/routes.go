@@ -26,5 +26,6 @@ func ApplyRoutes(r *gin.Engine, auth *auth.Authenticator, db *gorm.DB) {
 	apiV1 := r.Group("/v1")
 	{
 		apiV1.GET("/ping", pingHandler)
+		
 	}
 }
