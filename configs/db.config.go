@@ -14,7 +14,7 @@ type AppConfig struct {
 	Address string `envconfig:"ADDRESS"`
 }
 
-//Storage is storage handler config
+// Storage is storage handler config
 type Storage struct {
 	HandlerName string `envconfig:"STORAGE_HANDLERNAME"`
 	Host        string `envconfig:"STORAGE_HOST"`
@@ -32,7 +32,7 @@ type TLS struct {
 	CACrt string `envconfig:"TLS_CACRT"`
 }
 
-//LoadConfig read env vars
+// LoadConfig read env vars
 func LoadConfig() (*AppConfig, error) {
 	var conf AppConfig
 	err := envconfig.Process("GO_LMS", &conf)
@@ -44,7 +44,7 @@ func LoadConfig() (*AppConfig, error) {
 		if err != nil {
 			return nil, err
 		}
-		
+
 		storage := Storage{
 			HandlerName: os.Getenv("STORAGE_HANDLERNAME"),
 			Host:        os.Getenv("STORAGE_HOST"),

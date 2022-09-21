@@ -9,7 +9,7 @@ services:
                 - POSTGRES_USER=${STORAGE_DBUSER}
                 - POSTGRES_PASSWORD=${STORAGE_DBPASSWORD}
         ports:
-            - "127.0.0.1:5432:5432"
+            - "127.0.0.1:5433:5432"
         environment:
             - POSTGRES_DB=${STORAGE_DATABASE}
             - POSTGRES_USER=${STORAGE_DBUSER}
@@ -24,7 +24,7 @@ services:
     backend:
         build: .
         ports:
-            - "8000:3000" 
+            - "4000:3000" 
         restart: unless-stopped
         depends_on: 
             - db

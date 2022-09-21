@@ -24,3 +24,20 @@ func InjectDB(db *gorm.DB) gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+// USER
+//to0k the database users id,name , age , email , phone  //how to take users form the database?
+// func getUsers(c *gin.Context){  // in c place we will use the database data
+// 	c.IndentedJSON(http.StatusOK, Users)  //this reder our data
+// }
+//write some functions to get the user
+//get from ("/user" , function)
+// func main(){
+// 	router:=gin.Default()  //this is the defualt gin api labrary
+// 	router.GET("/users",getUsers) // this resourse called the function runs
+// }
+
+// took the database books id,author,quantity ,
+//write some functions to get the book
+//jsonfunc handle by json
+//get from ("/book" , jsonfunc)
