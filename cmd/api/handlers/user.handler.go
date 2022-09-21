@@ -30,7 +30,45 @@ var (
 )
 
 // UserController is an anonymous struct for user controller
-type UserController struct {
+type UserController struct{}
+
+// UserLoginRequest spec for login request
+type GetusersRequest struct {
+	Id int `json:"id"`
+}
+type UserLoginRequest struct {
+	Email    string `json:"email" validate:"required,email,unique"`
+	Password string `json:"password" validate:"required"`
+}
+type UserLoginResponse struct {
+	Id             int    `json:"id"`
+	Name           string `json:"name"`
+	Username       string `json:"username"`
+	Email          string `json:"email"`
+	Role           int    `json:"role"`
+	Gender         int    `json:"gender"`
+	DisabilityType int    `json:"type_of_disability"`
+}
+
+// UserInfoUpdateRequest - spec for updating user info
+type UserInfoUpdateRequest struct {
+	ID        string `json:"id" validate:"required,uuid" example:"c01bdef7-173f-4d29-3edc60baf6a2"`
+	Name      string `json:"name" validate:"min=3,max=10,omitempty"`
+	Phone     string `json:"phone" validate:"omitempty"`
+	Title     string `json:"title" validate:"omitempty"`
+	KeySkills string `json:"key_skills" validate:"omitempty"`
+	About     string `gorm:"type:text" json:"about" validate:"omitempty"`
+
+	TimeZone *time.Time `json:"timezone" validation:"omitempty"`
+}
+
+// UserCreateRequest spec for signup request
+type UserCreateRequest struct {
+	Name            string     `json:"name" validate:"required" example:"Groot"`
+	Email           string     `json:"email" validate:"required,email,unique" example:"groot@golms.com"`
+	Password        string     `json:"password" validate:"required" example:"GrootSecret"`
+	PasswordConfirm string     `json:"password_confirm" validate:"required,eqfield=password" example:"GrootSecret"`
+	TimeZone        *time.Time `json:"timezone" validate:"required" example:"America/Anchorage"`
 }
 
 // SignUp registers user
@@ -71,42 +109,13 @@ func SignIn(ctx *gin.Context) {
 	})
 }
 
-// UserLoginRequest spec for login request
-type GetusersRequest struct {
-	Id int `json:"id"`
-}
-type UserLoginRequest struct {
-	Email    string `json:"email" validate:"required,email,unique"`
-	Password string `json:"password" validate:"required"`
-}
-type UserLoginResponse struct {
-	Id             int    `json:"id"`
-	Name           string `json:"name"`
-	Username       string `json:"username"`
-	Email          string `json:"email"`
-	Role           int    `json:"role"`
-	Gender         int    `json:"gender"`
-	DisabilityType int    `json:"type_of_disability"`
-}
-
-// UserCreateRequest spec for signup request
-type UserCreateRequest struct {
-	Name            string     `json:"name" validate:"required" example:"Groot"`
-	Email           string     `json:"email" validate:"required,email,unique" example:"groot@golms.com"`
-	Password        string     `json:"password" validate:"required" example:"GrootSecret"`
-	PasswordConfirm string     `json:"password_confirm" validate:"required,eqfield=password" example:"GrootSecret"`
-	TimeZone        *time.Time `json:"timezone" validate:"required" example:"America/Anchorage"`
-}
-
 // ToUser converts UserLoginRequest to User object
 func (userLoginRequest *UserLoginRequest) Tologin() (*models.User, error) {
 
 	foundUser := models.User{
 		Email: userLoginRequest.Email,
 	}
-	// UserLogin(ctx context.Context, user model.userluserLoginRequest) (model.UserLoginResponse, error)
-	// response, err := controller.UserService.UserLogin(ctx, user)
-	//
+
 	foundUser.FetchByEmail()
 	if foundUser.GetID() == "" {
 		return nil, nil
@@ -117,16 +126,7 @@ func (userLoginRequest *UserLoginRequest) Tologin() (*models.User, error) {
 		return nil, err
 	}
 	return &foundUser, nil
-	//TODO or return the loginresponse
 
-	// if userLoginRequest == nil {
-	// 	return nil, errors.New("Null User Request")
-	// }
-	// user := &models.User{
-	// 	Email:    UserLoginRequest.Email,
-	// 	password: UserLoginRequest.Password,
-	// }
-	// return user, nil
 }
 
 // ToUser converts UserCreateRequest to User object
@@ -152,6 +152,10 @@ func (userCreateRequest *UserCreateRequest) ToUser() (*models.User, error) {
 	return user, nil
 }
 
+func Getusers(ctx *gin.Context) {
+	ctx.JSON(200, models.UserList{})
+}
+
 // TO DO get users
 var Users []models.User
 
@@ -162,10 +166,6 @@ func Getuser(ctx *gin.Context) {
 		return
 	}
 	ctx.IndentedJSON(http.StatusOK, user)
-}
-
-func Getusers(ctx *gin.Context) {
-	ctx.JSON(200, models.UserList{})
 }
 
 func getuserbyid(id string) (*models.User, error) {
@@ -185,16 +185,4 @@ func GetTimeFromStamp(ts string) *time.Time {
 	}
 	tm := time.Unix(i, 0)
 	return &tm
-}
-
-// UserInfoUpdateRequest - spec for updating user info
-type UserInfoUpdateRequest struct {
-	ID        string `json:"id" validate:"required,uuid" example:"c01bdef7-173f-4d29-3edc60baf6a2"`
-	Name      string `json:"name" validate:"min=3,max=10,omitempty"`
-	Phone     string `json:"phone" validate:"omitempty"`
-	Title     string `json:"title" validate:"omitempty"`
-	KeySkills string `json:"key_skills" validate:"omitempty"`
-	About     string `gorm:"type:text" json:"about" validate:"omitempty"`
-
-	TimeZone *time.Time `json:"timezone" validation:"omitempty"`
 }
