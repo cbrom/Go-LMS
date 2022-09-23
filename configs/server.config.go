@@ -7,7 +7,7 @@ import (
 var CFG struct {
 	Env    string `default:"dev" envconfig:"ENV"`
 	Server struct {
-		Host         string        `default:"0.0.0.0:3000" envconfig:"HOST"`
+		Host         string        `default:"0.0.0.0:3001" envconfig:"HOST"`
 		Graphql      string        `default:"0.0.0.0:4000" envconfig:"GRAPHQL"`
 		ReadTimeout  time.Duration `default:"10s" envconfig:"READ_TIMEOUT"`
 		WriteTimeout time.Duration `default:"10s" envconfig:"WRITE_TIMOUT"`
