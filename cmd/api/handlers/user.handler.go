@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+	"fmt"
 
 	"github.com/pkg/errors"
 
@@ -41,13 +42,13 @@ type UserLoginRequest struct {
 	Password string `json:"password" validate:"required"`
 }
 type UserLoginResponse struct {
-	Id             int    `json:"id"`
+	Id             string    `json:"id"`
 	Name           string `json:"name"`
 	Username       string `json:"username"`
 	Email          string `json:"email"`
 	Role           int    `json:"role"`
 	Gender         int    `json:"gender"`
-	DisabilityType int    `json:"type_of_disability"`
+	DisabilityType string    `json:"type_of_disability"`
 }
 
 // UserInfoUpdateRequest - spec for updating user info
@@ -98,14 +99,29 @@ func SignIn(ctx *gin.Context) {
 	if err != nil {
 		log.Printf("error in user  => %+v", err.Error())
 	}
-	value := founduser
+	// value := founduser
+	user := founduser
+	var response UserLoginResponse
+	response = UserLoginResponse{
+		Id:                 founduser.GetID(),
+		Name:				user.Name,
+		Email:				user.Email,
+		Username:			user.Username,
+		Role:				user.Role,
+		Gender:				user.Gender,
+		DisabilityType:     user.DisabilityType,
+	}
+
 	token, _ := authenticator.GenerateToken(auth.Claims{})
 	c, _ := authenticator.ParseClaims(token)
-	// fmt.Println(c)
+	fmt.Println(c)
 
 	ctx.JSON(200, gin.H{
-		"message": value,
+		"message": response,
 		"token":   c,
+		
+		
+		
 	})
 }
 
@@ -157,23 +173,31 @@ func Getusers(ctx *gin.Context) {
 }
 
 // TO DO get users
-var Users []models.User
+
 
 func Getuser(ctx *gin.Context) {
+
+
 	id := ctx.Param("id")
 	user, err := getuserbyid(id)
 	if err != nil {
+		ctx.IndentedJSON(http.StatusNotFound, gin.H{"message":"userrr not found"})
 		return
 	}
+
 	ctx.IndentedJSON(http.StatusOK, user)
 }
 
 func getuserbyid(id string) (*models.User, error) {
+
+	var Users []models.User
 	for i, u := range Users {
-		if u.ID == id {
+		if u.GetID() == id {
 			return &Users[i], nil
 		}
+		fmt.Println("hello")
 	}
+	
 	return nil, errors.New("user not found")
 }
 
@@ -186,3 +210,6 @@ func GetTimeFromStamp(ts string) *time.Time {
 	tm := time.Unix(i, 0)
 	return &tm
 }
+
+//TODO UPDATE
+//TODO DELATE 

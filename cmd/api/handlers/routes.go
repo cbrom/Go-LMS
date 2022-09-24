@@ -24,6 +24,9 @@ var (
 	authenticator *auth.Authenticator
 )
 
+
+
+
 // ApplyRoutes applies router to gin engine
 func ApplyRoutes(r *gin.Engine, auth *auth.Authenticator, db *gorm.DB) {
 
@@ -34,7 +37,7 @@ func ApplyRoutes(r *gin.Engine, auth *auth.Authenticator, db *gorm.DB) {
 		apiV1.POST("/users", SignUp)       // done
 		apiV1.POST("/users/login", SignIn) //done
 		apiV1.GET("/users/:id", Getuser)   // done
-		apiV1.GET("/users/all", Getusers)
+		// apiV1.GET("/users/all", Getusers)
 		
 	}
 }
