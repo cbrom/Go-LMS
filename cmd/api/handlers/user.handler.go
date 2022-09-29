@@ -1,13 +1,13 @@
 package handlers
 
 import (
+	"fmt"
 	"go-lms-of-pupilfirst/cmd/models"
 	"go-lms-of-pupilfirst/pkg/auth"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
-	"fmt"
 
 	"github.com/pkg/errors"
 
@@ -38,22 +38,22 @@ type GetusersRequest struct {
 	Id int `json:"id"`
 }
 type UserLoginRequest struct {
-	Email    string `json:"email" validate:"required,email,unique"`
+	Email    string //`json:"email" validate:"required,email,unique"`
 	Password string `json:"password" validate:"required"`
 }
 type UserLoginResponse struct {
-	Id             string    `json:"id"`
+	Id             string `json:"id" gorm:"primaryKey"`
 	Name           string `json:"name"`
 	Username       string `json:"username"`
 	Email          string `json:"email"`
 	Role           int    `json:"role"`
 	Gender         int    `json:"gender"`
-	DisabilityType string    `json:"type_of_disability"`
+	DisabilityType string `json:"type_of_disability"`
 }
 
 // UserInfoUpdateRequest - spec for updating user info
 type UserInfoUpdateRequest struct {
-	ID        string `json:"id" validate:"required,uuid" example:"c01bdef7-173f-4d29-3edc60baf6a2"`
+	ID        string `json:"id" validate:"required,uuid" example:"c01bdef7-173f-4d29-3edc60baf6a2" gorm:"primaryKey"`
 	Name      string `json:"name" validate:"min=3,max=10,omitempty"`
 	Phone     string `json:"phone" validate:"omitempty"`
 	Title     string `json:"title" validate:"omitempty"`
@@ -99,17 +99,16 @@ func SignIn(ctx *gin.Context) {
 	if err != nil {
 		log.Printf("error in user  => %+v", err.Error())
 	}
-	// value := founduser
 	user := founduser
 	var response UserLoginResponse
 	response = UserLoginResponse{
-		Id:                 founduser.GetID(),
-		Name:				user.Name,
-		Email:				user.Email,
-		Username:			user.Username,
-		Role:				user.Role,
-		Gender:				user.Gender,
-		DisabilityType:     user.DisabilityType,
+		Id:             user.GetID(),
+		Name:           user.Name,
+		Email:          user.Email,
+		Username:       user.Username,
+		Role:           user.Role,
+		Gender:         user.Gender,
+		DisabilityType: user.DisabilityType,
 	}
 
 	token, _ := authenticator.GenerateToken(auth.Claims{})
@@ -119,9 +118,6 @@ func SignIn(ctx *gin.Context) {
 	ctx.JSON(200, gin.H{
 		"message": response,
 		"token":   c,
-		
-		
-		
 	})
 }
 
@@ -168,40 +164,29 @@ func (userCreateRequest *UserCreateRequest) ToUser() (*models.User, error) {
 	return user, nil
 }
 
+// get users
 func Getusers(ctx *gin.Context) {
-	ctx.JSON(200, models.UserList{})
+	ul := &models.UserList{}
+	usr := &models.User{}
+	usr.FetchAll(ul)
+	ctx.Bind(ul)
+	ctx.JSON(200, ul)
 }
 
-// TO DO get users
-
-
+// get user
 func Getuser(ctx *gin.Context) {
-
-
 	id := ctx.Param("id")
-	user, err := getuserbyid(id)
-	if err != nil {
-		ctx.IndentedJSON(http.StatusNotFound, gin.H{"message":"userrr not found"})
-		return
+	usr := &models.User{}
+	usr.SetID(id)
+	usr.FetchByID()
+	if usr.FetchByID() != nil {
+		ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": "user not found"})
+	} else {
+		ctx.IndentedJSON(http.StatusOK, usr) //or return usr
 	}
 
-	ctx.IndentedJSON(http.StatusOK, user)
 }
 
-func getuserbyid(id string) (*models.User, error) {
-
-	var Users []models.User
-	for i, u := range Users {
-		if u.GetID() == id {
-			return &Users[i], nil
-		}
-		fmt.Println("hello")
-	}
-	
-	return nil, errors.New("user not found")
-}
-
-// GetTimeFromStamp changes timestamp string to  *time.Time
 func GetTimeFromStamp(ts string) *time.Time {
 	i, err := strconv.ParseInt(ts, 10, 64)
 	if err != nil {
@@ -211,5 +196,48 @@ func GetTimeFromStamp(ts string) *time.Time {
 	return &tm
 }
 
-//TODO UPDATE
-//TODO DELATE 
+// UPDATE user
+func updateuser(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	usr := &models.User{}
+	usr.SetID(id)
+	usr.FetchByID()
+	ctx.Bind(&usr)
+	usr.UpdateOne()
+	ctx.JSON(200, &usr)
+
+}
+
+// DELATE user
+func delateuser(ctx *gin.Context) {
+	id := ctx.Param("id")
+	usr := &models.User{}
+	usr.SetID(id)
+	usr.Delete()
+	if usr.Delete() != nil {
+		ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": "user not deleted"})
+	} else {
+		ctx.IndentedJSON(http.StatusOK, gin.H{"message": "user delated"}) //or return usr
+
+	}
+
+}
+func softdelate(ctx *gin.Context) {
+	id := ctx.Param("id")
+	usr := &models.User{}
+	usr.SetID(id)
+	usr.SoftDelete()
+	if usr.SoftDelete() != nil {
+		ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": "user not deleted"})
+	} else {
+		ctx.IndentedJSON(http.StatusOK, gin.H{"message": "user delated"}) //or return usr
+
+	}
+
+}
+
+// "name":"eyasu",
+// "email":"eyasubirhanu@gmail.com",
+// "password":"1234",
+// "password_confirm":"1234"

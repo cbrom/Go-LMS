@@ -10,22 +10,9 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// func (ctrl *UserController) setupRouter() {
-// 	router := gin.Default()
-
-// 	router.POST("/users", ctrl.SignUp)
-// 	router.POST("/users/login", ctrl.SignIn)
-// 	// router.POST("/tokens/renew_access", server.renewAccessToken)
-
-// 	ctrl.r = router
-// }
-
 var (
 	authenticator *auth.Authenticator
 )
-
-
-
 
 // ApplyRoutes applies router to gin engine
 func ApplyRoutes(r *gin.Engine, auth *auth.Authenticator, db *gorm.DB) {
@@ -34,10 +21,14 @@ func ApplyRoutes(r *gin.Engine, auth *auth.Authenticator, db *gorm.DB) {
 	authenticator = auth
 	apiV1 := r.Group("/v1")
 	{
-		apiV1.POST("/users", SignUp)       // done
-		apiV1.POST("/users/login", SignIn) //done
-		apiV1.GET("/users/:id", Getuser)   // done
+		apiV1.POST("/users/signup", SignUp)    // done
+		apiV1.POST("/users/signin", SignIn)    //done
+		apiV1.GET("/users/:id", Getuser)       // done
+		apiV1.GET("/users/", Getusers)         //done
+		apiV1.PUT("/users/:id", updateuser)    //done
+		apiV1.DELETE("/users/:id", delateuser) //done
+
 		// apiV1.GET("/users/all", Getusers)
-		
+
 	}
 }

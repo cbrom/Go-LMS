@@ -12,10 +12,10 @@ const (
 
 // User struct for users table
 type User struct {
-	// Id                    int
-	Username              string
-	Gender				  int
-	DisabilityType        string
+	// Id             int `gorm:"primaryKey"`
+	Username       string
+	Gender         int
+	DisabilityType string
 	utils.Base
 	Email                  string `gorm:"type:varchar(100);unique_index" `
 	PasswordSalt           string
@@ -47,7 +47,7 @@ func (u *User) TableName() string {
 }
 
 // UserList defines array of user objects
-type UserList []*User	
+type UserList []*User
 
 // TableName gorm standard table name
 func (u *UserList) TableName() string {
@@ -127,7 +127,7 @@ func (u *User) UpdateOne() error {
 	if handler == nil {
 		return errHandlerNotSet
 	}
-	err := handler.Save(u).Error
+	err := handler.Unscoped().Save(u).Error
 	return err
 }
 
