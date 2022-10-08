@@ -5,6 +5,7 @@ import (
 	"go-lms-of-pupilfirst/cmd/models"
 	"go-lms-of-pupilfirst/pkg/auth"
 	"log"
+	"net/http"
 	"time"
 
 	"github.com/pkg/errors"
@@ -156,4 +157,18 @@ type UserInfoUpdateRequest struct {
 	About     string `gorm:"type:text" json:"about" validate:"omitempty"`
 
 	TimeZone *time.Time `json:"timezone" validation:"omitempty"`
+}
+
+// get user
+func Getuser(ctx *gin.Context) {
+	id := ctx.Param("id")
+	usr := &models.User{}
+	usr.SetID(id)
+	usr.FetchByID()
+	if usr.FetchByID() != nil {
+		ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": "user not found"})
+	} else {
+		ctx.IndentedJSON(http.StatusOK, usr) //or return usr
+	}
+
 }
