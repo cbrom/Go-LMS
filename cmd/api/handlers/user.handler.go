@@ -194,3 +194,18 @@ func updateuser(ctx *gin.Context) {
 	ctx.JSON(200, &usr)
 
 }
+
+// DELATE user
+func delateuser(ctx *gin.Context) {
+	id := ctx.Param("id")
+	usr := &models.User{}
+	usr.SetID(id)
+	usr.Delete()
+	if usr.Delete() != nil {
+		ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": "user not deleted"})
+	} else {
+		ctx.IndentedJSON(http.StatusOK, gin.H{"message": "user delated"}) //or return usr
+
+	}
+
+}
