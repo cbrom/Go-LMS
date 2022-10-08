@@ -181,3 +181,16 @@ func Getusers(ctx *gin.Context) {
 	ctx.Bind(ul)
 	ctx.JSON(200, ul)
 }
+
+// UPDATE user
+func updateuser(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	usr := &models.User{}
+	usr.SetID(id)
+	usr.FetchByID()
+	ctx.Bind(&usr)
+	usr.UpdateOne()
+	ctx.JSON(200, &usr)
+
+}
