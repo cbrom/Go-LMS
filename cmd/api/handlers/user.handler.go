@@ -31,7 +31,7 @@ var (
 type UserController struct{}
 
 // SignUp registers user
-func (ctrl *UserController) SignUp(ctx *gin.Context) {
+func SignUp(ctx *gin.Context) {
 	// get values
 	// build into struct
 
