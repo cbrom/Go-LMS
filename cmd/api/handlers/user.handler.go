@@ -172,3 +172,12 @@ func Getuser(ctx *gin.Context) {
 	}
 
 }
+
+// get users
+func Getusers(ctx *gin.Context) {
+	ul := &models.UserList{}
+	usr := &models.User{}
+	usr.FetchAll(ul)
+	ctx.Bind(ul)
+	ctx.JSON(200, ul)
+}
