@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"go-lms-of-pupilfirst/cmd/models"
 	"go-lms-of-pupilfirst/pkg/auth"
 	"log"
@@ -50,6 +51,34 @@ func SignUp(ctx *gin.Context) {
 	})
 }
 
+func SignIn(ctx *gin.Context) {
+	var signinBody UserLoginRequest
+	ctx.BindJSON(&signinBody)
+	founduser, err := signinBody.Tologin()
+	if err != nil {
+		log.Printf("error in user  => %+v", err.Error())
+	}
+	user := founduser
+	var response UserLoginResponse
+	response = UserLoginResponse{
+		Id:    user.GetID(),
+		Name:  user.Name,
+		Email: user.Email,
+		About: user.About,
+		Role:  user.Role,
+		Phone: user.Phone,
+	}
+
+	token, _ := authenticator.GenerateToken(auth.Claims{})
+	c, _ := authenticator.ParseClaims(token)
+	fmt.Println(c)
+
+	ctx.JSON(200, gin.H{
+		"message": response,
+		"token":   c,
+	})
+}
+
 // UserLoginRequest spec for login request
 type UserLoginRequest struct {
 	Email    string `json:"email" validate:"required,email,unique"`
@@ -63,6 +92,15 @@ type UserCreateRequest struct {
 	Password        string     `json:"password" validate:"required" example:"GrootSecret"`
 	PasswordConfirm string     `json:"password_confirm" validate:"required,eqfield=password" example:"GrootSecret"`
 	TimeZone        *time.Time `json:"timezone" validate:"required" example:"America/Anchorage"`
+}
+
+type UserLoginResponse struct {
+	Id    string `json:"id" gorm:"primaryKey"`
+	Name  string `json:"name"`
+	About string `json:"about"`
+	Email string `json:"email"`
+	Role  int    `json:"role"`
+	Phone string `json:"phone"`
 }
 
 // ToUser converts UserCreateRequest to User object
@@ -86,6 +124,26 @@ func (userCreateRequest *UserCreateRequest) ToUser() (*models.User, error) {
 		TimeZone:     userCreateRequest.TimeZone,
 	}
 	return user, nil
+}
+
+// ToUser converts UserLoginRequest to User object
+func (userLoginRequest *UserLoginRequest) Tologin() (*models.User, error) {
+
+	foundUser := models.User{
+		Email: userLoginRequest.Email,
+	}
+
+	foundUser.FetchByEmail()
+	if foundUser.GetID() == "" {
+		return nil, nil
+	}
+	saltedPassword := userLoginRequest.Password + foundUser.PasswordSalt
+	if err := bcrypt.CompareHashAndPassword(foundUser.PasswordHash, []byte(saltedPassword)); err != nil {
+		err = errors.WithStack(errors.New("ErrAuthenticationFailure"))
+		return nil, err
+	}
+	return &foundUser, nil
+
 }
 
 // UserInfoUpdateRequest - spec for updating user info
