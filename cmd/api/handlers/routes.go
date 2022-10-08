@@ -20,7 +20,7 @@ func ApplyRoutes(r *gin.Engine, auth *auth.Authenticator, db *gorm.DB) {
 	apiV1 := r.Group("/v1")
 	{
 		apiV1.POST("/users/signup", SignUp)    // done
-		
+		apiV1.POST("/users/signin", SignIn)
 
 	}
 }
