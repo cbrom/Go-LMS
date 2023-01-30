@@ -9,12 +9,14 @@ import (
 
 // AppConfig is the config structure
 type AppConfig struct {
-	TLS     TLS
-	Storage Storage
-	Address string `envconfig:"ADDRESS"`
+	Email        Email
+	TLS          TLS
+	Storage      Storage
+	Address      string `envconfig:"ADDRESS"`
+	ClientOrigin string `envconfig:"CLIENT_ORIGIN"`
 }
 
-//Storage is storage handler config
+// Storage is storage handler config
 type Storage struct {
 	HandlerName string `envconfig:"STORAGE_HANDLERNAME"`
 	Host        string `envconfig:"STORAGE_HOST"`
@@ -25,6 +27,14 @@ type Storage struct {
 	URL         string `envconfig:"STORAGE_URL"`
 }
 
+type Email struct {
+	EmailFrom string `envconfig:"EMAIL_FROM"`
+	SMTPHost  string `envconfig:"SMTP_HOST"`
+	SMTPPort  string `envconfig:"SMTP_PORT"`
+	SMTPUser  string `envconfig:"SMTP_USER"`
+	SMTPPass  string `envconfig:"SMTP_PASS"`
+}
+
 // TLS is the tls config for running the server
 type TLS struct {
 	Key   string `envconfig:"TLS_KEY"`
@@ -32,7 +42,7 @@ type TLS struct {
 	CACrt string `envconfig:"TLS_CACRT"`
 }
 
-//LoadConfig read env vars
+// LoadConfig read env vars
 func LoadConfig() (*AppConfig, error) {
 	var conf AppConfig
 	err := envconfig.Process("GO_LMS", &conf)
@@ -44,7 +54,7 @@ func LoadConfig() (*AppConfig, error) {
 		if err != nil {
 			return nil, err
 		}
-		
+
 		storage := Storage{
 			HandlerName: os.Getenv("STORAGE_HANDLERNAME"),
 			Host:        os.Getenv("STORAGE_HOST"),
@@ -58,15 +68,24 @@ func LoadConfig() (*AppConfig, error) {
 		if conf.Storage.Host == "db" {
 			storage.Host = conf.Storage.Host
 		}
+		email := Email{
+			EmailFrom: os.Getenv("EMAIL_FROM"),
+			SMTPHost:  os.Getenv("SMTP_HOST"),
+			SMTPPass:  os.Getenv("SMTP_PASS"),
+			SMTPPort:  os.Getenv("SMTP_PORT"),
+			SMTPUser:  os.Getenv("SMTP_USER"),
+		}
 
 		tls := TLS{
 			Key:   os.Getenv("TLS_KEY"),
 			Crt:   os.Getenv("TLS_CRT"),
 			CACrt: os.Getenv("TLS_CACRT"),
 		}
+		conf.Email = email
 		conf.Storage = storage
 		conf.TLS = tls
 		conf.Address = os.Getenv("ADDRESS")
+		conf.ClientOrigin = os.Getenv("CLIENT_ORIGIN")
 	}
 
 	return &conf, nil

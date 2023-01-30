@@ -18,6 +18,8 @@ type User struct {
 	PasswordHash           []byte
 	Role                   int
 	SiginInCount           int
+	VerificationCode       string `json:"verification_code"`
+	Verified               bool   `gorm:"not null"`
 	CurrentSignInAt        *time.Time
 	LastSignInAt           *time.Time
 	CurrentSignInIP        string
@@ -83,6 +85,15 @@ func (u *User) Create() error {
 	return nil
 }
 
+// Save user record
+func (u *User) Save() error {
+	if handler == nil {
+		return errHandlerNotSet
+	}
+	err := handler.Save(u).Error
+	return err
+}
+
 // FetchByID fetches User by id
 func (u *User) FetchByID() error {
 	if handler == nil {
@@ -106,6 +117,18 @@ func (u *User) FetchByEmail() error {
 		return err
 	}
 
+	return nil
+}
+
+// FetchByVerificationCode fetches User by VerificationCode
+func (u *User) FetchByVerificationCode() error {
+	if handler == nil {
+		return errHandlerNotSet
+	}
+	err := handler.Where("verification_code = ?", u.VerificationCode).First(&u).Error
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
