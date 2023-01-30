@@ -3,21 +3,52 @@ package main
 import (
 	"encoding/json"
 	"go-lms-of-pupilfirst/cmd/api/handlers"
+	"go-lms-of-pupilfirst/cmd/api/routes"
 	"go-lms-of-pupilfirst/configs"
+
+	_ "go-lms-of-pupilfirst/cmd/api/docs"
 	"go-lms-of-pupilfirst/migrations"
 	"go-lms-of-pupilfirst/pkg/auth"
 	"go-lms-of-pupilfirst/pkg/database"
 	"go-lms-of-pupilfirst/pkg/flag"
+
 	"log"
 	"os"
 	"time"
 
 	redistrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/go-redis/redis"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	"github.com/kelseyhightower/envconfig"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
+
+// @title GO-LMS service API
+// @version 1.0
+// @description This is GO-LMS server.
+// @termsOfService GO-LMS.com
+
+// @contact.name API Support
+// @contact.url http://GO-LMS.com/support
+// @contact.email GO-LMS@swagger.io
+
+// @license.name MIT
+// @license.url https://opensource.org/licenses/MIT
+
+// @host localhost:3001
+// @BasePath /v1
+
+// @query.collection.format multi
+
+// @securityDefinitions.basic BasicAuth
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds | log.Lshortfile)
@@ -69,8 +100,17 @@ func main() {
 
 	migrations.Migrate(db)
 
+	config, err := configs.LoadConfig()
 	app := gin.Default()
-	handlers.ApplyRoutes(app, authenticator, db)
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{"http://localhost:8000", config.ClientOrigin}
+	corsConfig.AllowCredentials = true
+
+	app.Use(cors.New(corsConfig))
+	routes.ApplyRoutes(app, authenticator, db, &handlers.UserController{})
 	app.Use(database.InjectDB(db))
+	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	app.Run(configs.CFG.Server.Host)
 }
+
+// go install github.com/swaggo/swag/cmd/swag@latest
