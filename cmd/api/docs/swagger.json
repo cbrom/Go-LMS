@@ -1,0 +1,148 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is GO-LMS server.",
+        "title": "GO-LMS service API",
+        "termsOfService": "GO-LMS.com",
+        "contact": {
+            "name": "API Support",
+            "url": "http://GO-LMS.com/support",
+            "email": "GO-LMS@swagger.io"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:3001",
+    "basePath": "/v1",
+    "paths": {
+        "/register": {
+            "post": {
+                "description": "creates user directory",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Registers a user",
+                "parameters": [
+                    {
+                        "description": "The body to create a user",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.UserCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/verifyemail/{verification_code}": {
+            "get": {
+                "description": "verificationCode varifay a user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Verify a user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "verificationCode",
+                        "name": "verification_code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handlers.UserCreateRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password",
+                "password_confirm"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "groot@golms.com"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Groot"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "GrootSecret"
+                },
+                "password_confirm": {
+                    "type": "string",
+                    "example": "GrootSecret"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        },
+        "BasicAuth": {
+            "type": "basic"
+        }
+    }
+}

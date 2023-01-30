@@ -1,0 +1,101 @@
+basePath: /v1
+definitions:
+  handlers.UserCreateRequest:
+    properties:
+      email:
+        example: groot@golms.com
+        type: string
+      name:
+        example: Groot
+        type: string
+      password:
+        example: GrootSecret
+        type: string
+      password_confirm:
+        example: GrootSecret
+        type: string
+    required:
+    - email
+    - name
+    - password
+    - password_confirm
+    type: object
+host: localhost:3001
+info:
+  contact:
+    email: GO-LMS@swagger.io
+    name: API Support
+    url: http://GO-LMS.com/support
+  description: This is GO-LMS server.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: GO-LMS.com
+  title: GO-LMS service API
+  version: "1.0"
+paths:
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: creates user directory
+      parameters:
+      - description: The body to create a user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UserCreateRequest'
+      responses:
+        "200":
+          description: success
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+        "404":
+          description: error
+          schema:
+            type: string
+        "500":
+          description: error
+          schema:
+            type: string
+      summary: Registers a user
+      tags:
+      - Users
+  /verifyemail/{verification_code}:
+    get:
+      consumes:
+      - application/json
+      description: verificationCode varifay a user
+      parameters:
+      - description: verificationCode
+        in: path
+        name: verification_code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            type: string
+        "400":
+          description: error
+          schema:
+            type: string
+      summary: Verify a user
+      tags:
+      - users
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+  BasicAuth:
+    type: basic
+swagger: "2.0"
