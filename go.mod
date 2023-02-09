@@ -5,7 +5,7 @@ go 1.13
 require (
 	github.com/DataDog/datadog-go v3.7.1+incompatible // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/gin-gonic/gin v1.7.0
+	github.com/gin-gonic/gin v1.7.7
 	github.com/go-redis/redis v6.15.8+incompatible
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/graphql-go/graphql v0.7.9
